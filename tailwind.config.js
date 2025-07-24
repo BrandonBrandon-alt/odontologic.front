@@ -43,7 +43,7 @@ module.exports = {
         // Sistema de colores semánticos mejorado
         background: {
           DEFAULT: "#ffffff", // Light mode
-          dark: "#0f172a", // Dark mode
+          dark: "#252825", // Dark mode
           secondary: "#f8fafc", // Light secondary
           "secondary-dark": "#1e293b", // Dark secondary
         },
@@ -58,15 +58,15 @@ module.exports = {
         // Superficies y contenedores
         surface: {
           DEFAULT: "#ffffff", // Light cards/containers
-          dark: "#003d35", // Dark cards/containers
+          dark: "#00bcd4", // Dark cards/containers
           elevated: "#f8fafc", // Light elevated surfaces
           "elevated-dark": "#334155", // Dark elevated surfaces
         },
 
         // Bordes optimizados
         border: {
-          DEFAULT: "#e2e8f0", // Light borders
-          dark: "#475569", // Dark borders
+          DEFAULT: "#e7e7e7fa", // Light borders
+          dark: "#009688", // Dark borders
           focus: "#009688", // Focus state
           "focus-dark": "#26a69a", // Focus state dark
         },
@@ -228,7 +228,7 @@ module.exports = {
       backgroundImage: {
         "gradient-primary": "linear-gradient(135deg, #009688 0%, #00bcd4 100%)",
         "gradient-primary-dark":
-          "linear-gradient(135deg, #00796b 0%, #0097a7 100%)",
+          "linear-gradient(135deg, #00897b 0%, #009688 100%)",
         "gradient-surface": "linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)",
         "gradient-surface-dark":
           "linear-gradient(145deg, #1e293b 0%, #334155 100%)",

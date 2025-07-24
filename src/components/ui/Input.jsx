@@ -1,12 +1,17 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { FaEye, FaEyeSlash, FaExclamationCircle, FaCheckCircle } from 'react-icons/fa';
+import React, { useState, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+  FaEye,
+  FaEyeSlash,
+  FaExclamationCircle,
+  FaCheckCircle,
+} from "react-icons/fa";
 
 /**
  * Componente Input mejorado para el sistema de diseño dental
  * Campo de texto con etiqueta flotante, validación y múltiples variantes
  */
-const Input = ({ 
+const Input = ({
   id,
   label,
   type = "text",
@@ -30,23 +35,26 @@ const Input = ({
   onFocus,
   onBlur,
   onClear,
-  ...props 
+  ...props
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [hasValue, setHasValue] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [internalValue, setInternalValue] = useState(props.value || props.defaultValue || '');
+  const [internalValue, setInternalValue] = useState(
+    props.value || props.defaultValue || ""
+  );
   const inputRef = useRef(null);
 
   // Determinar el tipo actual del input
-  const currentType = type === 'password' && showPassword ? 'text' : type;
-  const shouldShowPasswordToggle = type === 'password' && showPasswordToggle;
+  const currentType = type === "password" && showPassword ? "text" : type;
+  const shouldShowPasswordToggle = type === "password" && showPasswordToggle;
 
   // Estados derivados
   const hasError = Boolean(error);
   const hasSuccess = Boolean(success);
   const hasFloatingLabel = Boolean(label) && !placeholder;
-  const shouldFloat = isFocused || hasValue || (props.value && props.value !== '');
+  const shouldFloat =
+    isFocused || hasValue || (props.value && props.value !== "");
 
   // Clases base usando nuestro sistema
   const baseClasses = `
@@ -54,60 +62,91 @@ const Input = ({
     dental-text-primary placeholder:dental-text-muted
     focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
     disabled:opacity-60 disabled:cursor-not-allowed
-    ${loading ? 'cursor-wait' : ''}
+    ${loading ? "cursor-wait" : ""}
   `;
 
   // Variantes de estilo
   const variants = {
     default: `
       dental-input
-      ${hasError ? 'border-error focus-visible:ring-error' : ''}
-      ${hasSuccess ? 'border-success focus-visible:ring-success' : ''}
-      ${isFocused && !hasError && !hasSuccess ? 'border-primary-500 focus-visible:ring-primary-500' : ''}
+      border-2 border-border dark:border-border-dark
+      ${hasError ? "border-error focus-visible:ring-error" : ""}
+      ${hasSuccess ? "border-success focus-visible:ring-success" : ""}
+      ${
+        isFocused && !hasError && !hasSuccess
+          ? "border-primary-500 focus-visible:ring-primary-500"
+          : ""
+      }
     `,
     outline: `
       bg-transparent border-2 dental-border rounded-dental-md
       px-dental-md py-dental-md
-      ${hasError ? 'border-error focus:border-error focus-visible:ring-error' : ''}
-      ${hasSuccess ? 'border-success focus:border-success focus-visible:ring-success' : ''}
-      ${isFocused && !hasError && !hasSuccess ? 'border-primary-500 focus-visible:ring-primary-500' : ''}
+      ${
+        hasError
+          ? "border-error focus:border-error focus-visible:ring-error"
+          : ""
+      }
+      ${
+        hasSuccess
+          ? "border-success focus:border-success focus-visible:ring-success"
+          : ""
+      }
+      ${
+        isFocused && !hasError && !hasSuccess
+          ? "border-primary-500 focus-visible:ring-primary-500"
+          : ""
+      }
     `,
     filled: `
       dental-bg-interactive-hover border border-transparent rounded-dental-md
       px-dental-md py-dental-md
       focus:dental-bg-surface focus:border-primary-500 focus-visible:ring-primary-500
-      ${hasError ? 'border-error focus:border-error focus-visible:ring-error' : ''}
-      ${hasSuccess ? 'border-success focus:border-success focus-visible:ring-success' : ''}
+      ${
+        hasError
+          ? "border-error focus:border-error focus-visible:ring-error"
+          : ""
+      }
+      ${
+        hasSuccess
+          ? "border-success focus:border-success focus-visible:ring-success"
+          : ""
+      }
     `,
     underline: `
       bg-transparent border-0 border-b-2 dental-border rounded-none
       px-0 py-dental-sm
       focus:border-primary-500 focus-visible:ring-0
-      ${hasError ? 'border-error focus:border-error' : ''}
-      ${hasSuccess ? 'border-success focus:border-success' : ''}
-    `
+      ${hasError ? "border-error focus:border-error" : ""}
+      ${hasSuccess ? "border-success focus:border-success" : ""}
+    `,
   };
 
   // Tamaños
   const sizes = {
     sm: {
-      input: 'text-dental-sm min-h-[32px]',
-      padding: hasFloatingLabel ? 'pt-dental-lg pb-dental-xs px-dental-sm' : 'py-dental-sm px-dental-sm',
-      label: 'text-dental-sm',
-      icon: 'text-sm'
+      input: "text-dental-sm min-h-[32px]",
+      padding: hasFloatingLabel
+        ? "pt-dental-lg pb-dental-xs px-dental-sm"
+        : "py-dental-sm px-dental-sm",
+      label: "text-dental-sm",
+      icon: "text-sm",
     },
     md: {
-      input: 'text-dental-base min-h-[40px]',
-      padding: hasFloatingLabel ? 'pt-dental-xl pb-dental-sm px-dental-md' : 'py-dental-md px-dental-md',
-      label: 'text-dental-base',
-      icon: 'text-base'
+      input: "text-dental-base min-h-[40px]",
+      padding: hasFloatingLabel
+        ? "pt-dental-xl pb-dental-sm px-dental-md"
+        : "py-dental-md px-dental-md",
+      label: "text-dental-base",
+      icon: "text-base",
     },
     lg: {
-      input: 'text-dental-lg min-h-[48px]',
-      padding: hasFloatingLabel ? 'pt-dental-2xl pb-dental-md px-dental-lg' : 'py-dental-lg px-dental-lg',
-      label: 'text-dental-lg',
-      icon: 'text-lg'
-    }
+      input: "text-dental-lg min-h-[48px]",
+      padding: hasFloatingLabel
+        ? "pt-dental-2xl pb-dental-md px-dental-lg"
+        : "py-dental-lg px-dental-lg",
+      label: "text-dental-lg",
+      icon: "text-lg",
+    },
   };
 
   const sizeStyle = sizes[size];
@@ -117,7 +156,7 @@ const Input = ({
     const value = e.target.value;
     setHasValue(value !== "");
     setInternalValue(value);
-    
+
     if (onChange) {
       onChange(e);
     }
@@ -136,11 +175,11 @@ const Input = ({
   const handleClear = () => {
     if (inputRef.current) {
       const event = {
-        target: { value: '' }
+        target: { value: "" },
       };
-      inputRef.current.value = '';
+      inputRef.current.value = "";
       setHasValue(false);
-      setInternalValue('');
+      setInternalValue("");
       if (onClear) onClear(event);
       if (onChange) onChange(event);
       inputRef.current.focus();
@@ -154,7 +193,7 @@ const Input = ({
   // Efectos
   useEffect(() => {
     if (props.value !== undefined) {
-      setHasValue(props.value !== '');
+      setHasValue(props.value !== "");
       setInternalValue(props.value);
     }
   }, [props.value]);
@@ -166,25 +205,31 @@ const Input = ({
     return {
       y: shouldFloat ? -22 : 0,
       scale: shouldFloat ? 0.85 : 1,
-      color: isFocused 
-        ? hasError ? 'rgb(239, 68, 68)' : hasSuccess ? 'rgb(16, 185, 129)' : 'rgb(0, 150, 136)'
-        : 'var(--color-text-muted)'
+      color: isFocused
+        ? hasError
+          ? "rgb(239, 68, 68)"
+          : hasSuccess
+          ? "rgb(16, 185, 129)"
+          : "rgb(0, 150, 136)"
+        : "var(--color-text-muted)",
     };
   };
 
   // Renderizado de iconos
   const renderIcon = (position) => {
-    if (position === 'left' && icon && iconPosition === 'left') {
+    if (position === "left" && icon && iconPosition === "left") {
       return (
-        <div className={`absolute left-dental-sm top-1/2 transform -translate-y-1/2 dental-text-muted ${sizeStyle.icon}`}>
+        <div
+          className={`absolute left-dental-sm top-1/2 transform -translate-y-1/2 dental-text-muted ${sizeStyle.icon}`}
+        >
           {icon}
         </div>
       );
     }
 
-    if (position === 'right') {
+    if (position === "right") {
       const rightIcons = [];
-      
+
       if (loading) {
         rightIcons.push(
           <motion.div
@@ -197,17 +242,23 @@ const Input = ({
           </motion.div>
         );
       }
-      
+
       if (hasSuccess && !loading) {
         rightIcons.push(
-          <FaCheckCircle key="success" className={`text-success ${sizeStyle.icon}`} />
+          <FaCheckCircle
+            key="success"
+            className={`text-success ${sizeStyle.icon}`}
+          />
         );
       } else if (hasError && !loading) {
         rightIcons.push(
-          <FaExclamationCircle key="error" className={`text-error ${sizeStyle.icon}`} />
+          <FaExclamationCircle
+            key="error"
+            className={`text-error ${sizeStyle.icon}`}
+          />
         );
       }
-      
+
       if (clearable && hasValue && !disabled && !loading) {
         rightIcons.push(
           <button
@@ -220,12 +271,13 @@ const Input = ({
           </button>
         );
       }
-      
+
       if (shouldShowPasswordToggle && !loading) {
         rightIcons.push(
           <button
             key="password-toggle"
-            type="button"a
+            type="button"
+            a
             onClick={togglePasswordVisibility}
             className={`dental-text-muted hover:dental-text-primary transition-theme ${sizeStyle.icon}`}
           >
@@ -233,8 +285,14 @@ const Input = ({
           </button>
         );
       }
-      
-      if (icon && iconPosition === 'right' && !loading && !hasSuccess && !hasError) {
+
+      if (
+        icon &&
+        iconPosition === "right" &&
+        !loading &&
+        !hasSuccess &&
+        !hasError
+      ) {
         rightIcons.push(
           <div key="icon" className={`dental-text-muted ${sizeStyle.icon}`}>
             {icon}
@@ -257,20 +315,28 @@ const Input = ({
   // Cálculo de padding considerando iconos
   const getInputPadding = () => {
     let padding = sizeStyle.padding;
-    
-    if (icon && iconPosition === 'left') {
-      padding = padding.replace('px-dental-sm', 'pl-dental-xl pr-dental-sm')
-                      .replace('px-dental-md', 'pl-dental-2xl pr-dental-md')
-                      .replace('px-dental-lg', 'pl-dental-3xl pr-dental-lg');
+
+    if (icon && iconPosition === "left") {
+      padding = padding
+        .replace("px-dental-sm", "pl-dental-xl pr-dental-sm")
+        .replace("px-dental-md", "pl-dental-2xl pr-dental-md")
+        .replace("px-dental-lg", "pl-dental-3xl pr-dental-lg");
     }
-    
-    const hasRightElements = loading || hasSuccess || hasError || clearable || shouldShowPasswordToggle || (icon && iconPosition === 'right');
+
+    const hasRightElements =
+      loading ||
+      hasSuccess ||
+      hasError ||
+      clearable ||
+      shouldShowPasswordToggle ||
+      (icon && iconPosition === "right");
     if (hasRightElements) {
-      padding = padding.replace('px-dental-sm', 'pl-dental-sm pr-dental-xl')
-                      .replace('px-dental-md', 'pl-dental-md pr-dental-2xl')
-                      .replace('px-dental-lg', 'pl-dental-lg pr-dental-3xl');
+      padding = padding
+        .replace("px-dental-sm", "pl-dental-sm pr-dental-xl")
+        .replace("px-dental-md", "pl-dental-md pr-dental-2xl")
+        .replace("px-dental-lg", "pl-dental-lg pr-dental-3xl");
     }
-    
+
     return padding;
   };
 
@@ -282,11 +348,11 @@ const Input = ({
           className={`
             absolute left-dental-md dental-text-muted transition-theme pointer-events-none z-10
             ${sizeStyle.label} ${labelClassName}
-            ${required ? "after:content-['*'] after:text-error after:ml-1" : ''}
+            ${required ? "after:content-['*'] after:text-error after:ml-1" : ""}
           `}
           animate={getLabelAnimation()}
           style={{
-            top: variant === 'underline' ? '0.5rem' : '1rem',
+            top: variant === "underline" ? "0.5rem" : "1rem",
             transformOrigin: "left",
           }}
         >
@@ -300,7 +366,7 @@ const Input = ({
           className={`
             block dental-text-primary font-medium mb-dental-xs
             ${sizeStyle.label} ${labelClassName}
-            ${required ? "after:content-['*'] after:text-error after:ml-1" : ''}
+            ${required ? "after:content-['*'] after:text-error after:ml-1" : ""}
           `}
         >
           {label}
@@ -308,8 +374,8 @@ const Input = ({
       )}
 
       <div className="relative">
-        {renderIcon('left')}
-        
+        {renderIcon("left")}
+
         <input
           ref={inputRef}
           id={id}
@@ -320,7 +386,9 @@ const Input = ({
             ${sizeStyle.input}
             ${getInputPadding()}
             ${className}
-          `.replace(/\s+/g, ' ').trim()}
+          `
+            .replace(/\s+/g, " ")
+            .trim()}
           placeholder={placeholder}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -328,13 +396,17 @@ const Input = ({
           disabled={disabled}
           {...props}
         />
-        
-        {renderIcon('right')}
 
-        {variant === 'underline' && (
+        {renderIcon("right")}
+
+        {variant === "underline" && (
           <motion.div
             className={`absolute bottom-0 left-0 h-0.5 ${
-              hasError ? 'bg-error' : hasSuccess ? 'bg-success' : 'bg-primary-500'
+              hasError
+                ? "bg-error"
+                : hasSuccess
+                ? "bg-success"
+                : "bg-primary-500"
             }`}
             initial={{ width: 0 }}
             animate={{ width: isFocused ? "100%" : 0 }}
@@ -372,15 +444,11 @@ const Input = ({
 
 // --- Componentes especializados (CORREGIDOS) ---
 export const PasswordInput = (props) => (
-  <Input 
-    type="password" 
-    showPasswordToggle={true}
-    {...props} 
-  />
+  <Input type="password" showPasswordToggle={true} {...props} />
 );
 
 export const SearchInput = ({ onSearch, ...props }) => (
-  <Input 
+  <Input
     type="search"
     icon={<span>🔍</span>}
     clearable={true}
@@ -394,7 +462,7 @@ export const SearchInput = ({ onSearch, ...props }) => (
 );
 
 export const EmailInput = (props) => (
-  <Input 
+  <Input
     type="email"
     icon={<span>@</span>}
     placeholder="ejemplo@correo.com"
@@ -403,7 +471,7 @@ export const EmailInput = (props) => (
 );
 
 export const PhoneInput = (props) => (
-  <Input 
+  <Input
     type="tel"
     icon={<span>📞</span>}
     placeholder="+57 300 123 4567"
@@ -412,11 +480,7 @@ export const PhoneInput = (props) => (
 );
 
 export const NumberInput = (props) => (
-  <Input 
-    type="number"
-    icon={<span>#</span>}
-    {...props}
-  />
+  <Input type="number" icon={<span>#</span>} {...props} />
 );
 
 export default Input;

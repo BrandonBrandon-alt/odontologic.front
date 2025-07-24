@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "../context/AuthContext";
@@ -15,8 +15,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -25,7 +23,8 @@ export default function RootLayout({ children }) {
       >
         <AuthProvider>
           <Navbar />
-          <main className="flex-grow container mx-auto px-dental-md py-dental-lg">
+          <main className="flex-grow container mx-auto px-dental-md pt-20 pb-dental-lg">
+            {" "}
             {children}
           </main>
           <Footer />
