@@ -1,26 +1,170 @@
-@import "tailwindcss";
+/* 1. Importa las capas base de Tailwind v3 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+/* 2. Define tus variables CSS semánticas y estilos base */
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Colores semánticos que tus componentes usan con var() */
+    --color-background: #ffffff;
+    --color-surface: theme('colors.neutral.50');
+    --color-surface-secondary: #fafafa;
+    --color-text-primary: theme('colors.primary.900');
+    --color-text-secondary: theme('colors.primary.600');
+    --color-text-muted: theme('colors.primary.900');
+    --color-border: theme('colors.neutral.200');
+    --color-border-light: theme('colors.neutral.100');
+    
+    /* Variables de sombra para modo claro */
+    --shadow-dental-sm: theme('boxShadow.dental-sm');
+    --shadow-dental-md: theme('boxShadow.dental-md');
+    --shadow-dental-lg: theme('boxShadow.dental-lg');
+    --shadow-dental-xl: theme('boxShadow.dental-xl');
+  }
+
+  .dark {
+    /* Sobrescribe las variables semánticas para el modo oscuro */
+    --color-background: theme('colors.neutral.900');
+    --color-surface: theme('colors.neutral.800');
+    --color-surface-secondary: theme('colors.neutral.700');
+    --color-text-primary: theme('colors.neutral.50');
+    --color-text-secondary: #b3b3b3;
+    --color-text-muted: #9ca3af;
+    --color-border: theme('colors.neutral.700');
+    --color-border-light: theme('colors.neutral.600');
+    
+    /* Sombras más intensas en modo oscuro */
+    --shadow-dental-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow-dental-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+    --shadow-dental-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+    --shadow-dental-xl: 0 20px 25px -5px rgb(0 0 0 / 0.6);
+  }
+
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    font-family: theme('fontFamily.dental');
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* 3. Tus componentes y utilidades personalizadas se quedan igual */
+/* Estos seguirán funcionando porque usan las variables CSS que definimos arriba */
+@layer components {
+  .dental-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: theme('borderRadius.dental-lg');
+    box-shadow: var(--shadow-dental-sm);
+    padding: theme('spacing.dental-lg');
+    transition: all 0.2s ease;
+  }
+
+  .dental-card:hover {
+    box-shadow: var(--shadow-dental-md);
+    transform: translateY(-2px);
+  }
+
+  .dental-button-primary {
+    background-color: theme('colors.primary.900');
+    color: white;
+    padding: theme('spacing.dental-md') theme('spacing.dental-xl');
+    border-radius: theme('borderRadius.dental-md');
+    font-weight: 500;
+    font-size: theme('fontSize.dental-base');
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-dental-sm);
+  }
+
+  .dental-button-primary:hover {
+    background-color: theme('colors.primary.600');
+    box-shadow: var(--shadow-dental-md);
+    transform: translateY(-1px);
+  }
+
+  .dental-button-primary:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-dental-sm);
+  }
+
+  .dental-button-secondary {
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
+    padding: theme('spacing.dental-md') theme('spacing.dental-xl');
+    border-radius: theme('borderRadius.dental-md');
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .dental-button-secondary:hover {
+    background-color: var(--color-surface-secondary);
+    border-color: theme('colors.primary.500');
+  }
+
+  .dental-input {
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: theme('borderRadius.dental-md');
+    padding: theme('spacing.dental-md');
+    font-size: theme('fontSize.dental-base');
+    color: var(--color-text-primary);
+    transition: all 0.2s ease;
+    width: 100%;
+  }
+
+  .dental-input:focus {
+    outline: none;
+    border-color: theme('colors.primary.500');
+    box-shadow: 0 0 0 3px rgb(0 173 181 / 0.1);
+  }
+
+  .dental-text-primary {
+    color: var(--color-text-primary);
+  }
+
+  .dental-text-secondary {
+    color: var(--color-text-secondary);
+  }
+
+  .dental-text-muted {
+    color: var(--color-text-muted);
+  }
+
+  .dental-bg-surface {
+    background-color: var(--color-surface);
+  }
+
+  .dental-border {
+    border-color: var(--color-border);
+  }
+}
+
+@layer utilities {
+  .shadow-dental-sm { box-shadow: theme('boxShadow.dental-sm'); }
+  .shadow-dental-md { box-shadow: theme('boxShadow.dental-md'); }
+  .shadow-dental-lg { box-shadow: theme('boxShadow.dental-lg'); }
+  .shadow-dental-xl { box-shadow: theme('boxShadow.dental-xl'); }
+  
+  .text-dental-xs { font-size: theme('fontSize.dental-xs'); }
+  .text-dental-sm { font-size: theme('fontSize.dental-sm'); }
+  .text-dental-base { font-size: theme('fontSize.dental-base'); }
+  .text-dental-lg { font-size: theme('fontSize.dental-lg'); }
+  .text-dental-xl { font-size: theme('fontSize.dental-xl'); }
+  .text-dental-2xl { font-size: theme('fontSize.dental-2xl'); }
+  .text-dental-3xl { font-size: theme('fontSize.dental-3xl'); }
+  
+  .rounded-dental-sm { border-radius: theme('borderRadius.dental-sm'); }
+  .rounded-dental-md { border-radius: theme('borderRadius.dental-md'); }
+  .rounded-dental-lg { border-radius: theme('borderRadius.dental-lg'); }
+  .rounded-dental-xl { border-radius: theme('borderRadius.dental-xl'); }
 }
