@@ -4,36 +4,42 @@ import { motion } from "framer-motion";
 import Link from "next/link"; // FIX: Added this import
 
 import Card from "../ui/Card";
-import { FaUsers, FaStar, FaHeart } from "react-icons/fa";
-import { PiToothFill } from "react-icons/pi";
-
+import { FaShieldVirus, FaClock } from "react-icons/fa";
+import { MdOutlineGroups3 } from "react-icons/md";
+import { GiSparkles } from "react-icons/gi";
 
 const FeaturedServicesSection = () => {
   const services = [
     {
-      icon: <FaUsers />,
+      icon: <FaShieldVirus />,
       iconColor: "text-primary-500",
-      title: "Odontología General",
+      title: "Seguridad Garantizada",
       description:
-        "Revisiones completas, limpiezas profesionales y tratamientos para mantener tu salud bucal.",
-      borderColor: "border-primary-500",
+        "Tu información personal y médica está protegida con los más altos estándares de seguridad y confidencialidad.",
       link: "/services#general",
     },
     {
-      icon: <FaStar />,
-      iconColor: "text-yellow-500",
-      title: "Estética Dental",
+      icon: <FaClock />,
+      iconColor: "text-accent-700",
+      title: "Atención Rápida",
       description:
-        "Blanqueamientos, carillas y tratamientos para lograr la sonrisa que siempre has deseado.",
-      borderColor: "border-primary-500",
+        "genda tu cita en minutos y recibe atención oportuna sin largas esperas.",
       link: "/services#esthetic",
     },
     {
-      icon: <PiToothFill />,
+      icon: <MdOutlineGroups3 />,
       iconColor: "text-accent-500",
-      title: "Ortodoncia",
+      title: "Equipo Profesional",
       description:
-        "Alineación dental con brackets tradicionales o invisibles para una sonrisa perfecta.",
+        "Contamos con dentistas certificados y personal capacitado para brindarte la mejor atención.",
+      link: "/services#orthodontics",
+    },
+    {
+      icon: <GiSparkles />,
+      iconColor: "text-yellow-500",
+      title: "Tecnología Avanzada",
+      description:
+        "tilizamos equipos de última generación para diagnósticos precisos y tratamientos efectivos.",
       link: "/services#orthodontics",
     },
   ];
@@ -57,7 +63,7 @@ const FeaturedServicesSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           {services.map((service, index) => (
             <motion.div
               key={index}
@@ -94,14 +100,7 @@ const FeaturedServicesSection = () => {
           transition={{ duration: 0.8, delay: 0.3 }}
           viewport={{ once: true }}
           className="text-center mt-16"
-        >
-          <Link
-            href="/services"
-            className="inline-block bg-gradient-primary dark:bg-gradient-primary-dark text-white font-bold py-4 px-10 rounded-full shadow-lg transition-all duration-300 ease-in-out text-lg transform hover:scale-105"
-          >
-            Ver Todos los Servicios
-          </Link>
-        </motion.div>
+        ></motion.div>
       </div>
     </section>
   );

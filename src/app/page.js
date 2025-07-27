@@ -2,6 +2,7 @@ import React from "react";
 import HeroSection from "../components/Home/HeroSection";
 import ClinicCarouselSection from "../components/Home/ClinicCarouselSection";
 import FeaturedServicesSection from "@/components/Home/FeaturedServicesSection";
+import WhyChooseUsSection from "@/components/Home/WhyChooseUsSection";
 
 function Home() {
   return (
@@ -9,7 +10,7 @@ function Home() {
       <HeroSection />
       <ClinicCarouselSection />
       <FeaturedServicesSection />
-      {/* Puedes agregar más secciones aquí si es necesario */}
+      <WhyChooseUsSection />
     </div>
   );
 }

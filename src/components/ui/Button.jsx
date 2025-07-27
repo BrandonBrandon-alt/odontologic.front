@@ -86,7 +86,7 @@ const DentalButton = ({
   const variants = {
     primary: `
       bg-gradient-primary dark:bg-gradient-primary-dark
-      hover:from-primary-500 hover:via-primary-500 hover:to-primary-500
+      hover:from-accent-500 hover:via-accent-500 hover:to-accent-500
       active:from-primary-600 active:via-primary-700 active:to-primary-800
       text-white font-bold
       border border-primary-600/20
@@ -101,8 +101,7 @@ const DentalButton = ({
     `,
 
     secondary: `
-      bg-gradient-to-br from-primary-400 via-primary-400 to-primary-400
-      hover:from-primary-500 hover:via-primary-500 hover:to-primary-500
+      hover:from-primary-900 hover:via-primary-900 hover:to-primary-900
       active:from-gray-200 active:via-gray-300 active:to-gray-400
       dental-text-primary border border-gray-300/50
       shadow-md shadow-gray-400/20

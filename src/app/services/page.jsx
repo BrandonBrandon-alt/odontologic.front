@@ -1,29 +1,85 @@
-"use client";
+"use client"; // Directiva para indicar que este componente es un componente de cliente en Next.js
 
-import React from "react";
-import Link from "next/link";
-
-// 1. Reemplazar íconos de Heroicons con react-icons
+import React from "react"; // Importa la librería React
+import { motion } from "framer-motion"; // Importa el componente 'motion' de Framer Motion para animaciones
+import Link from "next/link"; // Importa el componente 'Link' de Next.js para la navegación entre páginas
 import {
-  FaClock,
-  FaShieldAlt,
-  FaHeart,
-  FaTooth,
-  FaMagic,
-  FaUserMd,
-} from "react-icons/fa";
+  FaClock, // Icono de reloj
+  FaShieldAlt, // Icono de escudo
+  FaHeart, // Icono de corazón
+  FaTooth, // Icono de diente (usado como icono principal de odontología)
+  FaMagic, // Icono de magia
+  FaUserMd, // Icono de médico (no usado en este código, pero importado)
+  FaCalendarPlus, // Icono de calendario con un signo de más (para agendar cita)
+  FaMapMarkerAlt, // Icono de marcador de mapa (para ubicación)
+  FaPhone, // Icono de teléfono
+  FaClock as FaClockAlt, // Se importa FaClock de nuevo pero con un alias FaClockAlt para evitar conflicto de nombres si se necesitara usar el original FaClock también.
+} from "react-icons/fa"; // Importa varios iconos de la librería Font Awesome a través de react-icons
+import Card, { ActionCard, StatCard } from "../../components/ui/Card"; // Importa componentes de tarjeta (Card, ActionCard, StatCard) desde una ruta relativa
+import DentalButton from "../../components/ui/Button"; // Importa un componente de botón personalizado (DentalButton) desde una ruta relativa
 
-// 2. Importar tus componentes personalizados Card y Button
-import Card, { ActionCard } from "../../components/ui/Card";
-import DentalButton from "../../components/ui/Button";
+// --- Animation Variants (Variantes de Animación) ---
+// Define variantes de animación para el contenedor principal
+const containerVariants = {
+  hidden: { opacity: 0 }, // Estado inicial: oculto (opacidad 0)
+  visible: {
+    opacity: 1, // Estado final: visible (opacidad 1)
+    transition: {
+      staggerChildren: 0.1, // Retraso entre la animación de los elementos hijos
+      delayChildren: 0.2, // Retraso antes de que los hijos comiencen a animarse
+      duration: 0.6, // Duración total de la animación del contenedor
+    },
+  },
+};
 
-// Datos de servicios (sin cambios en la estructura)
+// Define variantes de animación para elementos individuales
+const itemVariants = {
+  hidden: { y: 30, opacity: 0 }, // Estado inicial: oculto (desplazado 30px hacia abajo y opacidad 0)
+  visible: {
+    y: 0, // Estado final: en su posición original
+    opacity: 1, // Estado final: visible (opacidad 1)
+    transition: {
+      type: "spring", // Tipo de animación: muelle (spring) para un movimiento más natural
+      stiffness: 100, // Rigidez del muelle
+      damping: 15, // Amortiguación del muelle
+    },
+  },
+};
+
+// Define variantes de animación para un efecto de "escalar al pasar el ratón" (hover)
+const scaleOnHover = {
+  hover: {
+    scale: 1.05, // Escala el elemento al 105% de su tamaño original
+    y: -8, // Desplaza el elemento 8px hacia arriba
+    transition: {
+      type: "spring", // Animación de muelle para una transición suave
+      stiffness: 300, // Rigidez del muelle
+      damping: 20, // Amortiguación del muelle
+    },
+  },
+};
+
+// Define variantes de animación para un efecto de "flotación"
+const floatingVariants = {
+  animate: {
+    y: [-10, 10, -10], // Anima la posición Y entre -10px, 10px y -10px para crear un efecto de flotación
+    transition: {
+      duration: 6, // Duración de un ciclo completo de la animación
+      repeat: Infinity, // Repite la animación indefinidamente
+      ease: "easeInOut", // Función de easing para una animación suave de entrada y salida
+    },
+  },
+};
+
+// --- Data (Datos) ---
+// Objeto que contiene los datos para las diferentes categorías de servicios dentales
 const servicesData = {
   general: {
-    title: "Odontología General y Preventiva",
-    color: "primary",
-    icon: "🦷",
+    title: "Odontología General y Preventiva", // Título de la categoría
+    color: "primary", // Color asociado a la categoría (probablemente usado para estilos)
+    icon: "🦷", // Icono emoji para la categoría
     services: [
+      // Array de servicios individuales dentro de esta categoría
       {
         name: "Limpieza Dental Profesional",
         description:
@@ -151,228 +207,423 @@ const servicesData = {
   },
 };
 
+// Array de información de contacto
+const contactInfo = [
+  {
+    icon: FaMapMarkerAlt, // Icono de ubicación
+    title: "Ubicación", // Título
+    content: ["Calle Principal #123", "Centro, Ciudad"], // Contenido de la ubicación
+    iconColor: "text-red-500",
+  },
+  {
+    icon: FaPhone, // Icono de teléfono
+    title: "Teléfono", // Título
+    content: ["+57 123 456 7890", "+57 098 765 4321"], // Números de teléfono
+    iconColor: "text-blue-500",
+  },
+  {
+    icon: FaClockAlt, // Icono de reloj (alias para FaClock)
+    title: "Horarios", // Título
+    content: ["Lun - Vie: 8:00 AM - 6:00 PM", "Sáb: 8:00 AM - 2:00 PM"], // Horarios de atención
+    iconColor: "text--500",
+  },
+];
+
+// --- Components (Componentes) ---
+// Componente genérico para una sección de la página
+const Section = ({ children, className = "" }) => (
+  <section className={`py-16 md:py-20 ${className}`}>
+    {" "}
+    {/* Contenedor de sección con padding vertical responsivo y clase CSS opcional */}
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {" "}
+      {/* Contenedor interno con ancho máximo, centrado y padding horizontal responsivo */}
+      {children} {/* Renderiza los componentes hijos */}
+    </div>
+  </section>
+);
+
+// Componente para el título de una sección
+const SectionTitle = ({ title, subtitle, gradient = false, icon }) => (
+  <motion.div variants={itemVariants} className="text-center mb-16">
+    {" "}
+    {/* Contenedor animado con variantes de item, centrado y margen inferior */}
+    {icon && ( // Si se proporciona un icono, lo renderiza
+      <motion.div
+        className="text-6xl mb-6" // Estilo para el icono
+        initial={{ scale: 0 }} // Estado inicial de animación: escala 0
+        animate={{ scale: 1 }} // Estado final: escala 1
+        transition={{ delay: 0.2, type: "spring", stiffness: 200 }} // Transición de animación
+      >
+        {icon} {/* Renderiza el icono */}
+      </motion.div>
+    )}
+    <motion.h2
+      className={`text-3xl md:text-4xl lg:text-5xl font-black mb-4 ${
+        // Estilo del título con tamaño de fuente responsivo y negrita
+        gradient
+          ? "bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent" // Si es gradiente, aplica estilos de gradiente de texto
+          : "text-primary-500" // Si no es gradiente, aplica color primario
+      }`}
+      initial={{ scale: 0.9, opacity: 0 }} // Estado inicial de animación
+      animate={{ scale: 1, opacity: 1 }} // Estado final
+      transition={{ duration: 0.6 }} // Duración de la transición
+    >
+      {title} {/* Renderiza el título */}
+    </motion.h2>
+    <motion.div
+      className="w-24 h-1 bg-accent-500 mx-auto rounded-full mb-6" // Línea decorativa debajo del título
+      initial={{ width: 0 }} // Estado inicial de animación: ancho 0
+      animate={{ width: 96 }} // Estado final: ancho 96px
+      transition={{ delay: 0.3, duration: 0.8 }} // Transición de animación
+    />
+    {subtitle && ( // Si se proporciona un subtítulo, lo renderiza
+      <motion.p
+        className="text-lg md:text-xl text-text-secondary max-w-4xl mx-auto leading-relaxed" // Estilo del subtítulo
+        initial={{ y: 20, opacity: 0 }} // Estado inicial de animación
+        animate={{ y: 0, opacity: 1 }} // Estado final
+        transition={{ delay: 0.4, duration: 0.6 }} // Transición de animación
+      >
+        {subtitle} {/* Renderiza el subtítulo */}
+      </motion.p>
+    )}
+  </motion.div>
+);
+
+// Componente para una tarjeta de servicio individual
+const ServiceCard = ({ service, index }) => (
+  <motion.div
+    variants={itemVariants} // Aplica variantes de animación de item
+    initial={{ scale: 0.8, opacity: 0 }} // Estado inicial de animación
+    animate={{ scale: 1, opacity: 1 }} // Estado final
+    transition={{ delay: index * 0.1, duration: 0.6 }} // Retraso de animación basado en el índice
+    whileHover={scaleOnHover.hover} // Animación al pasar el ratón
+    className="w-full max-w-md mx-auto" // Estilos de ancho y centrado
+  >
+    <ActionCard
+      className="bg-[var(--color-primary)] dark:bg-[var(--color-surface)] h-full w-full min-h-[200px] border-2 border-border dark:border-border-dark relative overflow-hidden" // Estilos de la tarjeta, incluyendo colores de fondo y bordes para temas claro/oscuro
+      title={service.name} // Título de la tarjeta (nombre del servicio)
+      description={service.description} // Descripción del servicio
+      actions={
+        // Contenido de la sección de acciones de la tarjeta
+        <div className="flex justify-between items-center w-full mt-6">
+          <span className="text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full font-medium">
+            {service.duration} {/* Duración del servicio */}
+          </span>
+          <div className="flex flex-col items-end">
+            <span className="text-sm font-bold text-primary mb-2">
+              {service.price} {/* Precio del servicio */}
+            </span>
+            <DentalButton variant="primary" size="sm">
+              Agendar {/* Botón para agendar */}
+            </DentalButton>
+          </div>
+        </div>
+      }
+    >
+      {/* Decoración de efecto hover */}
+      <motion.div
+        className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-primary to-accent" // Línea de gradiente en la parte inferior
+        initial={{ width: "0%" }} // Estado inicial: ancho 0
+        whileHover={{ width: "100%" }} // Al pasar el ratón: ancho 100%
+        transition={{ duration: 0.3 }} // Duración de la transición
+      />
+    </ActionCard>
+  </motion.div>
+);
+
+// Componente para una categoría de servicios
+const ServiceCategory = ({ category, categoryData, index }) => (
+  <motion.div
+    variants={containerVariants} // Aplica variantes de animación de contenedor
+    initial="hidden" // Estado inicial: oculto
+    whileInView="visible" // Anima a "visible" cuando el componente está en la vista
+    viewport={{ once: true, amount: 0.2 }} // Configuración del viewport para la animación (solo una vez, 20% visible)
+    className="mb-20" // Margen inferior
+  >
+    <SectionTitle title={categoryData.title} icon={categoryData.icon} />{" "}
+    {/* Título de la sección de categoría */}
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6 lg:gap-8 justify-items-center max-w-6xl mx-auto">
+      {" "}
+      {/* Grid responsivo para las tarjetas de servicio */}
+      {categoryData.services.map((service, serviceIndex) => (
+        <ServiceCard
+          key={serviceIndex} // Clave única para cada tarjeta
+          service={service} // Datos del servicio
+          index={serviceIndex} // Índice del servicio para retrasos de animación
+        />
+      ))}
+    </div>
+  </motion.div>
+);
+
+// Componente para una tarjeta de información de contacto
+const ContactCard = ({ info, index }) => (
+  <motion.div
+    variants={itemVariants} // Aplica variantes de animación de item
+    initial={{ scale: 0.8, opacity: 0 }} // Estado inicial de animación
+    animate={{ scale: 1, opacity: 1 }} // Estado final
+    transition={{ delay: index * 0.1, duration: 0.6 }} // Retraso de animación basado en el índice
+    whileHover={scaleOnHover.hover} // Animación al pasar el ratón
+    className="w-full max-w-sm mx-auto" // Estilos de ancho y centrado
+  >
+    <Card className="bg-[var(--color-primary)] dark:bg-[var(--color-surface)] text-center h-full min-h-[200px] border-2 border-border dark:border-border-dark relative overflow-hidden">
+      {" "}
+      {/* Estilos de la tarjeta de contacto */}
+      <motion.div
+        className={`text-4xl mb-4 ${info.iconColor || "text-primary"}`} // Estilo del icono
+        whileHover={{ scale: 1.2, rotate: 10 }} // Animación al pasar el ratón
+        transition={{ duration: 0.3 }} // Duración de la transición
+      >
+        <info.icon className="w-12 h-12 text-primary mx-auto" />{" "}
+        {/* Renderiza el icono con estilos */}
+      </motion.div>
+      <h3 className="text-xl font-semibold mb-2 text-text-primary">
+        {info.title} {/* Título de la información de contacto */}
+      </h3>
+      <div className="text-text-secondary">
+        {info.content.map((line, i) => (
+          <p key={i} className="mb-1">
+            {line} {/* Contenido de la información de contacto */}
+          </p>
+        ))}
+      </div>
+      {/* Decoración de fondo flotante */}
+      <motion.div
+        variants={floatingVariants} // Aplica variantes de animación de flotación
+        animate="animate" // Inicia la animación de flotación
+        className="absolute -top-4 -right-4 w-20 h-20 bg-primary/10 rounded-full blur-xl" // Estilos de la decoración
+      />
+    </Card>
+  </motion.div>
+);
+
+// Componente para la sección Hero (banner principal)
+const HeroSection = () => (
+  <motion.section
+    initial="hidden" // Estado inicial: oculto
+    animate="visible" // Anima a visible
+    variants={containerVariants} // Aplica variantes de animación de contenedor
+    className="relative bg-gradient-primary dark:bg-gradient-primary-dark text-white py-24 w-screen left-1/2 -ml-[50vw] overflow-hidden" // Estilos de la sección hero, incluyendo gradientes de fondo y centrado de ancho completo
+  >
+    {/* Decoraciones de fondo */}
+    <motion.div
+      animate={{
+        rotate: [0, 360], // Rotación de 0 a 360 grados
+        scale: [1, 1.1, 1], // Escala para un efecto de "respiración"
+      }}
+      transition={{
+        duration: 20, // Duración de la animación
+        repeat: Infinity, // Repetición infinita
+        ease: "linear", // Easing lineal
+      }}
+      className="absolute top-20 right-10 w-96 h-96 bg-white/5 rounded-full blur-3xl" // Estilos de la decoración
+    />
+    <motion.div
+      animate={{
+        rotate: [360, 0], // Rotación de 360 a 0 grados
+        scale: [1.1, 1, 1.1], // Escala para un efecto de "respiración"
+      }}
+      transition={{
+        duration: 25, // Duración de la animación
+        repeat: Infinity, // Repetición infinita
+        ease: "linear", // Easing lineal
+      }}
+      className="absolute bottom-20 left-10 w-80 h-80 bg-white/5 rounded-full blur-3xl" // Estilos de la decoración
+    />
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      {" "}
+      {/* Contenido principal de la sección hero */}
+      <motion.h1
+        variants={itemVariants} // Aplica variantes de animación de item
+        className="text-4xl md:text-5xl lg:text-6xl font-black mb-6" // Estilos del título principal
+      >
+        Nuestros Servicios Odontológicos {/* Título */}
+      </motion.h1>
+      <motion.p
+        variants={itemVariants} // Aplica variantes de animación de item
+        className="text-xl md:text-2xl opacity-90 mb-8 max-w-4xl mx-auto" // Estilos del subtítulo
+      >
+        Cuidamos tu sonrisa con tecnología de vanguardia y atención
+        personalizada {/* Descripción */}
+      </motion.p>
+      <motion.div
+        variants={containerVariants} // Aplica variantes de animación de contenedor
+        className="flex flex-wrap justify-center gap-4 text-sm" // Contenedor de características
+      >
+        <motion.div
+          variants={itemVariants} // Aplica variantes de animación de item
+          className="flex items-center space-x-2 bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm" // Estilos de la característica
+        >
+          <FaClock className="h-5 w-5" /> {/* Icono */}
+          <span>Horarios Flexibles</span> {/* Texto */}
+        </motion.div>
+        <motion.div
+          variants={itemVariants} // Aplica variantes de animación de item
+          className="flex items-center space-x-2 bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm" // Estilos de la característica
+        >
+          <FaShieldAlt className="h-5 w-5" /> {/* Icono */}
+          <span>Garantía de Calidad</span> {/* Texto */}
+        </motion.div>
+        <motion.div
+          variants={itemVariants} // Aplica variantes de animación de item
+          className="flex items-center space-x-2 bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm" // Estilos de la característica
+        >
+          <FaHeart className="h-5 w-5" /> {/* Icono */}
+          <span>Atención Personalizada</span> {/* Texto */}
+        </motion.div>
+      </motion.div>
+    </div>
+  </motion.section>
+);
+
+// Componente para la sección de Llamada a la Acción (CTA)
+const CTASection = () => (
+  <Section className="bg-gradient-primary dark:bg-gradient-primary-dark text-white w-screen left-1/2 -ml-[50vw] relative">
+    {" "}
+    {/* Estilos de la sección CTA */}
+    {/* Decoraciones de fondo */}
+    <motion.div
+      animate={{ rotate: [0, 360] }} // Animación de rotación
+      transition={{ duration: 30, repeat: Infinity, ease: "linear" }} // Transición
+      className="absolute -top-20 -right-20 w-40 h-40 border border-white/10 rounded-full" // Estilos de la decoración
+    />
+    <motion.div
+      animate={{ rotate: [360, 0] }} // Animación de rotación inversa
+      transition={{ duration: 25, repeat: Infinity, ease: "linear" }} // Transición
+      className="absolute -bottom-20 -left-20 w-32 h-32 border border-white/10 rounded-full" // Estilos de la decoración
+    />
+    <motion.div
+      initial="hidden" // Estado inicial: oculto
+      whileInView="visible" // Anima a visible cuando está en la vista
+      viewport={{ once: true, amount: 0.5 }} // Configuración del viewport
+      variants={containerVariants} // Aplica variantes de animación de contenedor
+      className="text-center relative z-10" // Estilos del contenido
+    >
+      <motion.div
+        variants={itemVariants} // Aplica variantes de animación de item
+        className="inline-flex p-4 mb-8 bg-white/10 rounded-2xl backdrop-blur-sm" // Estilos del contenedor del icono
+      >
+        <FaMagic className="w-12 h-12 text-white" /> {/* Icono de magia */}
+      </motion.div>
+      <motion.h2
+        variants={itemVariants} // Aplica variantes de animación de item
+        className="text-3xl md:text-4xl font-bold mb-6" // Estilos del título
+      >
+        ¿Listo para Transformar tu Sonrisa? {/* Título */}
+      </motion.h2>
+      <motion.p
+        variants={itemVariants} // Aplica variantes de animación de item
+        className="text-xl mb-8 opacity-90 max-w-3xl mx-auto" // Estilos del subtítulo
+      >
+        Agenda tu cita hoy y recibe una consulta de evaluación gratuita{" "}
+        {/* Descripción */}
+      </motion.p>
+      <motion.div
+        variants={itemVariants} // Aplica variantes de animación de item
+        className="flex flex-col sm:flex-row gap-4 justify-center" // Contenedor de botones
+      >
+        <DentalButton
+          variant="primary" // Variante del botón
+          size="lg" // Tamaño del botón
+          icon={<FaCalendarPlus />} // Icono del botón
+          className="bg-white text-primary font-bold shadow-dental-xl hover:shadow-dental-2xl border " // Estilos adicionales
+        >
+          Agendar Cita {/* Texto del botón */}
+        </DentalButton>
+        <Link href="/contact">
+          {" "}
+          {/* Enlace a la página de contacto */}
+          <DentalButton
+            variant="secondary" // Variante del botón
+            size="lg" // Tamaño del botón
+            className="border-2 border-white text-white hover:bg-white hover:text-primary-500 backdrop-blur-sm" // Estilos adicionales
+          >
+            Contactar {/* Texto del botón */}
+          </DentalButton>
+        </Link>
+      </motion.div>
+    </motion.div>
+  </Section>
+);
+
+// Componente para la sección de Contacto
+const ContactSection = () => (
+  <Section>
+    <motion.div
+      initial="hidden" // Estado inicial: oculto
+      whileInView="visible" // Anima a visible cuando está en la vista
+      viewport={{ once: true, amount: 0.3 }} // Configuración del viewport
+      variants={containerVariants} // Aplica variantes de animación de contenedor
+    >
+      <SectionTitle
+        title="Información de Contacto" // Título de la sección
+        subtitle="Estamos aquí para ayudarte. Contáctanos por cualquiera de estos medios." // Subtítulo
+      />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 justify-items-center max-w-4xl mx-auto">
+        {" "}
+        {/* Grid responsivo para las tarjetas de contacto */}
+        {contactInfo.map((info, index) => (
+          <ContactCard key={index} info={info} index={index} /> // Renderiza las tarjetas de contacto
+        ))}
+      </div>
+    </motion.div>
+  </Section>
+);
+
+// --- Main Services Page Component (Componente Principal de la Página de Servicios) ---
+// Este es el componente principal que compone toda la página de servicios
 function ServicesPage() {
   return (
-    <div className="min-h-screen dental-bg-background">
-      {/* Hero Section */}
-      <section className="bg-gradient-primary dark:bg-gradient-primary-dark text-white py-24 animate-fade-in relative w-screen left-1/2 -ml-[50vw]">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 animate-slide-up">
-            Nuestros Servicios Odontológicos
-          </h1>
-          <p
-            className="text-xl md:text-2xl opacity-90 mb-8 max-w-4xl mx-auto animate-slide-up"
-            style={{ animationDelay: "0.1s" }}
-          >
-            Cuidamos tu sonrisa con tecnología de vanguardia y atención
-            personalizada
-          </p>
-          <div
-            className="flex flex-wrap justify-center gap-4 text-sm animate-slide-up"
-            style={{ animationDelay: "0.2s" }}
-          >
-            {/* 3. Íconos reemplazados */}
-            <div className="flex items-center space-x-2 bg-white/20 px-4 py-2 rounded-full">
-              <FaClock className="h-5 w-5" />
-              <span>Horarios Flexibles</span>
-            </div>
-            <div className="flex items-center space-x-2 bg-white/20 px-4 py-2 rounded-full">
-              <FaShieldAlt className="h-5 w-5" />
-              <span>Garantía de Calidad</span>
-            </div>
-            <div className="flex items-center space-x-2 bg-white/20 px-4 py-2 rounded-full">
-              <FaHeart className="h-5 w-5" />
-              <span>Atención Personalizada</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Servicios por Categorías */}
-      <section className="py-10">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {Object.entries(servicesData).map(
-            ([category, categoryData], categoryIndex) => (
-              <div
-                key={category}
-                className="mb-20 animate-fade-in-up"
-                style={{ animationDelay: `${categoryIndex * 0.2}s` }}
-              >
-                <div className="text-center mb-12">
-                  <div className="text-6xl mb-4">{categoryData.icon}</div>
-                  <h2 className="text-3xl md:text-4xl font-bold text-primary-500 mb-4">
-                    {categoryData.title}
-                  </h2>
-                  <div className="w-24 h-1 bg-accent-500 mx-auto rounded-full"></div>
-                </div>
-
-                {/* 4. Uso de ActionCard con DentalButton - Centrado y responsive */}
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6 lg:gap-8 justify-items-center max-w-6xl mx-auto">
-                  {categoryData.services.map((service, serviceIndex) => (
-                    <div
-                      key={serviceIndex}
-                      className="w-full max-w-md animate-slide-up"
-                      style={{
-                        animationDelay: `${
-                          categoryIndex * 0.2 + serviceIndex * 0.1
-                        }s`,
-                      }}
-                    >
-                      <ActionCard
-                        className=" bg-[var(--color-primary)] dark:bg-[var(--color-surface)] h-full w-full  min-h-[200px] border-2 border-border dark:border-border-dark "
-                        title={service.name}
-                        description={service.description}
-                        actions={
-                          <div className="flex justify-between items-center w-full mt-6">
-                            <span className="text-sm bg-gray-200 text-gray-700 px-3 py-1 rounded-full font-medium">
-                              {service.duration}
-                            </span>
-                            <DentalButton variant="primary" size="sm">
-                              Agendar
-                            </DentalButton>
-                          </div>
-                        }
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )
-          )}
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="bg-gradient-primary dark:bg-gradient-primary-dark text-white py-24 animate-fade-in relative w-screen left-1/2 -ml-[50vw]">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 animate-slide-up">
-            ¿Listo para Transformar tu Sonrisa?
-          </h2>
-          <p
-            className="text-xl mb-8 opacity-90 animate-slide-up"
-            style={{ animationDelay: "0.1s" }}
-          >
-            Agenda tu cita hoy y recibe una consulta de evaluación gratuita
-          </p>
-          <div
-            className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up"
-            style={{ animationDelay: "0.2s" }}
-          >
-            {/* 5. Botones reemplazados por DentalButton */}
-            <DentalButton variant="primary">Agendar Cita</DentalButton>
-            <Link href="/contact">
-              {/* Se usa la variante 'outline' y se ajustan colores para fondo oscuro */}
-              <DentalButton
-                variant="outline"
-                size="lg"
-                className="border-white text-white hover:bg-white hover:text-primary-500"
-              >
-                Contactar
-              </DentalButton>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Información de Contacto */}
-      <section className="py-16 animate-fade-in">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-primary-500 mb-4">
-              Información de Contacto
-            </h2>
-            <div className="w-24 h-1 bg-accent-500 mx-auto rounded-full"></div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 justify-items-center max-w-4xl mx-auto">
-            <div className="w-full max-w-sm">
-              <Card className="bg-[var(--color-primary)] dark:bg-[var(--color-surface)] text-center h-full min-h-[200px] border-2 border-border dark:border-border-dark">
-                <div className=" text-4xl mb-4">📍</div>
-                <h3 className="text-xl font-semibold mb-2">Ubicación</h3>
-                <p className="text-gray-100">
-                  Calle Principal #123
-                  <br />
-                  Centro, Ciudad
-                </p>
-              </Card>
-            </div>
-
-            <div className="w-full max-w-sm">
-              <Card className="bg-[var(--color-primary)] dark:bg-[var(--color-surface)] text-center h-full min-h-[200px] border-2 border-border dark:border-border-dark">
-                <div className="text-4xl mb-4">📞</div>
-                <h3 className="text-xl font-semibold mb-2">Teléfono</h3>
-                <p className="text-gray-100">
-                  +57 123 456 7890
-                  <br />
-                  +57 098 765 4321
-                </p>
-              </Card>
-            </div>
-
-            <div className="w-full max-w-sm">
-              <Card className="bg-[var(--color-primary)] dark:bg-[var(--color-surface)] text-center h-full min-h-[200px] border-2 border-border dark:border-border-dark">
-                <div className="text-4xl mb-4">⏰</div>
-                <h3 className="text-xl font-semibold mb-2">Horarios</h3>
-                <p className="text-gray-100">
-                  Lun - Vie: 8:00 AM - 6:00 PM
-                  <br />
-                  Sáb: 8:00 AM - 2:00 PM
-                </p>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <style jsx>{`
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
-        @keyframes slide-up {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes fade-in-up {
-          from {
-            opacity: 0;
-            transform: translateY(50px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-fade-in {
-          animation: fade-in 0.6s ease-out forwards;
-          opacity: 0;
-        }
-
-        .animate-slide-up {
-          animation: slide-up 0.6s ease-out forwards;
-          opacity: 0;
-        }
-
-        .animate-fade-in-up {
-          animation: fade-in-up 0.8s ease-out forwards;
-          opacity: 0;
-        }
-      `}</style>
+    <div className="min-h-screen dental-bg-background relative">
+      {" "}
+      {/* Contenedor principal de la página con altura mínima de pantalla y fondo temático */}
+      {/* Decoraciones de fondo fijas */}
+      <div className="fixed inset-0 -z-10">
+        <motion.div
+          animate={{
+            rotate: [0, 360],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-primary/5 to-accent/5 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{
+            rotate: [360, 0],
+            scale: [1.1, 1, 1.1],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="absolute bottom-20 left-10 w-80 h-80 bg-gradient-to-br from-accent/5 to-primary/5 rounded-full blur-3xl"
+        />
+      </div>
+      {/* Sección Hero */}
+      <HeroSection />
+      {/* Categorías de Servicios */}
+      <Section>
+        {Object.entries(servicesData).map(([category, categoryData], index) => (
+          <ServiceCategory
+            key={category} // Clave única para cada categoría
+            category={category} // Nombre de la categoría
+            categoryData={categoryData} // Datos de la categoría
+            index={index} // Índice de la categoría para posibles retrasos de animación
+          />
+        ))}
+      </Section>
+      {/* Sección CTA */}
+      <CTASection />
+      {/* Sección de Contacto */}
+      <ContactSection />
     </div>
   );
 }
 
-export default ServicesPage;
+export default ServicesPage; // Exporta el componente principal para que pueda ser usado en otras partes de la aplicación

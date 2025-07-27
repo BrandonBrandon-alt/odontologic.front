@@ -56,7 +56,6 @@
 
 
 
-
 /* 3. Tus componentes y utilidades personalizadas se quedan igual */
 /* Estos seguirán funcionando porque usan las variables CSS que definimos arriba */
 @layer components {
