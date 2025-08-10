@@ -1,7 +1,6 @@
-"use client";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "../context/AuthContext";
+import Providers from "./providers";
 import Navbar from "@/components/ui/navbar/Navbar";
 import Footer from "@/components/ui/Footer";
 
@@ -18,17 +17,12 @@ const geistMono = Geist_Mono({
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
-      >
-        <AuthProvider>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}>
+        <Providers>
           <Navbar />
-          <main className="flex-grow container mx-auto px-dental-md pt-20 pb-dental-lg">
-            {" "}
-            {children}
-          </main>
+          <main className="flex-grow container mx-auto px-dental-md pt-20 pb-dental-lg">{children}</main>
           <Footer />
-        </AuthProvider>
+        </Providers>
       </body>
     </html>
   );

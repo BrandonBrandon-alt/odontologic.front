@@ -1,7 +1,12 @@
-'use client';
+"use client";
 import React from 'react';
 import { motion } from 'framer-motion';
-import Carousel from '../ui/Carousel';
+import dynamic from 'next/dynamic';
+
+const Carousel = dynamic(() => import('../ui/Carousel'), {
+  ssr: false,
+  loading: () => <div style={{ height: 600 }} className="w-full animate-pulse bg-gray-200 dark:bg-neutral-800 rounded-2xl" />,
+});
 
 const itemVariants = {
     hidden: { opacity: 0, y: 30 },
