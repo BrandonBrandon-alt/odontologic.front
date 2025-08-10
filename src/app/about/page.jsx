@@ -12,107 +12,158 @@ import {
   ShieldCheckIcon,
   TrophyIcon,
   StarIcon,
+  LightBulbIcon,
+  CheckCircleIcon,
+  MapPinIcon,
+  PhoneIcon,
 } from "@heroicons/react/24/outline";
-import { FaCalendarPlus, FaStethoscope } from "react-icons/fa";
+import { FaCalendarPlus, FaStethoscope, FaAward, FaUsers, FaSmile } from "react-icons/fa";
 import { clinicData } from "@/lib/data";
 import Image from "next/image";
 import DentalButton from "@/components/ui/Button";
 import Card, { StatCard } from "@/components/ui/Card";
 
-// --- Animation Variants ---
+// --- Enhanced Animation Variants ---
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-      duration: 0.6,
+      staggerChildren: 0.15,
+      delayChildren: 0.1,
+      duration: 0.8,
     },
   },
 };
 
 const itemVariants = {
-  hidden: { y: 30, opacity: 0 },
+  hidden: { y: 50, opacity: 0, scale: 0.9 },
   visible: {
     y: 0,
+    opacity: 1,
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 80,
+      damping: 20,
+    },
+  },
+};
+
+const slideInFromLeft = {
+  hidden: { x: -100, opacity: 0 },
+  visible: {
+    x: 0,
     opacity: 1,
     transition: {
       type: "spring",
       stiffness: 100,
-      damping: 15,
+      damping: 20,
+    },
+  },
+};
+
+const slideInFromRight = {
+  hidden: { x: 100, opacity: 0 },
+  visible: {
+    x: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 20,
     },
   },
 };
 
 const scaleOnHover = {
   hover: {
-    scale: 1.05,
-    y: -8,
+    scale: 1.08,
+    y: -12,
     transition: {
       type: "spring",
-      stiffness: 300,
-      damping: 20,
+      stiffness: 400,
+      damping: 25,
     },
   },
 };
 
 const floatingVariants = {
   animate: {
-    y: [-10, 10, -10],
+    y: [-15, 15, -15],
+    rotate: [0, 5, 0],
     transition: {
-      duration: 6,
+      duration: 8,
       repeat: Infinity,
       ease: "easeInOut",
     },
   },
 };
 
-// --- Shared Components ---
-const Section = ({ children, className = "" }) => (
-  <section className={`py-16 md:py-20 ${className}`}>
+const pulseVariants = {
+  animate: {
+    scale: [1, 1.1, 1],
+    opacity: [0.7, 1, 0.7],
+    transition: {
+      duration: 3,
+      repeat: Infinity,
+      ease: "easeInOut",
+    },
+  },
+};
+
+// --- Enhanced Shared Components ---
+const Section = ({ children, className = "", background = "" }) => (
+  <section className={`py-20 md:py-28 ${background} ${className}`}>
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {children}
     </div>
   </section>
 );
 
-const SectionTitle = ({ title, subtitle, gradient = false, icon }) => (
-  <motion.div variants={itemVariants} className="text-center mb-16">
+const SectionTitle = ({ title, subtitle, gradient = false, icon, size = "large" }) => (
+  <motion.div 
+    variants={itemVariants} 
+    className="text-center mb-20"
+  >
     {icon && (
       <motion.div
-        className="text-6xl mb-6"
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+        className="text-7xl mb-8"
+        initial={{ scale: 0, rotate: -180 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
       >
         {icon}
       </motion.div>
     )}
     <motion.h2
-      className={`text-3xl md:text-4xl lg:text-5xl font-black mb-4 ${
+      className={`${
+        size === "large" 
+          ? "text-4xl md:text-5xl lg:text-6xl" 
+          : "text-3xl md:text-4xl lg:text-5xl"
+      } font-black mb-6 leading-tight ${
         gradient
           ? "bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent"
-          : "text-primary"
+          : "text-primary-500"
       }`}
-      initial={{ scale: 0.9, opacity: 0 }}
+      initial={{ scale: 0.8, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      transition={{ duration: 0.6 }}
+      transition={{ delay: 0.4, duration: 0.8 }}
     >
       {title}
     </motion.h2>
     <motion.div
-      className="w-24 h-1 bg-accent mx-auto rounded-full mb-6"
+      className="w-32 h-1.5 bg-accent-500 mx-auto rounded-full mb-8"
       initial={{ width: 0 }}
-      animate={{ width: 96 }}
-      transition={{ delay: 0.3, duration: 0.8 }}
+      animate={{ width: 128 }}
+      transition={{ delay: 0.5, duration: 1 }}
     />
     {subtitle && (
       <motion.p
-        className="text-lg md:text-xl text-text-secondary max-w-4xl mx-auto leading-relaxed"
-        initial={{ y: 20, opacity: 0 }}
+        className="text-xl md:text-2xl text-text-secondary max-w-5xl mx-auto leading-relaxed font-medium"
+        initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.4, duration: 0.6 }}
+        transition={{ delay: 0.6, duration: 0.8 }}
       >
         {subtitle}
       </motion.p>
@@ -120,18 +171,42 @@ const SectionTitle = ({ title, subtitle, gradient = false, icon }) => (
   </motion.div>
 );
 
-// --- Hero Section Component ---
+// --- Redesigned Hero Section ---
 const HeroSection = () => (
   <motion.section
     initial="hidden"
     animate="visible"
     variants={containerVariants}
-    className="relative bg-gradient-primary dark:bg-gradient-primary-dark text-white py-24 w-screen left-1/2 -ml-[50vw] overflow-hidden"
+    className="relative bg-gradient-primary dark:bg-gradient-primary-dark text-white py-32 w-screen left-1/2 -ml-[50vw] overflow-hidden"
   >
-    {/* Background decorations */}
+    {/* Enhanced Background decorations */}
     <motion.div
       animate={{
         rotate: [0, 360],
+        scale: [1, 1.2, 1],
+      }}
+      transition={{
+        duration: 25,
+        repeat: Infinity,
+        ease: "linear",
+      }}
+      className="absolute top-10 right-10 w-[500px] h-[500px] bg-white/10 rounded-full blur-3xl"
+    />
+    <motion.div
+      animate={{
+        rotate: [360, 0],
+        scale: [1.2, 1, 1.2],
+      }}
+      transition={{
+        duration: 30,
+        repeat: Infinity,
+        ease: "linear",
+      }}
+      className="absolute bottom-10 left-10 w-[400px] h-[400px] bg-white/10 rounded-full blur-3xl"
+    />
+    <motion.div
+      animate={{
+        rotate: [0, 180, 360],
         scale: [1, 1.1, 1],
       }}
       transition={{
@@ -139,62 +214,56 @@ const HeroSection = () => (
         repeat: Infinity,
         ease: "linear",
       }}
-      className="absolute top-20 right-10 w-96 h-96 bg-white/5 rounded-full blur-3xl"
-    />
-    <motion.div
-      animate={{
-        rotate: [360, 0],
-        scale: [1.1, 1, 1.1],
-      }}
-      transition={{
-        duration: 25,
-        repeat: Infinity,
-        ease: "linear",
-      }}
-      className="absolute bottom-20 left-10 w-80 h-80 bg-white/5 rounded-full blur-3xl"
+      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl"
     />
 
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-      {/* Floating elements */}
+      {/* Enhanced Floating elements */}
       <motion.div
         variants={floatingVariants}
         animate="animate"
-        className="absolute top-20 left-20 text-white/20"
+        className="absolute top-20 left-20 text-white/30"
       >
-        <SparklesIcon className="w-12 h-12" />
+        <SparklesIcon className="w-16 h-16" />
       </motion.div>
       <motion.div
         variants={floatingVariants}
         animate="animate"
-        className="absolute top-32 right-32 text-white/20"
+        className="absolute top-40 right-40 text-white/30"
       >
-        <HeartIcon className="w-10 h-10" />
+        <HeartIcon className="w-14 h-14" />
+      </motion.div>
+      <motion.div
+        variants={floatingVariants}
+        animate="animate"
+        className="absolute bottom-40 left-40 text-white/30"
+      >
+        <TrophyIcon className="w-12 h-12" />
       </motion.div>
 
       <motion.h1
         variants={itemVariants}
-        className="text-4xl md:text-5xl lg:text-6xl font-black mb-6"
+        className="text-5xl md:text-6xl lg:text-7xl font-black mb-8 leading-tight"
       >
-        <span>Cuidando Sonrisas,</span>
-        <br />
-        <span className="text-white">Transformando Vidas</span>
+        <span className="block">Cuidando Sonrisas,</span>
+        <span className="block text-white/90">Transformando Vidas</span>
       </motion.h1>
 
       <motion.p
         variants={itemVariants}
-        className="text-xl md:text-2xl opacity-90 mb-12 max-w-5xl mx-auto leading-relaxed"
+        className="text-2xl md:text-3xl opacity-90 mb-16 max-w-6xl mx-auto leading-relaxed font-medium"
       >
-        Desde <span className="font-bold">{clinicData.founded}</span>, hemos
+        Desde <span className="font-bold text-white">{clinicData.founded}</span>, hemos
         combinado la
-        <span className="font-semibold"> excelencia médica</span> con la
-        <span className="font-semibold"> última tecnología</span> para ofrecer
+        <span className="font-semibold text-white"> excelencia médica</span> con la
+        <span className="font-semibold text-white"> última tecnología</span> para ofrecer
         una experiencia dental inigualable en Colombia.
       </motion.p>
 
       {/* Enhanced Stats Grid */}
       <motion.div
         variants={containerVariants}
-        className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-5xl mx-auto"
+        className="grid grid-cols-1 sm:grid-cols-3 gap-10 max-w-6xl mx-auto"
       >
         <EnhancedStatCard
           icon={CalendarDaysIcon}
@@ -225,26 +294,26 @@ const EnhancedStatCard = ({ icon: Icon, value, label, delay = 0 }) => (
     variants={itemVariants}
     initial={{ scale: 0.8, opacity: 0 }}
     animate={{ scale: 1, opacity: 1 }}
-    transition={{ delay, duration: 0.5 }}
+    transition={{ delay, duration: 0.6 }}
     whileHover={scaleOnHover.hover}
     className="w-full max-w-sm mx-auto"
   >
     <StatCard
       title={label}
       value={value}
-      icon={<Icon className="w-8 h-8 text-white" />}
-      className="bg-[var(--color-primary)] dark:bg-[var(--color-surface)] text-center text-surface h-full min-h-[160px] "
+      icon={<Icon className="w-10 h-10 text-white" />}
+      className="bg-white/20 backdrop-blur-xl border border-white/30 text-center text-white h-full min-h-[180px] shadow-2xl"
     >
       <motion.div
-        variants={floatingVariants}
+        variants={pulseVariants}
         animate="animate"
-        className="absolute -top-4 -right-4 w-20 h-20 bg-white/5 rounded-full blur-xl"
+        className="absolute -top-6 -right-6 w-24 h-24 bg-white/10 rounded-full blur-xl"
       />
     </StatCard>
   </motion.div>
 );
 
-// --- History and Mission Section ---
+// --- Redesigned History and Mission Section ---
 const HistoryMissionSection = () => (
   <Section>
     <motion.div
@@ -252,59 +321,63 @@ const HistoryMissionSection = () => (
       whileInView="visible"
       viewport={{ once: true, amount: 0.3 }}
       variants={containerVariants}
-      className="grid lg:grid-cols-2 gap-16 items-center"
+      className="grid lg:grid-cols-2 gap-20 items-center"
     >
-      <motion.div variants={itemVariants} className="space-y-6">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
-            <TrophyIcon className="w-6 h-6 text-white" />
+      <motion.div variants={slideInFromLeft} className="space-y-8">
+        <div className="flex items-center space-x-4 mb-8">
+          <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center shadow-xl">
+            <TrophyIcon className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-4xl font-bold text-primary">Nuestra Historia</h2>
+          <h2 className="text-5xl font-black text-primary">Nuestra Historia</h2>
         </div>
 
-        <div className="space-y-6 text-text-secondary text-lg leading-relaxed">
-          <p className="relative pl-6">
-            <span className="absolute left-0 top-2 w-2 h-2 bg-primary rounded-full"></span>
-            Fundada en{" "}
-            <span className="font-bold text-primary">{clinicData.founded}</span>
-            , {clinicData.name} nació con la visión de ser un referente en salud
-            oral, donde cada paciente se sienta seguro, cómodo y valorado.
-          </p>
-          <p className="relative pl-6">
-            <span className="absolute left-0 top-2 w-2 h-2 bg-accent rounded-full"></span>
-            A lo largo de los años, hemos crecido hasta convertirnos en una de
-            las clínicas más respetadas, gracias a nuestro compromiso
-            inquebrantable con la calidad y la atención personalizada.
-          </p>
+        <div className="space-y-8 text-text-secondary text-xl leading-relaxed">
+          <div className="relative pl-8">
+            <span className="absolute left-0 top-3 w-3 h-3 bg-primary rounded-full shadow-lg"></span>
+            <p>
+              Fundada en{" "}
+              <span className="font-bold text-primary text-2xl">{clinicData.founded}</span>
+              , {clinicData.name} nació con la visión de ser un referente en salud
+              oral, donde cada paciente se sienta seguro, cómodo y valorado.
+            </p>
+          </div>
+          <div className="relative pl-8">
+            <span className="absolute left-0 top-3 w-3 h-3 bg-accent rounded-full shadow-lg"></span>
+            <p>
+              A lo largo de los años, hemos crecido hasta convertirnos en una de
+              las clínicas más respetadas, gracias a nuestro compromiso
+              inquebrantable con la calidad y la atención personalizada.
+            </p>
+          </div>
         </div>
       </motion.div>
 
-      <motion.div variants={itemVariants} className="relative">
+      <motion.div variants={slideInFromRight} className="relative">
         <Card
           variant="default"
-          className="bg-[var(--color-primary)] dark:bg-[var(--color-surface)] border-2 border-border dark:border-border-dark backdrop-blur-xl"
+          className="bg-[var(--color-primary)] dark:bg-[var(--color-surface)] border-2 border-border dark:border-border-dark shadow-2xl backdrop-blur-xl p-8"
         >
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
-              <ShieldCheckIcon className="w-5 h-5 text-white" />
+          <div className="flex items-center space-x-4 mb-8">
+            <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+              <ShieldCheckIcon className="w-6 h-6 text-white" />
             </div>
-            <h3 className="text-2xl font-bold text-text-primary">
+            <h3 className="text-3xl font-bold text-text-primary">
               Misión y Visión
             </h3>
           </div>
 
-          <div className="space-y-6">
-            <div className="p-4 bg-primary/5 rounded-xl border-l-4 border-primary">
-              <p className="text-text-secondary">
-                <strong className="text-primary text-lg">Misión:</strong>{" "}
+          <div className="space-y-8">
+            <div className="p-6 bg-primary/10 rounded-2xl border-l-4 border-primary shadow-lg">
+              <p className="text-text-secondary text-lg">
+                <strong className="text-primary text-xl">Misión:</strong>{" "}
                 Proporcionar atención dental integral de la más alta calidad
                 para mejorar la salud y la vida de nuestros pacientes.
               </p>
             </div>
 
-            <div className="p-4 bg-accent/5 rounded-xl border-l-4 border-accent">
-              <p className="text-text-secondary">
-                <strong className="text-accent text-lg">Visión:</strong> Ser la
+            <div className="p-6 bg-accent/10 rounded-2xl border-l-4 border-accent shadow-lg">
+              <p className="text-text-secondary text-lg">
+                <strong className="text-accent text-xl">Visión:</strong> Ser la
                 clínica dental líder en innovación, excelencia médica y
                 satisfacción del paciente en Colombia.
               </p>
@@ -316,20 +389,21 @@ const HistoryMissionSection = () => (
   </Section>
 );
 
-// --- Values Section ---
+// --- Redesigned Values Section ---
 const ValuesSection = () => (
   <Section>
     <SectionTitle
-      title="Nuestros Valores"
-      subtitle="Los principios que guían cada una de nuestras acciones y decisiones."
+      title="Nuestros Valores Fundamentales"
+      subtitle="Los principios que guían cada una de nuestras acciones y decisiones, creando la base de nuestra excelencia."
       gradient={true}
+      icon="💎"
     />
     <motion.div
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={containerVariants}
-      className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8 justify-items-center max-w-6xl mx-auto"
+      className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 lg:gap-10 justify-items-center max-w-7xl mx-auto"
     >
       {clinicData.values.map((value, index) => (
         <ValueCard key={index} {...value} index={index} />
@@ -338,53 +412,61 @@ const ValuesSection = () => (
   </Section>
 );
 
-// --- Value Card Component ---
+// --- Enhanced Value Card Component ---
 const ValueCard = ({ icon: Icon, title, description, index }) => (
   <motion.div
     variants={itemVariants}
     initial={{ scale: 0.8, opacity: 0 }}
     animate={{ scale: 1, opacity: 1 }}
-    transition={{ delay: index * 0.1, duration: 0.6 }}
+    transition={{ delay: index * 0.15, duration: 0.8 }}
     whileHover={scaleOnHover.hover}
-    className="w-full max-w-md mx-auto"
+    className="w-full max-w-sm mx-auto"
   >
     <Card
       variant="default"
-      className="bg-[var(--color-primary)] dark:bg-[var(--color-surface)] text-center h-full min-h-[250px] border-2 border-border dark:border-border-dark relative overflow-hidden"
+      className="bg-[var(--color-primary)] dark:bg-[var(--color-surface)] text-center h-full min-h-[300px] border-2 border-border dark:border-border-dark shadow-2xl relative overflow-hidden group"
     >
       <motion.div
-        whileHover={{ scale: 1.2, rotate: 10 }}
-        className="inline-flex p-4 mb-6 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl"
+        whileHover={{ scale: 1.3, rotate: 15 }}
+        className="inline-flex p-6 mb-8 bg-gradient-to-br from-primary/20 to-accent/20 rounded-3xl shadow-lg"
       >
-        <Icon className="w-10 h-10 text-primary" />
+        <Icon className="w-12 h-12 text-primary" />
       </motion.div>
-      <h3 className="text-xl font-bold text-text-primary mb-3">{title}</h3>
-      <p className="text-text-secondary leading-relaxed">{description}</p>
+      <h3 className="text-2xl font-bold text-text-primary mb-4">{title}</h3>
+      <p className="text-text-secondary leading-relaxed text-lg">{description}</p>
 
-      {/* Hover effect decoration */}
+      {/* Enhanced hover effect decoration */}
       <motion.div
-        className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-primary to-accent"
+        className="absolute bottom-0 left-0 h-2 bg-gradient-to-r from-primary to-accent rounded-t-full"
         initial={{ width: "0%" }}
         whileHover={{ width: "100%" }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.4 }}
+      />
+      
+      {/* Background decoration */}
+      <motion.div
+        variants={floatingVariants}
+        animate="animate"
+        className="absolute -top-8 -right-8 w-32 h-32 bg-primary/5 rounded-full blur-2xl"
       />
     </Card>
   </motion.div>
 );
 
-// --- Team Section ---
+// --- Redesigned Team Section ---
 const TeamSection = () => (
   <Section>
     <SectionTitle
-      title="Un Equipo de Expertos a tu Servicio"
-      subtitle="Conoce a los profesionales dedicados a cuidar de tu sonrisa con pasión y excelencia."
+      title="Nuestro Equipo de Expertos"
+      subtitle="Conoce a los profesionales dedicados a cuidar de tu sonrisa con pasión, experiencia y excelencia médica."
+      icon="👨‍⚕️"
     />
     <motion.div
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={containerVariants}
-      className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8 justify-items-center max-w-6xl mx-auto"
+      className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 lg:gap-10 justify-items-center max-w-7xl mx-auto"
     >
       {clinicData.team.map((member, index) => (
         <TeamMemberCard key={index} member={member} index={index} />
@@ -393,82 +475,83 @@ const TeamSection = () => (
   </Section>
 );
 
-// --- Team Member Card Component ---
+// --- Enhanced Team Member Card Component ---
 const TeamMemberCard = ({ member, index }) => (
   <motion.div
     variants={itemVariants}
     initial={{ scale: 0.8, opacity: 0 }}
     animate={{ scale: 1, opacity: 1 }}
-    transition={{ delay: index * 0.15, duration: 0.6 }}
+    transition={{ delay: index * 0.2, duration: 0.8 }}
     whileHover={scaleOnHover.hover}
-    className="w-full max-w-md mx-auto"
+    className="w-full max-w-sm mx-auto"
   >
     <Card
       variant="default"
-      className="bg-[var(--color-primary)] dark:bg-[var(--color-surface)] h-full border-2 border-border dark:border-border-dark relative overflow-hidden"
+      className="bg-[var(--color-primary)] dark:bg-[var(--color-surface)] h-full border-2 border-border dark:border-border-dark shadow-2xl relative overflow-hidden group"
     >
-      {/* Image container */}
-      <div className="relative h-56 w-full overflow-hidden rounded-t-lg">
+      {/* Enhanced Image container */}
+      <div className="relative h-64 w-full overflow-hidden rounded-t-2xl">
         <Image
           src={member.image}
           alt={`Foto de ${member.name}`}
           layout="fill"
           objectFit="cover"
-          className="transition-transform duration-500 group-hover:scale-110"
+          className="transition-transform duration-700 group-hover:scale-110"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ delay: index * 0.2 + 0.5 }}
-          className="absolute top-4 right-4 bg-white/90 dark:bg-surface-secondary/90 p-2 rounded-full shadow-lg"
+          transition={{ delay: index * 0.3 + 0.5 }}
+          className="absolute top-4 right-4 bg-white/95 dark:bg-surface-secondary/95 p-3 rounded-full shadow-xl"
         >
-          <StarIcon className="w-5 h-5 text-primary" />
+          <StarIcon className="w-6 h-6 text-primary" />
         </motion.div>
       </div>
 
-      {/* Content */}
-      <div className="p-6 text-center">
+      {/* Enhanced Content */}
+      <div className="p-8 text-center">
         <motion.div
-          initial={{ y: 20, opacity: 0 }}
+          initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: index * 0.2 + 0.3 }}
+          transition={{ delay: index * 0.3 + 0.3 }}
         >
-          <h3 className="text-xl font-bold text-text-primary mb-2">
+          <h3 className="text-2xl font-bold text-text-primary mb-3">
             {member.name}
           </h3>
-          <p className="text-primary font-semibold mb-2">{member.specialty}</p>
-          <p className="text-sm text-text-secondary leading-relaxed">
+          <p className="text-primary font-semibold text-lg mb-3">{member.specialty}</p>
+          <p className="text-text-secondary leading-relaxed">
             {member.education}
           </p>
         </motion.div>
 
-        {/* Decorative line */}
+        {/* Enhanced decorative line */}
         <motion.div
-          className="absolute bottom-0 left-6 right-6 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent"
+          className="absolute bottom-0 left-8 right-8 h-1 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full"
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
-          transition={{ delay: index * 0.2 + 0.6, duration: 0.8 }}
+          transition={{ delay: index * 0.3 + 0.8, duration: 1 }}
         />
       </div>
     </Card>
   </motion.div>
 );
 
-// --- Why Choose Us Section ---
+// --- Redesigned Why Choose Us Section ---
 const WhyChooseUsSection = () => (
   <Section>
     <SectionTitle
       title="¿Por Qué Elegirnos?"
-      subtitle="Descubre las razones por las que miles de pacientes confían en nosotros día a día."
+      subtitle="Descubre las razones por las que miles de pacientes confían en nosotros día a día para el cuidado de su salud dental."
       gradient={true}
-      icon="🌟"
+      icon="🏆"
     />
     <motion.div
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.3 }}
       variants={containerVariants}
-      className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 justify-items-center max-w-6xl mx-auto"
+      className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 lg:gap-10 justify-items-center max-w-7xl mx-auto"
     >
       {clinicData.whyChooseUs.map((reason, index) => (
         <motion.div
@@ -476,28 +559,28 @@ const WhyChooseUsSection = () => (
           variants={itemVariants}
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: index * 0.1, duration: 0.6 }}
+          transition={{ delay: index * 0.15, duration: 0.8 }}
           whileHover={scaleOnHover.hover}
-          className="w-full max-w-md mx-auto"
+          className="w-full max-w-sm mx-auto"
         >
           <Card
             variant="default"
-            className="bg-[var(--color-primary)] dark:bg-[var(--color-surface)] h-full min-h-[200px] border-2 border-border dark:border-border-dark relative overflow-hidden flex items-start space-x-6"
+            className="bg-[var(--color-primary)] dark:bg-[var(--color-surface)] h-full min-h-[250px] border-2 border-border dark:border-border-dark shadow-2xl relative overflow-hidden flex items-start space-x-6 p-8"
           >
             <motion.div
               className="flex-shrink-0"
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              transition={{ duration: 0.3 }}
+              whileHover={{ scale: 1.2, rotate: 10 }}
+              transition={{ duration: 0.4 }}
             >
-              <div className="bg-gradient-to-br from-primary/20 to-accent/20 p-4 rounded-2xl">
-                <reason.icon className="w-8 h-8 text-primary" />
+              <div className="bg-gradient-to-br from-primary/20 to-accent/20 p-5 rounded-2xl shadow-lg">
+                <reason.icon className="w-10 h-10 text-primary" />
               </div>
             </motion.div>
             <div className="flex-1">
-              <h3 className="text-xl font-bold text-text-primary mb-3">
+              <h3 className="text-2xl font-bold text-text-primary mb-4">
                 {reason.title}
               </h3>
-              <p className="text-text-secondary leading-relaxed">
+              <p className="text-text-secondary leading-relaxed text-lg">
                 {reason.description}
               </p>
             </div>
@@ -508,19 +591,24 @@ const WhyChooseUsSection = () => (
   </Section>
 );
 
-// --- CTA Section ---
+// --- Enhanced CTA Section ---
 const CTASection = () => (
   <Section className="bg-gradient-primary dark:bg-gradient-primary-dark text-white w-screen left-1/2 -ml-[50vw] relative">
-    {/* Background decorations */}
+    {/* Enhanced Background decorations */}
     <motion.div
       animate={{ rotate: [0, 360] }}
-      transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-      className="absolute -top-20 -right-20 w-40 h-40 border border-white/10 rounded-full"
+      transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+      className="absolute -top-32 -right-32 w-64 h-64 border border-white/10 rounded-full"
     />
     <motion.div
       animate={{ rotate: [360, 0] }}
-      transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-      className="absolute -bottom-20 -left-20 w-32 h-32 border border-white/10 rounded-full"
+      transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
+      className="absolute -bottom-32 -left-32 w-48 h-48 border border-white/10 rounded-full"
+    />
+    <motion.div
+      animate={{ rotate: [0, 180, 360] }}
+      transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 border border-white/5 rounded-full"
     />
 
     <motion.div
@@ -532,21 +620,21 @@ const CTASection = () => (
     >
       <motion.div
         variants={itemVariants}
-        className="inline-flex p-4 mb-8 bg-white/10 rounded-2xl backdrop-blur-sm"
+        className="inline-flex p-6 mb-10 bg-white/15 rounded-3xl backdrop-blur-xl shadow-2xl"
       >
-        <SparklesIcon className="w-12 h-12 text-white" />
+        <SparklesIcon className="w-16 h-16 text-white" />
       </motion.div>
 
       <motion.h2
         variants={itemVariants}
-        className="text-3xl md:text-4xl lg:text-5xl font-black leading-tight mb-8 tracking-tight"
+        className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight mb-10 tracking-tight"
       >
-        ¿Listo para Empezar tu Tratamiento?
+        ¿Listo para Transformar tu Sonrisa?
       </motion.h2>
 
       <motion.p
         variants={itemVariants}
-        className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto opacity-90 leading-relaxed"
+        className="text-2xl md:text-3xl mb-16 max-w-4xl mx-auto opacity-95 leading-relaxed font-medium"
       >
         Únete a nuestra familia de pacientes satisfechos. Tu sonrisa es nuestra
         mayor recompensa y el testimonio de nuestro compromiso contigo.
@@ -554,28 +642,28 @@ const CTASection = () => (
 
       <motion.div
         variants={itemVariants}
-        className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+        className="flex flex-col sm:flex-row gap-8 justify-center items-center"
       >
         <Link href="/login" passHref>
           <DentalButton
             variant="primary"
             size="lg"
             icon={<FaCalendarPlus />}
-            className="bg-white text-primary font-bold shadow-lg hover:shadow-xl"
+            className="bg-white text-primary font-bold shadow-2xl hover:shadow-3xl text-lg px-8 py-4"
           >
             Agendar Cita
           </DentalButton>
         </Link>
 
         <Link href="/services" passHref>
-          <DentalButton
-            variant="secondary"
-            size="lg"
-            icon={<FaStethoscope />}
-            className="border-2 border-white text-white font-bold backdrop-blur-sm hover:bg-white/10"
-          >
-            Ver Servicios
-          </DentalButton>
+                  <DentalButton
+          variant="secondary"
+          size="lg"
+          icon={<FaStethoscope />}
+          className="border-2 border-white text-white font-bold backdrop-blur-sm hover:bg-white hover:text-primary-500 text-lg px-8 py-4 shadow-2xl"
+        >
+          Ver Servicios
+        </DentalButton>
         </Link>
       </motion.div>
     </motion.div>
@@ -586,11 +674,35 @@ const CTASection = () => (
 function AboutPage() {
   return (
     <div className="min-h-screen dental-bg-background relative">
-      {/* Fixed Background decorations */}
+      {/* Enhanced Fixed Background decorations */}
       <div className="fixed inset-0 -z-10">
         <motion.div
           animate={{
             rotate: [0, 360],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="absolute top-20 right-10 w-[500px] h-[500px] bg-gradient-to-br from-primary/8 to-accent/8 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{
+            rotate: [360, 0],
+            scale: [1.2, 1, 1.2],
+          }}
+          transition={{
+            duration: 30,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="absolute bottom-20 left-10 w-[400px] h-[400px] bg-gradient-to-br from-accent/8 to-primary/8 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{
+            rotate: [0, 180, 360],
             scale: [1, 1.1, 1],
           }}
           transition={{
@@ -598,19 +710,7 @@ function AboutPage() {
             repeat: Infinity,
             ease: "linear",
           }}
-          className="absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-primary/5 to-accent/5 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{
-            rotate: [360, 0],
-            scale: [1.1, 1, 1.1],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          className="absolute bottom-20 left-10 w-80 h-80 bg-gradient-to-br from-accent/5 to-primary/5 rounded-full blur-3xl"
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-primary/5 to-accent/5 rounded-full blur-3xl"
         />
       </div>
 
