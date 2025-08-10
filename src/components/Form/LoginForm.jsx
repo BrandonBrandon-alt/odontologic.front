@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation"; // Para redirigir al usuario
 import Link from "next/link"; // Added for navigation links
 import { motion, AnimatePresence } from "framer-motion"; // Added for animations
+import Image from "next/image";
 
 import Form from "../ui/Form"; // Asegúrate que la ruta sea correcta
 import Input from "../ui/Input"; // Asegúrate que la ruta sea correcta
@@ -90,10 +91,14 @@ const LoginForm = () => {
         className="hidden md:block md:w-1/2 relative overflow-hidden "
         variants={imageVariants}
       >
-        <img
+        <Image
           src="/Login.png"
           alt="Fondo de inicio de sesión"
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          sizes="(max-width: 768px) 0, 50vw"
+          quality={60}
+          priority={false}
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-tr from-primary/70 to-accent/70"></div>
         <div className="absolute inset-0 flex items-center justify-center p-8 text-center text-white z-10">

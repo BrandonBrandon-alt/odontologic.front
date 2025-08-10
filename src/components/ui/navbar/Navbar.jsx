@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { Menu as MenuIcon, X as CloseIcon } from "lucide-react";
+import dynamic from "next/dynamic";
 
 import { useAuth } from "../../../context/AuthContext";
 import useScrollDirection from "../../../hooks/useScrollDirection";
@@ -12,22 +13,16 @@ import useScrollDirection from "../../../hooks/useScrollDirection";
 import Logo from "./Logo";
 import NavLinks from "./NavLinks";
 import UserAuthSection from "./UserAuthSection";
-import MobileMenu from "./MobileMenu";
+const MobileMenu = dynamic(() => import("./MobileMenu"), { ssr: false });
 import NotificationBanner from "./NotificationBanner";
 import ThemeToggleButton from "../ThemeToggleButton"; // Mantenerlo aquí si es un componente global de la navbar
 
 const Navbar = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // isDropdownOpen y isSearchOpen se manejarán dentro de UserAuthSection o sus hijos si es necesario
-  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  // const [isSearchOpen, setIsSearchOpen] = useState(false);
-
   const { loading, error, message, clearError, clearMessage } = useAuth();
   const { isVisible } = useScrollDirection();
-  // const { scrollY } = useScroll(); // Ya no es necesario si la animación de scroll se maneja con isVisible
 
-  // Animaciones mejoradas (pueden ser trasladadas a un archivo de constantes o un hook de animaciones)
   const navVariants = {
     hidden: { y: -120, opacity: 0, filter: "blur(10px)" },
     visible: {
@@ -40,31 +35,18 @@ const Navbar = () => {
       y: -120,
       opacity: 0,
       filter: "blur(8px)",
-      transition: {
-        type: "spring",
-        stiffness: 150,
-        damping: 25,
-        duration: 0.3,
-      },
+      transition: { type: "spring", stiffness: 150, damping: 25, duration: 0.3 },
     },
     visibleScroll: {
       y: 0,
       opacity: 1,
       filter: "blur(0px)",
-      transition: {
-        type: "spring",
-        stiffness: 150,
-        damping: 25,
-        duration: 0.3,
-      },
+      transition: { type: "spring", stiffness: 150, damping: 25, duration: 0.3 },
     },
   };
 
   useEffect(() => {
-    // Cuando la ruta cambia, cierra el menú móvil
     setIsMenuOpen(false);
-    // setIsDropdownOpen(false); // Esta lógica debería estar en el componente del dropdown
-    // setIsSearchOpen(false);   // Esta lógica debería estar donde se maneje el estado de búsqueda
   }, [pathname]);
 
   if (loading) {
@@ -83,12 +65,7 @@ const Navbar = () => {
 
   return (
     <>
-      <NotificationBanner
-        error={error}
-        message={message}
-        clearError={clearError}
-        clearMessage={clearMessage}
-      />
+      <NotificationBanner error={error} message={message} clearError={clearError} clearMessage={clearMessage} />
 
       <motion.nav
         className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-neutral-900 border-b border-border dark:border-border-dark shadow-md"
@@ -104,9 +81,7 @@ const Navbar = () => {
           {/* Menú de Navegación Desktop */}
           <div className="hidden md:flex items-center space-x-6">
             <NavLinks />
-
             <div className="w-px h-8 bg-gradient-to-b from-transparent via-border dark:via-border-dark to-transparent"></div>
-
             <UserAuthSection />
           </div>
 
@@ -120,15 +95,8 @@ const Navbar = () => {
               className="p-2.5 rounded-xl bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-lg focus:outline-none text-foreground dark:text-foreground-dark"
               aria-label="Toggle menu"
             >
-              <motion.div
-                animate={{ rotate: isMenuOpen ? 180 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                {isMenuOpen ? (
-                  <FaTimes className="text-xl" />
-                ) : (
-                  <FaBars className="text-xl" />
-                )}
+              <motion.div animate={{ rotate: isMenuOpen ? 180 : 0 }} transition={{ duration: 0.3 }}>
+                {isMenuOpen ? <CloseIcon className="w-5 h-5" /> : <MenuIcon className="w-5 h-5" />}
               </motion.div>
             </motion.button>
           </div>

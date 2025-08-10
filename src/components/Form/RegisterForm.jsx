@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 // Importa el servicio de autenticación
 import { authService } from "../../services/auth.service";
@@ -206,22 +207,14 @@ function RegisterForm() {
       const userData = { ...formData, recaptchaToken };
       delete userData.confirmPassword;
 
-      // --- INICIO DEL CAMBIO ---
-
-      // 1. Descomenta la siguiente línea para hacer la llamada real al servicio
       await authService.register(userData);
 
-      // 2. Esta lógica se ejecutará si el registro es exitoso
       setMessage(
         "¡Registro Exitoso! Hemos enviado un correo de activación a tu email."
       );
       setTimeout(() => {
         router.push("/login");
       }, 1000);
-
-      // 3. Elimina todo el bloque de simulación que tenías antes
-
-      // --- FIN DEL CAMBIO ---
     } catch (err) {
       const errorMessage =
         err.response?.data?.message ||
@@ -235,21 +228,21 @@ function RegisterForm() {
 
   return (
     <div className="relative bg-[var(--color-primary)] dark:bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl shadow-[var(--shadow-dental-xl)] w-full max-w-6xl overflow-hidden md:flex md:min-h-[600px]">
-      <motion.div
-        className="hidden md:block md:w-1/2 relative overflow-hidden"
-        variants={imageVariants}
-      >
-        <img
+      <motion.div className="hidden md:block md:w-1/2 relative overflow-hidden" variants={imageVariants}>
+        <Image
           src="/Register.png"
           alt="Fondo de registro"
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          sizes="(max-width: 768px) 0, 50vw"
+          quality={60}
+          priority={false}
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-tr from-primary/70 to-accent/70"></div>
+
         <div className="absolute inset-0 flex items-center justify-center p-8 text-center text-white z-10">
           <div>
-            <h2 className="text-4xl lg:text-5xl font-extrabold mb-4 drop-shadow-lg">
-              ¡Únete a Nuestra Comunidad!
-            </h2>
+            <h2 className="text-4xl lg:text-5xl font-extrabold mb-4 drop-shadow-lg">¡Únete a Nuestra Comunidad!</h2>
             <p className="text-lg lg:text-xl font-light opacity-90 leading-relaxed">
               Regístrate para gestionar tus citas y acceder a servicios
               exclusivos.

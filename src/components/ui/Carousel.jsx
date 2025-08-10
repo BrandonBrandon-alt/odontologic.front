@@ -8,6 +8,7 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import { ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
+import Image from "next/image";
 
 import DentalButton from "../ui/Button";
 
@@ -157,16 +158,16 @@ const Carousel = () => {
             className="relative flex-shrink-0 w-full h-[600px] flex items-center justify-center overflow-hidden"
           >
             {/* Imagen de fondo con efecto parallax */}
-            <motion.div
-              className="absolute inset-0 scale-110"
-              style={{
-                backgroundImage: `url(${image})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                y: currentIndex === index ? y : 0,
-              }}
-              transition={{ type: "spring", stiffness: 400, damping: 40 }}
-            />
+            <motion.div className="absolute inset-0 scale-110" style={{ y: currentIndex === index ? y : 0 }}>
+              <Image
+                src={image}
+                alt=""
+                fill
+                sizes="(max-width: 1024px) 100vw, 1200px"
+                priority={index === 0}
+                quality={60}
+              />
+            </motion.div>
 
             {/* Overlay con gradiente dinámico */}
             <motion.div
@@ -218,135 +219,49 @@ const Carousel = () => {
 
                     {/* Descripción */}
                     <motion.p
-                      className="text-xl md:text-2xl lg:text-3xl text-white/95 font-light max-w-3xl leading-relaxed"
-                      style={{
-                        textShadow: "0 2px 10px rgba(0,0,0,0.3)",
-                      }}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2, duration: 0.6 }}
+                      className="text-lg md:text-2xl text-white/95 max-w-3xl mx-auto"
                     >
                       {slideTexts[index]?.desc}
                     </motion.p>
 
-                    {/* Botón CTA mejorado */}
-                    {/* Botón reemplazado por tu componente reutilizable */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.4, duration: 0.6 }}
-                    >
-                      <DentalButton
-                        variant="primary"
-                        size="lg"
-                        rounded="xl"
-                        className="mt-8"
-                      >
-                        {slideTexts[index]?.cta}
-                      </DentalButton>
-                    </motion.div>
+                    {/* CTA */}
+                    <div className="mt-6">
+                      <DentalButton variant="primary">{slideTexts[index]?.cta}</DentalButton>
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
+
+            {/* Controles */}
+            <div className="absolute inset-x-0 bottom-6 flex items-center justify-between px-6">
+              <button
+                aria-label="Anterior"
+                onClick={prevSlide}
+                className="p-2 rounded-full bg-black/30 text-white hover:bg-black/50 transition"
+              >
+                <ChevronLeft />
+              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  aria-label={isPlaying ? "Pausar" : "Reproducir"}
+                  onClick={() => setIsPlaying((v) => !v)}
+                  className="p-2 rounded-full bg-black/30 text-white hover:bg-black/50 transition"
+                >
+                  {isPlaying ? <Pause /> : <Play />}
+                </button>
+              </div>
+              <button
+                aria-label="Siguiente"
+                onClick={nextSlide}
+                className="p-2 rounded-full bg-black/30 text-white hover:bg-black/50 transition"
+              >
+                <ChevronRight />
+              </button>
+            </div>
           </motion.div>
         ))}
       </motion.div>
-
-      {/* Controles de navegación mejorados */}
-      <motion.button
-        onClick={prevSlide}
-        className="absolute top-1/2 left-6 transform -translate-y-1/2 group focus:outline-none focus:ring-2 focus:ring-accent-600 focus:ring-offset-2 focus:ring-offset-transparent rounded-full"
-        whileHover={{ scale: 1.1, x: -4 }}
-        whileTap={{ scale: 0.9 }}
-        aria-label="Anterior"
-      >
-        <div className="bg-white/20 backdrop-blur-lg border border-white/30 p-4 rounded-full shadow-dental-lg hover:bg-accent hover:border-accent/50 transition-all duration-300 group-hover:shadow-dental-xl group-focus:bg-accent">
-          <ChevronLeft
-            size={32}
-            className="text-white group-hover:text-white drop-shadow-sm transition-colors duration-300"
-          />
-        </div>
-      </motion.button>
-
-      <motion.button
-        onClick={nextSlide}
-        className="absolute top-1/2 right-6 transform -translate-y-1/2 group focus:outline-none focus:ring-2 focus:ring-accent-600  focus:ring-offset-2 focus:ring-offset-transparent rounded-full"
-        whileHover={{ scale: 1.1, x: 4 }}
-        whileTap={{ scale: 0.9 }}
-        aria-label="Siguiente"
-      >
-        <div className="bg-white/20 backdrop-blur-lg border border-white/30 p-4 rounded-full shadow-dental-lg hover:bg-accent hover:border-accent/50 transition-all duration-300 group-hover:shadow-dental-xl group-focus:bg-accent">
-          <ChevronRight
-            size={32}
-            className="text-white group-hover:text-white drop-shadow-sm transition-colors duration-300"
-          />
-        </div>
-      </motion.button>
-
-      {/* Control de play/pause */}
-      <motion.button
-        onClick={() => setIsPlaying(!isPlaying)}
-        className="absolute top-6 right-6 group focus:outline-none focus:ring-2 focus:ring-accent-600  focus:ring-offset-2 focus:ring-offset-transparent rounded-full"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        aria-label={isPlaying ? "Pausar" : "Reproducir"}
-      >
-        <div className="bg-white/20 backdrop-blur-lg border border-white/30 p-3 rounded-full shadow-dental-md hover:bg-accent hover:border-accent/50 transition-all duration-300 group-focus:bg-accent">
-          {isPlaying ? (
-            <Pause
-              size={20}
-              className="text-white group-hover:text-white transition-colors duration-300"
-            />
-          ) : (
-            <Play
-              size={20}
-              className="text-white group-hover:text-white transition-colors duration-300"
-            />
-          )}
-        </div>
-      </motion.button>
-
-      {/* Indicadores modernos */}
-      <div className="absolute bottom-8 left-0 right-0 flex justify-center items-center space-x-3 z-20">
-        {images.map((_, index) => (
-          <motion.button
-            key={index}
-            onClick={() => goToSlide(index, index > currentIndex ? 1 : -1)}
-            className="relative group focus:outline-none"
-            whileHover={{ scale: 1.2 }}
-            whileTap={{ scale: 0.9 }}
-            aria-label={`Ir al slide ${index + 1}`}
-          >
-            {/* Indicador base */}
-            <div
-              className={`w-3 h-3 rounded-full border-2 border-white/50 transition-all duration-300 ${
-                index === currentIndex
-                  ? "bg-white scale-125 shadow-lg"
-                  : "bg-white/30 hover:bg-white/60"
-              }`}
-            />
-
-            {/* Barra de progreso para el slide activo */}
-            {index === currentIndex && isPlaying && (
-              <motion.div
-                className="absolute inset-0 rounded-full border-2 border-white"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 5, ease: "linear", repeat: Infinity }}
-                style={{
-                  background: `conic-gradient(from 0deg, transparent 0deg, white ${360}deg, transparent ${360}deg)`,
-                }}
-              />
-            )}
-          </motion.button>
-        ))}
-      </div>
-
-      {/* Información del slide actual */}
-      <div className="absolute bottom-8 left-8 text-white/80 text-sm font-medium backdrop-blur-sm bg-black/20 px-3 py-1 rounded-dental-md">
-        {currentIndex + 1} / {images.length}
-      </div>
     </motion.div>
   );
 };
