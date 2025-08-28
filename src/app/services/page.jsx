@@ -17,6 +17,7 @@ import {
 } from "react-icons/fa"; // Importa varios iconos de la librería Font Awesome a través de react-icons
 import Card, { ActionCard, StatCard } from "../../components/ui/Card"; // Importa componentes de tarjeta (Card, ActionCard, StatCard) desde una ruta relativa
 import DentalButton from "../../components/ui/Button"; // Importa un componente de botón personalizado (DentalButton) desde una ruta relativa
+import PageHero from "@/components/ui/PageHero"; // Hero reutilizable alineado con Home
 
 // --- Animation Variants (Variantes de Animación) ---
 // Define variantes de animación para el contenedor principal
@@ -398,59 +399,37 @@ const ContactCard = ({ info, index }) => (
   </motion.div>
 );
 
-// Componente para la sección Hero (banner principal)
+// Hero reutilizando PageHero para consistencia visual
 const HeroSection = () => (
-  <motion.section
-    initial="hidden" // Estado inicial: oculto
-    animate="visible" // Anima a visible
-    variants={containerVariants} // Aplica variantes de animación de contenedor
-    className="relative bg-gradient-primary dark:bg-gradient-primary-dark text-white py-24 w-screen left-1/2 -ml-[50vw] overflow-hidden" // Estilos de la sección hero, incluyendo gradientes de fondo y centrado de ancho completo
+  <PageHero
+    headingLines={["Nuestros Servicios Odontológicos"]}
+    subtitle="Cuidamos tu sonrisa con tecnología de vanguardia y atención personalizada"
+    primaryAction={{
+      label: "Agendar Cita",
+      onClick: () => alert("Redirigiendo al agendamiento..."),
+      ariaLabel: "Agendar una cita",
+      variant: "primary",
+      icon: <FaCalendarPlus className="w-5 h-5" />,
+    }}
+    secondaryActions={[
+      {
+        label: "Contactar",
+        href: "/contact",
+        ariaLabel: "Ir a la página de contacto",
+        variant: "secondary",
+      },
+    ]}
   >
-    {/* Decoraciones de fondo (removidas por simplicidad): antes había círculos blur top/right y bottom/left */}
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-      {" "}
-      {/* Contenido principal de la sección hero */}
-      <motion.h1
-        variants={itemVariants} // Aplica variantes de animación de item
-        className="text-4xl md:text-5xl lg:text-6xl font-black mb-6" // Estilos del título principal
-      >
-        Nuestros Servicios Odontológicos {/* Título */}
-      </motion.h1>
-      <motion.p
-        variants={itemVariants} // Aplica variantes de animación de item
-        className="text-xl md:text-2xl opacity-90 mb-8 max-w-4xl mx-auto" // Estilos del subtítulo
-      >
-        Cuidamos tu sonrisa con tecnología de vanguardia y atención
-        personalizada {/* Descripción */}
-      </motion.p>
-      <motion.div
-        variants={containerVariants} // Aplica variantes de animación de contenedor
-        className="flex flex-wrap justify-center gap-4 text-sm" // Contenedor de características
-      >
-        <motion.div
-          variants={itemVariants} // Aplica variantes de animación de item
-          className="flex items-center space-x-2 bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm" // Estilos de la característica
-        >
-          <FaClock className="h-5 w-5" /> {/* Icono */}
-          <span>Horarios Flexibles</span> {/* Texto */}
-        </motion.div>
-        <motion.div
-          variants={itemVariants} // Aplica variantes de animación de item
-          className="flex items-center space-x-2 bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm" // Estilos de la característica
-        >
-          <FaShieldAlt className="h-5 w-5" /> {/* Icono */}
-          <span>Garantía de Calidad</span> {/* Texto */}
-        </motion.div>
-        <motion.div
-          variants={itemVariants} // Aplica variantes de animación de item
-          className="flex items-center space-x-2 bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm" // Estilos de la característica
-        >
-          <FaHeart className="h-5 w-5" /> {/* Icono */}
-          <span>Atención Personalizada</span> {/* Texto */}
-        </motion.div>
-      </motion.div>
-    </div>
-  </motion.section>
+    <span className="px-4 py-2 rounded-full bg-white/15 text-white text-sm font-medium backdrop-blur-sm flex items-center gap-2">
+      <FaClock className="w-4 h-4" /> Horarios Flexibles
+    </span>
+    <span className="px-4 py-2 rounded-full bg-white/15 text-white text-sm font-medium backdrop-blur-sm flex items-center gap-2">
+      <FaShieldAlt className="w-4 h-4" /> Garantía de Calidad
+    </span>
+    <span className="px-4 py-2 rounded-full bg-white/15 text-white text-sm font-medium backdrop-blur-sm flex items-center gap-2">
+      <FaHeart className="w-4 h-4" /> Atención Personalizada
+    </span>
+  </PageHero>
 );
 
 // Componente para la sección de Llamada a la Acción (CTA)
