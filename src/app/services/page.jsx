@@ -406,31 +406,7 @@ const HeroSection = () => (
     variants={containerVariants} // Aplica variantes de animación de contenedor
     className="relative bg-gradient-primary dark:bg-gradient-primary-dark text-white py-24 w-screen left-1/2 -ml-[50vw] overflow-hidden" // Estilos de la sección hero, incluyendo gradientes de fondo y centrado de ancho completo
   >
-    {/* Decoraciones de fondo */}
-    <motion.div
-      animate={{
-        rotate: [0, 360], // Rotación de 0 a 360 grados
-        scale: [1, 1.1, 1], // Escala para un efecto de "respiración"
-      }}
-      transition={{
-        duration: 20, // Duración de la animación
-        repeat: Infinity, // Repetición infinita
-        ease: "linear", // Easing lineal
-      }}
-      className="absolute top-20 right-10 w-96 h-96 bg-white/5 rounded-full blur-3xl" // Estilos de la decoración
-    />
-    <motion.div
-      animate={{
-        rotate: [360, 0], // Rotación de 360 a 0 grados
-        scale: [1.1, 1, 1.1], // Escala para un efecto de "respiración"
-      }}
-      transition={{
-        duration: 25, // Duración de la animación
-        repeat: Infinity, // Repetición infinita
-        ease: "linear", // Easing lineal
-      }}
-      className="absolute bottom-20 left-10 w-80 h-80 bg-white/5 rounded-full blur-3xl" // Estilos de la decoración
-    />
+    {/* Decoraciones de fondo (removidas por simplicidad): antes había círculos blur top/right y bottom/left */}
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
       {" "}
       {/* Contenido principal de la sección hero */}
@@ -484,12 +460,13 @@ const CTASection = () => (
     {/* Estilos de la sección CTA */}
     {/* Decoraciones de fondo */}
     <motion.div
-      animate={{ rotate: [0, 360] }} // Animación de rotación
+      // Eliminada rotación para mejorar rendimiento y simplicidad visual
+      // animate={{ rotate: [0, 360] }}
       transition={{ duration: 30, repeat: Infinity, ease: "linear" }} // Transición
       className="absolute -top-20 -right-20 w-40 h-40 border border-white/10 rounded-full" // Estilos de la decoración
     />
     <motion.div
-      animate={{ rotate: [360, 0] }} // Animación de rotación inversa
+      // animate={{ rotate: [360, 0] }}
       transition={{ duration: 25, repeat: Infinity, ease: "linear" }} // Transición
       className="absolute -bottom-20 -left-20 w-32 h-32 border border-white/10 rounded-full" // Estilos de la decoración
     />
@@ -575,36 +552,11 @@ const ContactSection = () => (
 // Este es el componente principal que compone toda la página de servicios
 function ServicesPage() {
   return (
-    <div className="min-h-screen dental-bg-background relative pt-4 sm:pt-2">
+    <div className="min-h-screen dental-bg-background relative pt-6 sm:pt-4">
       {" "}
       {/* Contenedor principal de la página con altura mínima de pantalla y fondo temático */}
       {/* Decoraciones de fondo fijas */}
-      <div className="absolute inset-0 -z-10 pointer-events-none">
-        <motion.div
-          animate={{
-            rotate: [0, 360],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          className="absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-primary/5 to-accent/5 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{
-            rotate: [360, 0],
-            scale: [1.1, 1, 1.1],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          className="absolute bottom-20 left-10 w-80 h-80 bg-gradient-to-br from-accent/5 to-primary/5 rounded-full blur-3xl"
-        />
-      </div>
+      {/* Fondo decorativo fijo removido (dos círculos blur animados) para reducir distracción y repaints */}
       {/* Sección Hero */}
       <HeroSection />
       {/* Categorías de Servicios */}

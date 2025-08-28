@@ -23,9 +23,7 @@ export default function RootLayout({ children }) {
       >
         <Providers>
           <Navbar />
-          <main className="flex-grow container mx-auto px-dental-md pt-20 pb-dental-lg">
-            {children}
-          </main>
+          <main className="flex-grow pt-20 pb-dental-lg">{children}</main>
           <Footer />
           <BackToTopButton />
         </Providers>

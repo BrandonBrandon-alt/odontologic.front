@@ -17,7 +17,13 @@ import {
   MapPinIcon,
   PhoneIcon,
 } from "@heroicons/react/24/outline";
-import { FaCalendarPlus, FaStethoscope, FaAward, FaUsers, FaSmile } from "react-icons/fa";
+import {
+  FaCalendarPlus,
+  FaStethoscope,
+  FaAward,
+  FaUsers,
+  FaSmile,
+} from "react-icons/fa";
 import { clinicData } from "@/lib/data";
 import Image from "next/image";
 import DentalButton from "@/components/ui/Button";
@@ -121,11 +127,14 @@ const Section = ({ children, className = "", background = "" }) => (
   </section>
 );
 
-const SectionTitle = ({ title, subtitle, gradient = false, icon, size = "large" }) => (
-  <motion.div 
-    variants={itemVariants} 
-    className="text-center mb-20"
-  >
+const SectionTitle = ({
+  title,
+  subtitle,
+  gradient = false,
+  icon,
+  size = "large",
+}) => (
+  <motion.div variants={itemVariants} className="text-center mb-20">
     {icon && (
       <motion.div
         className="text-7xl mb-8"
@@ -138,8 +147,8 @@ const SectionTitle = ({ title, subtitle, gradient = false, icon, size = "large" 
     )}
     <motion.h2
       className={`${
-        size === "large" 
-          ? "text-4xl md:text-5xl lg:text-6xl" 
+        size === "large"
+          ? "text-4xl md:text-5xl lg:text-6xl"
           : "text-3xl md:text-4xl lg:text-5xl"
       } font-black mb-6 leading-tight ${
         gradient
@@ -179,43 +188,7 @@ const HeroSection = () => (
     variants={containerVariants}
     className="relative bg-gradient-primary dark:bg-gradient-primary-dark text-white py-32 w-screen left-1/2 -ml-[50vw] overflow-hidden"
   >
-    {/* Enhanced Background decorations */}
-    <motion.div
-      animate={{
-        rotate: [0, 360],
-        scale: [1, 1.2, 1],
-      }}
-      transition={{
-        duration: 25,
-        repeat: Infinity,
-        ease: "linear",
-      }}
-      className="absolute top-10 right-10 w-[500px] h-[500px] bg-white/10 rounded-full blur-3xl"
-    />
-    <motion.div
-      animate={{
-        rotate: [360, 0],
-        scale: [1.2, 1, 1.2],
-      }}
-      transition={{
-        duration: 30,
-        repeat: Infinity,
-        ease: "linear",
-      }}
-      className="absolute bottom-10 left-10 w-[400px] h-[400px] bg-white/10 rounded-full blur-3xl"
-    />
-    <motion.div
-      animate={{
-        rotate: [0, 180, 360],
-        scale: [1, 1.1, 1],
-      }}
-      transition={{
-        duration: 20,
-        repeat: Infinity,
-        ease: "linear",
-      }}
-      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl"
-    />
+    {/* Background decorative blurred circles removed for simplicity */}
 
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
       {/* Enhanced Floating elements */}
@@ -253,11 +226,15 @@ const HeroSection = () => (
         variants={itemVariants}
         className="text-2xl md:text-3xl opacity-90 mb-16 max-w-6xl mx-auto leading-relaxed font-medium"
       >
-        Desde <span className="font-bold text-white">{clinicData.founded}</span>, hemos
-        combinado la
-        <span className="font-semibold text-white"> excelencia médica</span> con la
-        <span className="font-semibold text-white"> última tecnología</span> para ofrecer
-        una experiencia dental inigualable en Colombia.
+        Desde <span className="font-bold text-white">{clinicData.founded}</span>
+        , hemos combinado la
+        <span className="font-semibold text-white"> excelencia médica</span> con
+        la
+        <span className="font-semibold text-white">
+          {" "}
+          última tecnología
+        </span>{" "}
+        para ofrecer una experiencia dental inigualable en Colombia.
       </motion.p>
 
       {/* Enhanced Stats Grid */}
@@ -336,9 +313,12 @@ const HistoryMissionSection = () => (
             <span className="absolute left-0 top-3 w-3 h-3 bg-primary rounded-full shadow-lg"></span>
             <p>
               Fundada en{" "}
-              <span className="font-bold text-primary text-2xl">{clinicData.founded}</span>
-              , {clinicData.name} nació con la visión de ser un referente en salud
-              oral, donde cada paciente se sienta seguro, cómodo y valorado.
+              <span className="font-bold text-primary text-2xl">
+                {clinicData.founded}
+              </span>
+              , {clinicData.name} nació con la visión de ser un referente en
+              salud oral, donde cada paciente se sienta seguro, cómodo y
+              valorado.
             </p>
           </div>
           <div className="relative pl-8">
@@ -433,7 +413,9 @@ const ValueCard = ({ icon: Icon, title, description, index }) => (
         <Icon className="w-12 h-12 text-primary" />
       </motion.div>
       <h3 className="text-2xl font-bold text-text-primary mb-4">{title}</h3>
-      <p className="text-text-secondary leading-relaxed text-lg">{description}</p>
+      <p className="text-text-secondary leading-relaxed text-lg">
+        {description}
+      </p>
 
       {/* Enhanced hover effect decoration */}
       <motion.div
@@ -442,7 +424,7 @@ const ValueCard = ({ icon: Icon, title, description, index }) => (
         whileHover={{ width: "100%" }}
         transition={{ duration: 0.4 }}
       />
-      
+
       {/* Background decoration */}
       <motion.div
         variants={floatingVariants}
@@ -519,7 +501,9 @@ const TeamMemberCard = ({ member, index }) => (
           <h3 className="text-2xl font-bold text-text-primary mb-3">
             {member.name}
           </h3>
-          <p className="text-primary font-semibold text-lg mb-3">{member.specialty}</p>
+          <p className="text-primary font-semibold text-lg mb-3">
+            {member.specialty}
+          </p>
           <p className="text-text-secondary leading-relaxed">
             {member.education}
           </p>
@@ -596,17 +580,18 @@ const CTASection = () => (
   <Section className="bg-gradient-primary dark:bg-gradient-primary-dark text-white w-screen left-1/2 -ml-[50vw] relative">
     {/* Enhanced Background decorations */}
     <motion.div
-      animate={{ rotate: [0, 360] }}
+      // Rotación eliminada
+      // animate={{ rotate: [0, 360] }}
       transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
       className="absolute -top-32 -right-32 w-64 h-64 border border-white/10 rounded-full"
     />
     <motion.div
-      animate={{ rotate: [360, 0] }}
+      // animate={{ rotate: [360, 0] }}
       transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
       className="absolute -bottom-32 -left-32 w-48 h-48 border border-white/10 rounded-full"
     />
     <motion.div
-      animate={{ rotate: [0, 180, 360] }}
+      // animate={{ rotate: [0, 180, 360] }}
       transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
       className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 border border-white/5 rounded-full"
     />
@@ -656,14 +641,14 @@ const CTASection = () => (
         </Link>
 
         <Link href="/services" passHref>
-                  <DentalButton
-          variant="secondary"
-          size="lg"
-          icon={<FaStethoscope />}
-          className="border-2 border-white text-white font-bold backdrop-blur-sm hover:bg-white hover:text-primary-500 text-lg px-8 py-4 shadow-2xl"
-        >
-          Ver Servicios
-        </DentalButton>
+          <DentalButton
+            variant="secondary"
+            size="lg"
+            icon={<FaStethoscope />}
+            className="border-2 border-white text-white font-bold backdrop-blur-sm hover:bg-white hover:text-primary-500 text-lg px-8 py-4 shadow-2xl"
+          >
+            Ver Servicios
+          </DentalButton>
         </Link>
       </motion.div>
     </motion.div>
@@ -686,7 +671,8 @@ function AboutPage() {
             repeat: Infinity,
             ease: "linear",
           }}
-          className="absolute top-20 right-10 w-[500px] h-[500px] bg-gradient-to-br from-primary/8 to-accent/8 rounded-full blur-3xl"
+          // className removed: blurred gradient circle eliminated
+          // className="absolute top-20 right-10 w-[500px] h-[500px] bg-gradient-to-br from-primary/8 to-accent/8 rounded-full blur-3xl"
         />
         <motion.div
           animate={{
@@ -698,7 +684,7 @@ function AboutPage() {
             repeat: Infinity,
             ease: "linear",
           }}
-          className="absolute bottom-20 left-10 w-[400px] h-[400px] bg-gradient-to-br from-accent/8 to-primary/8 rounded-full blur-3xl"
+          // className="absolute bottom-20 left-10 w-[400px] h-[400px] bg-gradient-to-br from-accent/8 to-primary/8 rounded-full blur-3xl"
         />
         <motion.div
           animate={{
@@ -710,7 +696,7 @@ function AboutPage() {
             repeat: Infinity,
             ease: "linear",
           }}
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-primary/5 to-accent/5 rounded-full blur-3xl"
+          // className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-primary/5 to-accent/5 rounded-full blur-3xl"
         />
       </div>
 

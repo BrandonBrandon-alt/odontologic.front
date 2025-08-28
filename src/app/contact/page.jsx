@@ -19,10 +19,10 @@ import Input from "@/components/ui/Input";
 import Alert from "@/components/ui/Alert";
 
 // Importar el servicio de contacto
-import { 
-  sendContactMessage, 
-  contactSubjects, 
-  initialContactForm 
+import {
+  sendContactMessage,
+  contactSubjects,
+  initialContactForm,
 } from "@/services/contact.service";
 
 // --- Animation Variants ---
@@ -123,31 +123,7 @@ const HeroSection = () => (
     variants={containerVariants}
     className="relative bg-gradient-primary dark:bg-gradient-primary-dark text-white py-24 w-screen left-1/2 -ml-[50vw] overflow-hidden"
   >
-    {/* Background decorations */}
-    <motion.div
-      animate={{
-        rotate: [0, 360],
-        scale: [1, 1.1, 1],
-      }}
-      transition={{
-        duration: 20,
-        repeat: Infinity,
-        ease: "linear",
-      }}
-      className="absolute top-20 right-10 w-96 h-96 bg-white/5 rounded-full blur-3xl"
-    />
-    <motion.div
-      animate={{
-        rotate: [360, 0],
-        scale: [1.1, 1, 1.1],
-      }}
-      transition={{
-        duration: 25,
-        repeat: Infinity,
-        ease: "linear",
-      }}
-      className="absolute bottom-20 left-10 w-80 h-80 bg-white/5 rounded-full blur-3xl"
-    />
+    {/* Background decorations removed (two blurred circles) */}
 
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
       <motion.h1
@@ -163,8 +139,8 @@ const HeroSection = () => (
         variants={itemVariants}
         className="text-xl md:text-2xl opacity-90 mb-12 max-w-4xl mx-auto leading-relaxed"
       >
-        ¿Tienes alguna pregunta o necesitas agendar una cita? 
-        Nuestro equipo está listo para atenderte y brindarte la mejor atención dental.
+        ¿Tienes alguna pregunta o necesitas agendar una cita? Nuestro equipo
+        está listo para atenderte y brindarte la mejor atención dental.
       </motion.p>
 
       <motion.div
@@ -206,10 +182,10 @@ const ContactFormSection = () => {
   const [alertMessage, setAlertMessage] = useState("");
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     // Limpiar error del campo cuando el usuario empiece a escribir
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: "" }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
@@ -221,11 +197,13 @@ const ContactFormSection = () => {
 
     try {
       const result = await sendContactMessage(formData);
-      
+
       if (result.success) {
         setIsSuccess(true);
         setFormData(initialContactForm);
-        setAlertMessage("¡Mensaje enviado exitosamente! Te contactaremos pronto.");
+        setAlertMessage(
+          "¡Mensaje enviado exitosamente! Te contactaremos pronto."
+        );
       } else {
         if (result.errors) {
           setErrors(result.errors);
@@ -255,7 +233,7 @@ const ContactFormSection = () => {
               Información de Contacto
             </h2>
             <p className="text-text-secondary text-lg leading-relaxed mb-8">
-              Puedes contactarnos a través de cualquiera de estos medios o 
+              Puedes contactarnos a través de cualquiera de estos medios o
               llenar el formulario y te responderemos lo antes posible.
             </p>
           </div>
@@ -282,7 +260,10 @@ const ContactFormSection = () => {
             <ContactInfoCard
               icon={ClockIcon}
               title="Horarios"
-              content={["Lun - Vie: 8:00 AM - 6:00 PM", "Sáb: 8:00 AM - 2:00 PM"]}
+              content={[
+                "Lun - Vie: 8:00 AM - 6:00 PM",
+                "Sáb: 8:00 AM - 2:00 PM",
+              ]}
               color="text-purple-500"
             />
           </div>
@@ -372,7 +353,9 @@ const ContactFormSection = () => {
                   </label>
                   <select
                     value={formData.subject}
-                    onChange={(e) => handleInputChange("subject", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("subject", e.target.value)
+                    }
                     className={`w-full px-4 py-3 border-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                       errors.subject
                         ? "border-error focus:ring-error"
@@ -398,7 +381,9 @@ const ContactFormSection = () => {
                   </label>
                   <textarea
                     value={formData.message}
-                    onChange={(e) => handleInputChange("message", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("message", e.target.value)
+                    }
                     rows={5}
                     className={`w-full px-4 py-3 border-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 resize-none ${
                       errors.message
@@ -464,12 +449,13 @@ const CTASection = () => (
   <Section className="bg-gradient-primary dark:bg-gradient-primary-dark text-white w-screen left-1/2 -ml-[50vw] relative">
     {/* Background decorations */}
     <motion.div
-      animate={{ rotate: [0, 360] }}
+      // Rotación eliminada
+      // animate={{ rotate: [0, 360] }}
       transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
       className="absolute -top-20 -right-20 w-40 h-40 border border-white/10 rounded-full"
     />
     <motion.div
-      animate={{ rotate: [360, 0] }}
+      // animate={{ rotate: [360, 0] }}
       transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
       className="absolute -bottom-20 -left-20 w-32 h-32 border border-white/10 rounded-full"
     />
@@ -499,8 +485,8 @@ const CTASection = () => (
         variants={itemVariants}
         className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto opacity-90 leading-relaxed"
       >
-        Agenda tu cita hoy y recibe una consulta de evaluación gratuita. 
-        Tu sonrisa es nuestra prioridad.
+        Agenda tu cita hoy y recibe una consulta de evaluación gratuita. Tu
+        sonrisa es nuestra prioridad.
       </motion.p>
 
       <motion.div
@@ -538,32 +524,7 @@ function ContactPage() {
   return (
     <div className="min-h-screen dental-bg-background relative">
       {/* Fixed Background decorations */}
-      <div className="fixed inset-0 -z-10">
-        <motion.div
-          animate={{
-            rotate: [0, 360],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          className="absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-primary/5 to-accent/5 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{
-            rotate: [360, 0],
-            scale: [1.1, 1, 1.1],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          className="absolute bottom-20 left-10 w-80 h-80 bg-gradient-to-br from-accent/5 to-primary/5 rounded-full blur-3xl"
-        />
-      </div>
+      {/* Fixed background blurred circles removed for cleaner design */}
 
       {/* Page Sections */}
       <HeroSection />

@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -7,20 +8,17 @@ import {
   FaUser,
   FaSignOutAlt,
   FaTachometerAlt,
+  FaUserMd,
+  FaUserShield,
 } from "react-icons/fa";
 import { useAuth } from "../../../context/AuthContext";
 import ThemeToggleButton from "../ThemeToggleButton";
 
 const UserAuthSection = () => {
-  const { isLoggedIn, user, logout } = useAuth();
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error);
-    }
-  };
+  const { isAuthenticated, user, logout } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
+  const isLoggedIn = isAuthenticated; // alias para consistencia con componentes existentes
 
   const getDashboardPath = (role) =>
     ({
@@ -34,10 +32,49 @@ const UserAuthSection = () => {
     tap: { scale: 0.98 },
   };
 
+  const roleIconMap = {
+    admin: <FaUserShield className="text-primary-500" aria-hidden="true" />,
+    dentist: <FaUserMd className="text-accent-500" aria-hidden="true" />,
+    user: <FaUser className="text-primary-500" aria-hidden="true" />,
+  };
+
+  const roleLabelMap = {
+    admin: "Administrador",
+    dentist: "Doctor",
+    user: "Paciente",
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (e) {
+      console.warn("Logout error", e);
+    } finally {
+      const target = `/login?from=${encodeURIComponent(pathname || "/")}`;
+      router.replace(target);
+    }
+  };
+
   if (isLoggedIn) {
     return (
       <div className="flex items-center space-x-3">
         <ThemeToggleButton />
+
+        {/* Chip de rol y usuario */}
+        <div
+          className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/60 dark:bg-gray-800/60 border border-border dark:border-border-dark backdrop-blur-sm shadow-sm max-w-xs"
+          aria-label={`Usuario autenticado: ${user?.name || "Usuario"}, rol ${
+            roleLabelMap[user?.role] || "Paciente"
+          }`}
+        >
+          {roleIconMap[user?.role]}
+          <span className="text-xs font-semibold tracking-wide text-text-secondary truncate max-w-[6rem]">
+            {user?.name || "Usuario"}
+          </span>
+          <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-primary-500/10 text-primary-600 dark:text-primary-400 tracking-wider">
+            {roleLabelMap[user?.role] || "Paciente"}
+          </span>
+        </div>
 
         {/* Dashboard Link */}
         <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap">
@@ -53,17 +90,11 @@ const UserAuthSection = () => {
         {/* User Menu */}
         <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap">
           <Link
-            href={`/${
-              user?.role === "admin"
-                ? "admin"
-                : user?.role === "dentist"
-                ? "dentist"
-                : "patient"
-            }-profile`}
+            href={`/${user?.role || "patient"}-profile`}
             className="flex items-center space-x-2 px-3 py-2 border border-border dark:border-border-dark hover:bg-interactive dark:hover:bg-interactive-dark rounded-lg transition-colors duration-200 font-medium text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/50"
           >
-            <FaUser className="text-sm" />
-            <span className="hidden lg:inline">{user?.name || "Perfil"}</span>
+            {roleIconMap[user?.role] || <FaUser className="text-sm" />}
+            <span className="hidden lg:inline">Perfil</span>
           </Link>
         </motion.div>
 
