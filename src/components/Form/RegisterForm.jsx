@@ -107,13 +107,13 @@ function RegisterForm() {
     switch (name) {
       case "name":
         if (!value.trim()) errorMsg = "El nombre es obligatorio.";
-        else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/.test(value))
-          errorMsg = "Solo letras y espacios.";
+        else if (value.trim().length < 2) errorMsg = "Mínimo 2 caracteres.";
+        else if (value.trim().length > 100) errorMsg = "Máximo 100 caracteres.";
         break;
       case "idNumber":
         if (!value.trim()) errorMsg = "La identificación es obligatoria.";
-        else if (!/^[0-9]+$/.test(value)) errorMsg = "Solo números.";
-        else if (value.length < 6) errorMsg = "Mínimo 6 dígitos.";
+        else if (value.trim().length < 5) errorMsg = "Mínimo 5 caracteres.";
+        else if (value.trim().length > 20) errorMsg = "Máximo 20 caracteres.";
         break;
       case "email":
         if (!value.trim()) errorMsg = "El correo es obligatorio.";
@@ -121,15 +121,19 @@ function RegisterForm() {
           errorMsg = "Correo inválido.";
         break;
       case "password":
+        // Backend: min 8, max 30, at least 4 of: lowercase, uppercase, numeric, symbol
+        const criteria = {
+          lower: /[a-z]/.test(value),
+          upper: /[A-Z]/.test(value),
+          number: /[0-9]/.test(value),
+          symbol: /[^A-Za-z0-9]/.test(value),
+        };
+        const metCount = Object.values(criteria).filter(Boolean).length;
         if (value.length < 8) errorMsg = "Mínimo 8 caracteres.";
-        else if (!/[A-Z]/.test(value))
-          errorMsg = "Debe contener al menos una mayúscula.";
-        else if (!/[a-z]/.test(value))
-          errorMsg = "Debe contener al menos una minúscula.";
-        else if (!/[0-9]/.test(value))
-          errorMsg = "Debe contener al menos un número.";
-        else if (!/[^A-Za-z0-9]/.test(value))
-          errorMsg = "Debe contener al menos un símbolo.";
+        else if (value.length > 30) errorMsg = "Máximo 30 caracteres.";
+        else if (metCount < 4)
+          errorMsg =
+            "Debe cumplir al menos 4 tipos: mayúscula, minúscula, número y símbolo.";
         break;
       case "confirmPassword":
         if (value !== formData.password)
@@ -139,12 +143,21 @@ function RegisterForm() {
         if (!value.trim()) errorMsg = "El teléfono es obligatorio.";
         else if (!/^[0-9]+$/.test(value)) errorMsg = "Solo números.";
         else if (value.length < 7) errorMsg = "Mínimo 7 dígitos.";
+        else if (value.length > 20) errorMsg = "Máximo 20 dígitos.";
         break;
       case "address":
-        if (!value.trim()) errorMsg = "La dirección es obligatoria.";
+        // Optional (backend allows null/empty) but enforce max length
+        if (value && value.length > 255) errorMsg = "Máximo 255 caracteres.";
         break;
       case "birth_date":
-        if (!value) errorMsg = "La fecha de nacimiento es obligatoria.";
+        // Optional; validate only if present and not future
+        if (value) {
+          const selected = new Date(value);
+          const today = new Date();
+          // Normalize times
+          if (selected > today)
+            errorMsg = "La fecha no puede estar en el futuro.";
+        }
         break;
       default:
         break;
@@ -154,11 +167,12 @@ function RegisterForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    const processed = name === "email" ? value.toLowerCase() : value;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: processed,
     }));
-    validateField(name, value);
+    validateField(name, processed);
   };
 
   const handleSubmit = async (e) => {
@@ -166,25 +180,69 @@ function RegisterForm() {
     setLoading(true);
     setError(null);
     setMessage(null);
-
-    // Validar todos los campos antes de enviar
-    let formIsValid = true;
-    const newFieldErrors = {};
-    Object.keys(formData).forEach((name) => {
-      validateField(name, formData[name]);
-      if (fieldErrors[name]) {
-        // Check if there's an error after validation
-        formIsValid = false;
+    // Full validation snapshot
+    const newErrors = {};
+    Object.entries(formData).forEach(([k, v]) => {
+      validateField(k, v);
+      // validateField sets asynchronously; we'll also reproduce logic here for submission reliability
+      let msg = "";
+      switch (k) {
+        case "name":
+          if (!v.trim()) msg = "El nombre es obligatorio.";
+          else if (v.trim().length < 2) msg = "Mínimo 2 caracteres.";
+          else if (v.trim().length > 100) msg = "Máximo 100 caracteres.";
+          break;
+        case "idNumber":
+          if (!v.trim()) msg = "La identificación es obligatoria.";
+          else if (v.trim().length < 5) msg = "Mínimo 5 caracteres.";
+          else if (v.trim().length > 20) msg = "Máximo 20 caracteres.";
+          break;
+        case "email":
+          if (!v.trim()) msg = "El correo es obligatorio.";
+          else if (!/^[^@]+@[^@]+\.[^@]+$/.test(v)) msg = "Correo inválido.";
+          break;
+        case "password": {
+          const criteria = {
+            lower: /[a-z]/.test(v),
+            upper: /[A-Z]/.test(v),
+            number: /[0-9]/.test(v),
+            symbol: /[^A-Za-z0-9]/.test(v),
+          };
+          const met = Object.values(criteria).filter(Boolean).length;
+          if (v.length < 8) msg = "Mínimo 8 caracteres.";
+          else if (v.length > 30) msg = "Máximo 30 caracteres.";
+          else if (met < 4)
+            msg =
+              "Debe cumplir al menos 4 tipos: mayúscula, minúscula, número y símbolo.";
+          break;
+        }
+        case "confirmPassword":
+          if (v !== formData.password) msg = "Las contraseñas no coinciden.";
+          break;
+        case "phone":
+          if (!v.trim()) msg = "El teléfono es obligatorio.";
+          else if (!/^[0-9]+$/.test(v)) msg = "Solo números.";
+          else if (v.length < 7) msg = "Mínimo 7 dígitos.";
+          else if (v.length > 20) msg = "Máximo 20 dígitos.";
+          break;
+        case "address":
+          if (v && v.length > 255) msg = "Máximo 255 caracteres.";
+          break;
+        case "birth_date":
+          if (v) {
+            const selected = new Date(v);
+            const today = new Date();
+            if (selected > today) msg = "La fecha no puede estar en el futuro.";
+          }
+          break;
+        default:
+          break;
       }
+      if (msg) newErrors[k] = msg;
     });
 
-    if (formData.password !== formData.confirmPassword) {
-      newFieldErrors.confirmPassword = "Las contraseñas no coinciden.";
-      formIsValid = false;
-    }
-    setFieldErrors(newFieldErrors);
-
-    if (!formIsValid) {
+    if (Object.keys(newErrors).length) {
+      setFieldErrors((prev) => ({ ...prev, ...newErrors }));
       setLoading(false);
       setError("Por favor, corrige los errores en el formulario.");
       return;
@@ -207,19 +265,31 @@ function RegisterForm() {
       const userData = { ...formData, recaptchaToken };
       delete userData.confirmPassword;
 
-      await authService.register(userData);
-
-      setMessage(
-        "¡Registro Exitoso! Hemos enviado un correo de activación a tu email."
-      );
+      const registeredUser = await authService.register(userData);
+      const emailForRedirect = formData.email; // snapshot
+      setMessage("¡Registro Exitoso! Te redirigimos para activar tu cuenta.");
+      // Debug (puedes quitar luego)
+      if (process.env.NODE_ENV === "development") {
+        console.log(
+          "[Register] Redirecting to activate with email:",
+          emailForRedirect
+        );
+      }
       setTimeout(() => {
-        router.push("/login");
-      }, 1000);
+        router.replace(
+          `/activate?email=${encodeURIComponent(emailForRedirect)}`
+        );
+      }, 600);
     } catch (err) {
-      const errorMessage =
-        err.response?.data?.message ||
-        err.message ||
-        "No se pudo completar el registro.";
+      const status = err.response?.status;
+      const data = err.response?.data || {};
+      let errorMessage =
+        data.message || err.message || "No se pudo completar el registro.";
+      if (status === 409) {
+        // Mensaje más amigable en español
+        errorMessage =
+          "Ya existe un usuario con este correo o número de identificación.";
+      }
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -228,7 +298,10 @@ function RegisterForm() {
 
   return (
     <div className="relative bg-[var(--color-primary)] dark:bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl shadow-[var(--shadow-dental-xl)] w-full max-w-6xl overflow-hidden md:flex md:min-h-[600px]">
-      <motion.div className="hidden md:block md:w-1/2 relative overflow-hidden" variants={imageVariants}>
+      <motion.div
+        className="hidden md:block md:w-1/2 relative overflow-hidden"
+        variants={imageVariants}
+      >
         <Image
           src="/Register.png"
           alt="Fondo de registro"
@@ -242,7 +315,9 @@ function RegisterForm() {
 
         <div className="absolute inset-0 flex items-center justify-center p-8 text-center text-white z-10">
           <div>
-            <h2 className="text-4xl lg:text-5xl font-extrabold mb-4 drop-shadow-lg">¡Únete a Nuestra Comunidad!</h2>
+            <h2 className="text-4xl lg:text-5xl font-extrabold mb-4 drop-shadow-lg">
+              ¡Únete a Nuestra Comunidad!
+            </h2>
             <p className="text-lg lg:text-xl font-light opacity-90 leading-relaxed">
               Regístrate para gestionar tus citas y acceder a servicios
               exclusivos.
@@ -390,7 +465,6 @@ function RegisterForm() {
             name="address"
             value={formData.address}
             onChange={handleChange}
-            required
             startIcon={
               <FaMapMarkerAlt className="h-5 w-5 text-foreground-muted" />
             }
@@ -402,7 +476,6 @@ function RegisterForm() {
             type="date"
             value={formData.birth_date}
             onChange={handleChange}
-            required
             startIcon={
               <FaCalendarAlt className="h-5 w-5 text-foreground-muted" />
             }

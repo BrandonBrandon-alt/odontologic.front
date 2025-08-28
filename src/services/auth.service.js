@@ -134,6 +134,44 @@ class AuthService {
     }
   }
 
+  // Verificar código de restablecimiento (opcional antes de enviar nueva contraseña)
+  async verifyResetCode({ email, code }) {
+    try {
+      const response = await apiClient.post("/auth/password/verify-code", {
+        email: email?.toLowerCase(),
+        code,
+      });
+      return response.data; // { message } si backend responde así
+    } catch (error) {
+      console.error("Verify reset code error:", error);
+      throw error;
+    }
+  }
+
+  // Activar cuenta con código enviado al email
+  async activateAccount({ email, code }) {
+    try {
+      const response = await apiClient.post("/auth/activate", { email, code });
+      return response.data; // { message }
+    } catch (error) {
+      console.error("Account activation error:", error);
+      throw error;
+    }
+  }
+
+  // Reenviar código de activación
+  async resendActivationCode(email) {
+    try {
+      const response = await apiClient.post("/auth/resend-activation", {
+        email,
+      });
+      return response.data; // { message }
+    } catch (error) {
+      console.error("Resend activation code error:", error);
+      throw error;
+    }
+  }
+
   // Verificar si el usuario está autenticado
   isAuthenticated() {
     const token = localStorage.getItem("accessToken");

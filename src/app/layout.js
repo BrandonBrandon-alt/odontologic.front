@@ -3,6 +3,7 @@ import "./globals.css";
 import Providers from "./providers";
 import Navbar from "@/components/ui/navbar/Navbar";
 import Footer from "@/components/ui/Footer";
+import BackToTopButton from "@/components/ui/BackToTopButton";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,11 +18,16 @@ const geistMono = Geist_Mono({
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+      >
         <Providers>
           <Navbar />
-          <main className="flex-grow container mx-auto px-dental-md pt-20 pb-dental-lg">{children}</main>
+          <main className="flex-grow container mx-auto px-dental-md pt-20 pb-dental-lg">
+            {children}
+          </main>
           <Footer />
+          <BackToTopButton />
         </Providers>
       </body>
     </html>

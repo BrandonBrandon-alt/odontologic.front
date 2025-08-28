@@ -1,15 +1,16 @@
 "use client"; // Marcar como Componente de Cliente para usar hooks
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // Para redirigir al usuario
 import Link from "next/link"; // Added for navigation links
 import { motion, AnimatePresence } from "framer-motion"; // Added for animations
 import Image from "next/image";
 
-import Form from "../ui/Form"; // Asegúrate que la ruta sea correcta
-import Input from "../ui/Input"; // Asegúrate que la ruta sea correcta
-import Button from "../ui/Button"; // Asegúrate que la ruta sea correcta
-import Alert from "../ui/Alert"; // Importamos el componente Alert
+import Form from "../ui/Form";
+import Input from "../ui/Input";
+import Button from "../ui/Button";
+import Alert from "../ui/Alert";
+import { authService } from "../../services/auth.service";
 
 /**
  * Componente LoginForm
@@ -20,6 +21,30 @@ const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+
+  // Cargar script reCAPTCHA v3
+  useEffect(() => {
+    const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_V3_SITE_KEY;
+    if (!siteKey) {
+      setIsScriptLoaded(true);
+      return;
+    }
+    const id = "recaptcha-script";
+    if (document.getElementById(id)) {
+      setIsScriptLoaded(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.id = id;
+    script.src = `https://www.google.com/recaptcha/api.js?render=${siteKey}`;
+    script.async = true;
+    script.defer = true;
+    script.onload = () => setTimeout(() => setIsScriptLoaded(true), 300);
+    document.head.appendChild(script);
+  }, []);
 
   // --- Animaciones de Framer Motion ---
   const formVariants = {
@@ -48,38 +73,71 @@ const LoginForm = () => {
     },
   };
 
-  // Manejador de la sumisión del formulario
+  // Validación por campo
+  const validateField = (name, value) => {
+    let msg = "";
+    if (name === "email") {
+      if (!value.trim()) msg = "El correo es obligatorio.";
+      else if (!/^[^@]+@[^@]+\.[^@]+$/.test(value)) msg = "Correo inválido.";
+    }
+    if (name === "password") {
+      if (!value) msg = "La contraseña es obligatoria.";
+    }
+    setFieldErrors((prev) => ({ ...prev, [name]: msg }));
+    return msg;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    const processed = name === "email" ? value.toLowerCase() : value;
+    setFormData((p) => ({ ...p, [name]: processed }));
+    validateField(name, processed);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
     setIsSuccess(false);
 
-    const email = e.target.elements.email.value;
-    const password = e.target.elements.password.value;
+    // Validación completa
+    const errors = {};
+    Object.entries(formData).forEach(([k, v]) => {
+      const m = validateField(k, v);
+      if (m) errors[k] = m;
+    });
+    if (Object.keys(errors).length) {
+      setIsLoading(false);
+      setError("Por favor corrige los errores del formulario.");
+      return;
+    }
 
     try {
-      // --- Llamada real al servicio de autenticación ---
-      // const user = await authService.login({ email, password });
-
-      // Simulación de login
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      if (email === "test@example.com" && password === "password") {
-        setIsSuccess(true);
-        setTimeout(() => {
-          router.push("/dashboard");
-        }, 1000);
-      } else {
-        setError(
-          "Credenciales inválidas. Intenta con test@example.com / password"
-        );
+      let recaptchaToken = null;
+      const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_V3_SITE_KEY;
+      if (siteKey && window.grecaptcha) {
+        recaptchaToken = await window.grecaptcha.execute(siteKey, {
+          action: "login",
+        });
       }
+      await authService.login({
+        email: formData.email.trim().toLowerCase(),
+        password: formData.password,
+        recaptchaToken,
+      });
+      setIsSuccess(true);
+      setTimeout(() => router.push("/dashboard"), 800);
     } catch (err) {
-      // Manejo de errores desde la API
-      const errorMessage =
-        err.response?.data?.message ||
+      const status = err.response?.status;
+      const messageFromApi = err.response?.data?.message;
+      let friendly =
+        messageFromApi ||
+        err.message ||
         "Ha ocurrido un error inesperado. Por favor, inténtalo de nuevo.";
-      setError(errorMessage);
+      if (status === 401) friendly = "Credenciales inválidas.";
+      else if (status === 403)
+        friendly = "Cuenta inactiva. Revisa tu correo para activarla.";
+      setError(friendly);
     } finally {
       setIsLoading(false);
     }
@@ -159,6 +217,9 @@ const LoginForm = () => {
               label="Correo Electrónico"
               required
               disabled={isLoading || isSuccess}
+              value={formData.email}
+              onChange={handleChange}
+              error={fieldErrors.email}
             />
           </Form.Field>
           <Form.Field>
@@ -170,6 +231,9 @@ const LoginForm = () => {
               required
               showPasswordToggle
               disabled={isLoading || isSuccess}
+              value={formData.password}
+              onChange={handleChange}
+              error={fieldErrors.password}
             />
           </Form.Field>
 
@@ -177,7 +241,7 @@ const LoginForm = () => {
             type="submit"
             fullWidth
             isLoading={isLoading}
-            disabled={isSuccess}
+            disabled={isSuccess || !isScriptLoaded}
           >
             {isSuccess ? "Redirigiendo..." : "Ingresar"}
           </Button>
