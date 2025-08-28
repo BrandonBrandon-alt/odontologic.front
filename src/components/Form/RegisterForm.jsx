@@ -265,14 +265,21 @@ function RegisterForm() {
       const userData = { ...formData, recaptchaToken };
       delete userData.confirmPassword;
 
-      await authService.register(userData);
-
-      setMessage(
-        "¡Registro Exitoso! Hemos enviado un correo de activación a tu email."
-      );
+      const registeredUser = await authService.register(userData);
+      const emailForRedirect = formData.email; // snapshot
+      setMessage("¡Registro Exitoso! Te redirigimos para activar tu cuenta.");
+      // Debug (puedes quitar luego)
+      if (process.env.NODE_ENV === "development") {
+        console.log(
+          "[Register] Redirecting to activate with email:",
+          emailForRedirect
+        );
+      }
       setTimeout(() => {
-        router.push("/login");
-      }, 1000);
+        router.replace(
+          `/activate?email=${encodeURIComponent(emailForRedirect)}`
+        );
+      }, 600);
     } catch (err) {
       const status = err.response?.status;
       const data = err.response?.data || {};
