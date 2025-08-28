@@ -513,7 +513,8 @@ const WhyChooseUsSection = () => (
 
 // --- Enhanced CTA Section ---
 const CTASection = () => (
-  <Section className="bg-gradient-primary dark:bg-gradient-primary-dark text-white w-screen left-1/2 -ml-[50vw] relative">
+  <Section className="relative text-white">
+    <div className="full-bleed-bg bg-gradient-primary dark:bg-gradient-primary-dark absolute inset-0 -z-10" />
     {/* Enhanced Background decorations */}
     <motion.div
       // Rotación eliminada
