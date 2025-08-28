@@ -51,6 +51,7 @@
     color: var(--color-text-primary);
     line-height: 1.6;
     transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden; /* Previene desplazamiento horizontal causado por hacks full-bleed */
   }
 }
 
@@ -112,6 +113,14 @@
 }
 
 @layer utilities {
+  /* Contenedor consistente */
+  .layout-container { @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8; }
+  /* Sección vertical spacing consistente */
+  .section-y { @apply py-16 sm:py-20 md:py-24; }
+  /* Full bleed background sin romper alineación central del contenido */
+  .full-bleed-bg { position: relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; width:100vw; }
+  /* Helper para fondo superpuesto (oscurecer) */
+  .hero-overlay { @apply absolute inset-0 bg-black/30 dark:bg-black/40 backdrop-blur-[2px] z-0; }
   .shadow-dental-sm { box-shadow: theme('boxShadow.dental-sm'); }
   .shadow-dental-md { box-shadow: theme('boxShadow.dental-md'); }
   .shadow-dental-lg { box-shadow: theme('boxShadow.dental-lg'); }

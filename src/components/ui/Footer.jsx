@@ -53,27 +53,30 @@ const serviceLinks = [
 
 const Footer = ({ children }) => {
   return (
-    <footer className="bg-gradient-primary dark:bg-gradient-primary-dark text-surface border-t-2 border-primary-500 py-10 shadow-inner mt-12">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-          <div className="text-center md:text-left">
-            <h3 className="text-xl font-bold mb-4 flex items-center justify-center md:justify-start gap-2 text-white">
+    <footer className="bg-gradient-primary dark:bg-gradient-primary-dark text-surface border-t-2 border-primary-500 pt-12 pb-8 shadow-inner mt-12 text-white">
+      <div className="layout-container">
+        {/* Grid principal adaptable */}
+        <div className="grid gap-y-12 gap-x-8 md:grid-cols-2 lg:grid-cols-4 mb-12">
+          {/* Contacto */}
+          <div className="flex flex-col items-center md:items-start">
+            <h3 className="text-lg sm:text-xl font-bold mb-5 flex items-center gap-2">
               <svg
-                className="w-6 h-6 inline-block text-accent-400"
+                className="w-6 h-6 text-accent-400"
                 fill="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path d="M12 2C7.03 2 3 6.03 3 11c0 5.25 7.02 10.45 8.09 11.22.34.24.81.24 1.15 0C13.98 21.45 21 16.25 21 11c0-4.97-4.03-9-9-9zm0 17.88C10.14 18.09 5 14.13 5 11c0-3.86 3.14-7 7-7s7 3.14 7 7c0 3.13-5.14 7.09-7 8.88z" />
                 <circle cx="12" cy="11" r="3" />
               </svg>
-              Contáctanos
+              <span id="footer-contact-heading">Contáctanos</span>
             </h3>
-            <div className="space-y-2 text-sm opacity-90">
+            <address className="not-italic space-y-2 text-sm opacity-90 text-center md:text-left">
               <p>
                 Teléfono:{" "}
                 <a
                   href="tel:+573001234567"
-                  className="hover:underline hover:text-accent-400 transition-colors duration-200"
+                  className="focus:outline-none focus-visible:ring-2 ring-offset-2 ring-accent-500/70 rounded hover:underline hover:text-accent-400 transition-colors"
                 >
                   +57 300 123 4567
                 </a>
@@ -82,108 +85,137 @@ const Footer = ({ children }) => {
                 Email:{" "}
                 <a
                   href="mailto:info@odontologic.com"
-                  className="hover:underline hover:text-accent-400 transition-colors duration-200"
+                  className="focus:outline-none focus-visible:ring-2 ring-offset-2 ring-accent-500/70 rounded hover:underline hover:text-accent-400 transition-colors"
                 >
                   info@odontologic.com
                 </a>
               </p>
               <p>Dirección: Calle 10 #15-20, Armenia, Quindío</p>
-            </div>
+              <p className="pt-2 text-xs opacity-70 leading-relaxed max-w-xs">
+                Atención personalizada con tecnología de vanguardia para tu
+                salud bucal.
+              </p>
+            </address>
           </div>
 
-          <div className="text-center md:text-left">
-            <h3 className="text-xl font-bold mb-4 text-white">Navegación</h3>
-            <div className="space-y-2 text-sm opacity-90">
+          {/* Navegación rápida */}
+          <nav
+            aria-labelledby="footer-nav-heading"
+            className="flex flex-col items-center md:items-start"
+          >
+            <h3
+              id="footer-nav-heading"
+              className="text-lg sm:text-xl font-bold mb-5"
+            >
+              Navegación
+            </h3>
+            <ul className="space-y-2 text-sm opacity-90 w-full max-w-[220px]">
               {quickLinks.map(({ href, label }) => (
-                <div key={label}>
+                <li key={label} className="w-full">
                   <Link
                     href={href}
-                    className="hover:underline hover:text-accent-400 transition-colors duration-200"
+                    className="block w-full focus:outline-none focus-visible:ring-2 ring-offset-2 ring-accent-500/70 rounded hover:underline hover:text-accent-400 transition-colors px-1"
                   >
                     {label}
                   </Link>
-                </div>
+                </li>
               ))}
-            </div>
-          </div>
+            </ul>
+          </nav>
 
-          <div className="text-center md:text-left">
-            <h3 className="text-xl font-bold mb-4 text-white">Servicios</h3>
-            <div className="space-y-2 text-sm opacity-90">
+          {/* Servicios */}
+          <nav
+            aria-labelledby="footer-services-heading"
+            className="flex flex-col items-center md:items-start"
+          >
+            <h3
+              id="footer-services-heading"
+              className="text-lg sm:text-xl font-bold mb-5"
+            >
+              Servicios
+            </h3>
+            <ul className="space-y-2 text-sm opacity-90 w-full max-w-[220px]">
               {serviceLinks.map(({ href, label }) => (
-                <div key={label}>
+                <li key={label} className="w-full">
                   <Link
                     href={href}
-                    className="hover:underline hover:text-accent-400 transition-colors duration-200"
+                    className="block w-full focus:outline-none focus-visible:ring-2 ring-offset-2 ring-accent-500/70 rounded hover:underline hover:text-accent-400 transition-colors px-1"
                   >
                     {label}
                   </Link>
-                </div>
+                </li>
               ))}
-            </div>
-          </div>
+            </ul>
+          </nav>
 
-          <div className="text-center md:text-left">
-            <h3 className="text-xl font-bold mb-4 text-white">Síguenos</h3>
-            <div className="flex space-x-4 justify-center md:justify-start mb-4">
+          {/* Redes y horarios */}
+          <div className="flex flex-col items-center md:items-start">
+            <h3 className="text-lg sm:text-xl font-bold mb-5">Síguenos</h3>
+            <ul
+              className="flex flex-wrap gap-4 justify-center md:justify-start mb-5"
+              aria-label="Redes sociales"
+            >
               {socialLinks.map(({ href, label, icon }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="bg-accent-500/20 hover:bg-accent-500 text-white rounded-full p-3 transition-colors duration-200 shadow-md"
-                >
-                  {icon}
-                </a>
+                <li key={label}>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="bg-accent-500/20 hover:bg-accent-500 text-white rounded-full p-3 transition-colors duration-200 shadow-md focus:outline-none focus-visible:ring-2 ring-offset-2 ring-accent-500/70"
+                  >
+                    {icon}
+                  </a>
+                </li>
               ))}
-            </div>
-            <div className="text-sm opacity-90">
-              <p>Horarios de atención:</p>
-              <p>Lun - Vie: 8:00 AM - 6:00 PM</p>
-              <p>Sábados: 8:00 AM - 2:00 PM</p>
+            </ul>
+            <div className="text-sm opacity-90 text-center md:text-left space-y-0.5">
+              <p className="font-semibold">Horarios:</p>
+              <p>Lun - Vie: 8:00 - 18:00</p>
+              <p>Sáb: 8:00 - 14:00</p>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-accent-500/20 pt-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex flex-wrap justify-center gap-4 text-sm opacity-90">
+        {/* Línea inferior */}
+        <div className="border-t border-white/10 pt-6">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-4 justify-between items-center">
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs sm:text-sm opacity-90">
               <Link
                 href="/privacy"
-                className="hover:underline hover:text-accent-400 transition-colors duration-200"
+                className="focus:outline-none focus-visible:ring-2 ring-offset-2 ring-accent-500/70 rounded hover:underline hover:text-accent-400 transition-colors"
               >
-                Política de Privacidad
+                Privacidad
               </Link>
               <Link
                 href="/terms"
-                className="hover:underline hover:text-accent-400 transition-colors duration-200"
+                className="focus:outline-none focus-visible:ring-2 ring-offset-2 ring-accent-500/70 rounded hover:underline hover:text-accent-400 transition-colors"
               >
-                Términos de Servicio
+                Términos
               </Link>
               <Link
                 href="/about"
-                className="hover:underline hover:text-accent-400 transition-colors duration-200"
+                className="focus:outline-none focus-visible:ring-2 ring-offset-2 ring-accent-500/70 rounded hover:underline hover:text-accent-400 transition-colors"
               >
                 Sobre Nosotros
               </Link>
               <Link
                 href="/contact"
-                className="hover:underline hover:text-accent-400 transition-colors duration-200"
+                className="focus:outline-none focus-visible:ring-2 ring-offset-2 ring-accent-500/70 rounded hover:underline hover:text-accent-400 transition-colors"
               >
                 Contacto
               </Link>
             </div>
-
-            <div className="text-center text-xs opacity-70">
-              &copy; {new Date().getFullYear()} Odontologic - Tu Clínica Dental
-              en Armenia, Quindío. Todos los derechos reservados.
+            <div className="text-center text-[10px] sm:text-xs opacity-70 leading-relaxed max-w-md">
+              &copy; {new Date().getFullYear()} Odontologic. Todos los derechos
+              reservados.
             </div>
           </div>
         </div>
       </div>
-      {children && <div className="mt-2 w-full">{children}</div>}
+      {children && (
+        <div className="layout-container mt-4 w-full">{children}</div>
+      )}
     </footer>
   );
 };
