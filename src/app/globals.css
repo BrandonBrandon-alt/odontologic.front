@@ -140,3 +140,9 @@
 .animate-gradient-x {
   animation: gradient-x 3s ease infinite;
 }
+
+
+/* Añade esto a tu archivo CSS global (globals.css o similar) */
+
+/* Simplified mobile menu helpers - rely mostly on component classes */
+body.mobile-menu-open { overflow: hidden; }

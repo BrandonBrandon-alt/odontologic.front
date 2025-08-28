@@ -8,23 +8,26 @@ const Logo = () => (
     whileHover={{ scale: 1.05 }}
     whileTap={{ scale: 0.98 }}
     transition={{ type: "spring", stiffness: 300, damping: 20 }}
+    className="flex-shrink-0"
   >
     <Link
       href="/"
-      className="group relative flex items-center space-x-3 text-2xl font-bold transition-all duration-300"
+      className="group relative flex items-center space-x-2 sm:space-x-3 text-xl sm:text-2xl font-bold transition-all duration-300"
+      aria-label="Ir al inicio - Odontologic"
     >
       <motion.div
         className="relative"
         whileHover={{ rotate: 360 }}
         transition={{ duration: 0.6, ease: "easeInOut" }}
       >
-        <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center shadow-lg">
-          <FaTooth className="text-white text-lg" />
+        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center shadow-lg">
+          <FaTooth className="text-white text-sm sm:text-lg" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl opacity-30 group-hover:animate-ping"></div>
       </motion.div>
-      <span className="hidden sm:inline bg-gradient-to-r from-primary-600 to-accent-600 dark:from-primary-400 dark:to-accent-400 bg-clip-text text-transparent font-extrabold tracking-tight">
-        Odontologic
+      <span className="bg-gradient-to-r from-primary-600 to-accent-600 dark:from-primary-400 dark:to-accent-400 bg-clip-text text-transparent font-extrabold tracking-tight">
+        <span className="hidden xs:inline">Odontologic</span>
+        <span className="xs:hidden">odontologic</span>
       </span>
     </Link>
   </motion.div>
