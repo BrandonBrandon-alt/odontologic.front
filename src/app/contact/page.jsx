@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import PageHero from "@/components/ui/PageHero"; // Hero reutilizable
+
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
@@ -71,76 +71,6 @@ const Section = ({ children, className = "" }) => (
       {children}
     </div>
   </section>
-);
-
-const SectionTitle = ({ title, subtitle, gradient = false, icon }) => (
-  <motion.div variants={itemVariants} className="text-center mb-16">
-    {icon && (
-      <motion.div
-        className="text-6xl mb-6"
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-      >
-        {icon}
-      </motion.div>
-    )}
-    <motion.h2
-      className={`text-3xl md:text-4xl lg:text-5xl font-black mb-4 ${
-        gradient
-          ? "bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent"
-          : "text-primary-500"
-      }`}
-      initial={{ scale: 0.9, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      transition={{ duration: 0.6 }}
-    >
-      {title}
-    </motion.h2>
-    <motion.div
-      className="w-24 h-1 bg-accent-500 mx-auto rounded-full mb-6"
-      initial={{ width: 0 }}
-      animate={{ width: 96 }}
-      transition={{ delay: 0.3, duration: 0.8 }}
-    />
-    {subtitle && (
-      <motion.p
-        className="text-lg md:text-xl text-text-secondary max-w-4xl mx-auto leading-relaxed"
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.4, duration: 0.6 }}
-      >
-        {subtitle}
-      </motion.p>
-    )}
-  </motion.div>
-);
-
-// --- Hero Section reutilizando PageHero ---
-const HeroSection = () => (
-  <PageHero
-    headingLines={["Contáctanos", "Estamos Aquí para Ayudarte"]}
-    subtitle="¿Tienes alguna pregunta o necesitas agendar una cita? Nuestro equipo está listo para atenderte y brindarte la mejor atención dental."
-    primaryAction={{
-      label: "Enviar Mensaje",
-      ariaLabel: "Ir al formulario de contacto",
-      onClick: () => {
-        const el = document.getElementById("contact-form");
-        if (el) el.scrollIntoView({ behavior: "smooth" });
-      },
-      variant: "primary",
-      icon: <ChatBubbleLeftRightIcon className="w-5 h-5" />,
-    }}
-    secondaryActions={[
-      {
-        label: "WhatsApp",
-        href: "https://wa.me/573123456789",
-        ariaLabel: "Abrir chat de WhatsApp",
-        variant: "secondary",
-        icon: <FaWhatsapp className="w-5 h-5" />,
-      },
-    ]}
-  />
 );
 
 // --- Contact Form Section ---
@@ -498,9 +428,8 @@ function ContactPage() {
       {/* Fixed background blurred circles removed for cleaner design */}
 
       {/* Page Sections */}
-      <HeroSection />
+
       <ContactFormSection />
-      <CTASection />
     </div>
   );
 }

@@ -17,7 +17,6 @@ import {
 } from "react-icons/fa"; // Importa varios iconos de la librería Font Awesome a través de react-icons
 import Card, { ActionCard, StatCard } from "../../components/ui/Card"; // Importa componentes de tarjeta (Card, ActionCard, StatCard) desde una ruta relativa
 import DentalButton from "../../components/ui/Button"; // Importa un componente de botón personalizado (DentalButton) desde una ruta relativa
-import PageHero from "@/components/ui/PageHero"; // Hero reutilizable alineado con Home
 
 // --- Animation Variants (Variantes de Animación) ---
 // Define variantes de animación para el contenedor principal
@@ -399,44 +398,10 @@ const ContactCard = ({ info, index }) => (
   </motion.div>
 );
 
-// Hero reutilizando PageHero para consistencia visual
-const HeroSection = () => (
-  <PageHero
-    headingLines={["Nuestros Servicios Odontológicos"]}
-    subtitle="Cuidamos tu sonrisa con tecnología de vanguardia y atención personalizada"
-    primaryAction={{
-      label: "Agendar Cita",
-      onClick: () => alert("Redirigiendo al agendamiento..."),
-      ariaLabel: "Agendar una cita",
-      variant: "primary",
-      icon: <FaCalendarPlus className="w-5 h-5" />,
-    }}
-    secondaryActions={[
-      {
-        label: "Contactar",
-        href: "/contact",
-        ariaLabel: "Ir a la página de contacto",
-        variant: "secondary",
-      },
-    ]}
-  >
-    <span className="px-4 py-2 rounded-full bg-white/15 text-white text-sm font-medium backdrop-blur-sm flex items-center gap-2">
-      <FaClock className="w-4 h-4" /> Horarios Flexibles
-    </span>
-    <span className="px-4 py-2 rounded-full bg-white/15 text-white text-sm font-medium backdrop-blur-sm flex items-center gap-2">
-      <FaShieldAlt className="w-4 h-4" /> Garantía de Calidad
-    </span>
-    <span className="px-4 py-2 rounded-full bg-white/15 text-white text-sm font-medium backdrop-blur-sm flex items-center gap-2">
-      <FaHeart className="w-4 h-4" /> Atención Personalizada
-    </span>
-  </PageHero>
-);
-
 // Componente para la sección de Llamada a la Acción (CTA)
 const CTASection = () => (
   <Section className="relative text-white">
-    <div className="full-bleed-bg bg-gradient-primary dark:bg-gradient-primary-dark absolute inset-0 -z-10" />
-    {" "}
+    <div className="full-bleed-bg bg-gradient-primary dark:bg-gradient-primary-dark absolute inset-0 -z-10" />{" "}
     {/* Estilos de la sección CTA */}
     {/* Decoraciones de fondo */}
     <motion.div
@@ -538,7 +503,6 @@ function ServicesPage() {
       {/* Decoraciones de fondo fijas */}
       {/* Fondo decorativo fijo removido (dos círculos blur animados) para reducir distracción y repaints */}
       {/* Sección Hero */}
-      <HeroSection />
       {/* Categorías de Servicios */}
       <Section>
         {Object.entries(servicesData).map(([category, categoryData], index) => (
@@ -550,8 +514,6 @@ function ServicesPage() {
           />
         ))}
       </Section>
-      {/* Sección CTA */}
-      <CTASection />
       {/* Sección de Contacto */}
       <ContactSection />
     </div>
