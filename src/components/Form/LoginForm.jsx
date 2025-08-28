@@ -144,7 +144,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="relative bg-[var(--color-primary)] dark:bg-[var(--color-surface)]  rounded-xl shadow-[var(--shadow-dental-xl)] w-full max-w-6xl overflow-hidden md:flex md:min-h-[700px]">
+    <div className="relative bg-[var(--color-primary)] dark:bg-[var(--color-surface)] rounded-xl shadow-[var(--shadow-dental-xl)] w-full max-w-6xl overflow-hidden md:flex md:min-h-[640px] lg:min-h-[700px]">
       <motion.div
         className="hidden md:block md:w-1/2 relative overflow-hidden "
         variants={imageVariants}
@@ -172,7 +172,7 @@ const LoginForm = () => {
       </motion.div>
 
       <motion.div
-        className="w-full md:w-1/2 p-6 sm:p-10 lg:p-16 flex flex-col justify-center bg-[var(--color-primary)] dark:bg-[var(--color-surface)] border-2 border-border dark:border-border-dark"
+        className="w-full md:w-1/2 flex flex-col justify-center bg-[var(--color-primary)] dark:bg-[var(--color-surface)] border-2 border-border dark:border-border-dark px-5 py-8 sm:px-8 sm:py-12 xl:px-16 xl:py-16"
         variants={formVariants}
       >
         <motion.h2
@@ -182,7 +182,7 @@ const LoginForm = () => {
           Inicia Sesión
         </motion.h2>
         <motion.p
-          className="text-base text-[var(--color-text-secondary)] text-center mb-8"
+          className="text-sm sm:text-base text-[var(--color-text-secondary)] text-center mb-6 sm:mb-8 max-w-md mx-auto"
           variants={textVariants}
           transition={{ delay: 0.1 }}
         >
@@ -208,7 +208,10 @@ const LoginForm = () => {
           )}
         </AnimatePresence>
 
-        <Form onSubmit={handleSubmit} className="space-y-6">
+        <Form
+          onSubmit={handleSubmit}
+          className="space-y-5 sm:space-y-6 max-w-md mx-auto w-full"
+        >
           <Form.Field>
             <Input
               id="email"
@@ -237,16 +240,18 @@ const LoginForm = () => {
             />
           </Form.Field>
 
-          <Button
-            type="submit"
-            fullWidth
-            isLoading={isLoading}
-            disabled={isSuccess || !isScriptLoaded}
-          >
-            {isSuccess ? "Redirigiendo..." : "Ingresar"}
-          </Button>
+          <div className="pt-2">
+            <Button
+              type="submit"
+              fullWidth
+              isLoading={isLoading}
+              disabled={isSuccess || !isScriptLoaded}
+            >
+              {isSuccess ? "Redirigiendo..." : "Ingresar"}
+            </Button>
+          </div>
 
-          <p className="mt-2 text-center text-[var(--color-text-secondary)] text-sm">
+          <p className="mt-2 text-center text-[var(--color-text-secondary)] text-xs sm:text-sm">
             <Link
               href="/solicitar-reset"
               className="font-semibold text-primary hover:text-accent underline"
@@ -254,7 +259,7 @@ const LoginForm = () => {
               ¿Olvidaste tu contraseña?
             </Link>
           </p>
-          <p className="mt-2 text-center text-[var(--color-text-secondary)] text-sm">
+          <p className="mt-2 text-center text-[var(--color-text-secondary)] text-xs sm:text-sm">
             ¿No tienes una cuenta?{" "}
             <Link
               href="/register"

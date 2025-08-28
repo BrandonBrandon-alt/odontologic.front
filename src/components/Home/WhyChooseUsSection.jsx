@@ -8,14 +8,14 @@ import { FaShieldVirus, FaClock } from "react-icons/fa";
 import { MdOutlineGroups3 } from "react-icons/md";
 import { GiSparkles } from "react-icons/gi";
 
-const FeaturedServicesSection = () => {
+const WhyChooseUsSection = () => {
   const services = [
     {
       icon: <FaShieldVirus />,
       iconColor: "text-primary-500",
       title: "Seguridad Garantizada",
       description:
-        "Tu información personal y médica está protegida con los más altos estándares de seguridad y confidencialidad.",
+        "Información personal y médica protegida con estándares de seguridad y confidencialidad.",
       link: "/services#general",
     },
     {
@@ -23,7 +23,7 @@ const FeaturedServicesSection = () => {
       iconColor: "text-accent-700",
       title: "Atención Rápida",
       description:
-        "genda tu cita en minutos y recibe atención oportuna sin largas esperas.",
+        "Agenda tu cita en minutos y recibe atención oportuna sin largas esperas.",
       link: "/services#esthetic",
     },
     {
@@ -39,13 +39,13 @@ const FeaturedServicesSection = () => {
       iconColor: "text-yellow-500",
       title: "Tecnología Avanzada",
       description:
-        "tilizamos equipos de última generación para diagnósticos precisos y tratamientos efectivos.",
+        "Utilizamos equipos de última generación para diagnósticos precisos y tratamientos efectivos.",
       link: "/services#orthodontics",
     },
   ];
 
   return (
-    <section className="py-24 ">
+    <section className="py-24">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -55,15 +55,15 @@ const FeaturedServicesSection = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold dental-text-primary mb-6">
-            Nuestros Servicios Destacados
+            ¿Por Qué Elegirnos?
           </h2>
           <p className="text-lg md:text-xl dental-text-secondary max-w-3xl mx-auto leading-relaxed">
-            Ofrecemos una amplia gama de servicios odontológicos con la más alta
-            calidad y tecnología avanzada.
+            Beneficios clave que nos diferencian y mejoran tu experiencia dental
+            integral.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12">
           {services.map((service, index) => (
             <motion.div
               key={index}
@@ -73,7 +73,11 @@ const FeaturedServicesSection = () => {
               viewport={{ once: true }}
               className="h-full"
             >
-              <Link href={service.link} className="h-full block">
+              <Link
+                href={service.link}
+                aria-label={service.title}
+                className="h-full block focus:outline-none focus-visible:ring-4 focus-visible:ring-primary-400/40 rounded-2xl"
+              >
                 <Card
                   variant="elevated"
                   interactive={true}
@@ -99,11 +103,11 @@ const FeaturedServicesSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
           viewport={{ once: true }}
-          className="text-center mt-16"
-        ></motion.div>
+          className="text-center mt-4"
+        />
       </div>
     </section>
   );
 };
 
-export default FeaturedServicesSection;
+export default WhyChooseUsSection;

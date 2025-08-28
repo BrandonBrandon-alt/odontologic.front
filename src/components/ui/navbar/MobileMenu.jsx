@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
@@ -86,9 +86,44 @@ const renderMobileLink = (href, icon, text, pathname) => {
   );
 };
 
-const MobileMenu = ({ isMenuOpen, setIsMenuOpen }) => {
+const MobileMenu = ({
+  isMenuOpen,
+  setIsMenuOpen,
+  panelId = "mobile-menu-panel",
+}) => {
   const pathname = usePathname();
   const { isLoggedIn, user, logout: logoutContext } = useAuth();
+  const panelRef = useRef(null);
+
+  // Focus management & accessibility (trap focus, ESC close)
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const panel = panelRef.current;
+    if (!panel) return;
+    const focusable = panel.querySelectorAll(
+      'a[href], button:not([disabled]), [tabindex="0"]'
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    first?.focus();
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setIsMenuOpen(false);
+      } else if (e.key === "Tab") {
+        if (focusable.length === 0) return;
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isMenuOpen, setIsMenuOpen]);
 
   const handleLogout = async () => {
     try {
@@ -125,7 +160,12 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }) => {
           onClick={() => setIsMenuOpen(false)}
         >
           <motion.div
-            className="absolute right-0 top-0 h-full w-5/6 max-w-sm bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl overflow-y-auto"
+            id={panelId}
+            ref={panelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menú de navegación"
+            className="absolute right-0 top-0 h-full w-5/6 max-w-sm bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl overflow-y-auto focus:outline-none"
             variants={mobileMenuVariants}
             initial="hidden"
             animate="visible"
@@ -148,7 +188,7 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }) => {
                 </div>
               </motion.div>
 
-              <nav className="space-y-2">
+              <nav className="space-y-2" aria-label="Navegación móvil">
                 {[
                   { href: "/", icon: <FaHome />, text: "Home" },
                   { href: "/services", icon: <FaTooth />, text: "Servicios" },
@@ -187,7 +227,7 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }) => {
                     >
                       <button
                         onClick={handleLogout}
-                        className="group w-full flex items-center space-x-3 py-3 px-4 rounded-xl font-medium text-error-DEFAULT dark:text-error-foreground-dark hover:bg-error-light dark:hover:bg-error-dark/30 transition-colors duration-300"
+                        className="group w-full flex items-center space-x-3 py-3 px-4 rounded-xl font-medium text-error-DEFAULT dark:text-error-foreground-dark hover:bg-error-light dark:hover:bg-error-dark/30 transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-error-500/50"
                       >
                         <FaSignOutAlt />
                         <span>Cerrar Sesión</span>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { Menu as MenuIcon, X as CloseIcon } from "lucide-react";
@@ -20,6 +20,8 @@ import ThemeToggleButton from "../ThemeToggleButton"; // Mantenerlo aquí si es 
 const Navbar = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuButtonRef = useRef(null);
+  const lastFocusedElementRef = useRef(null);
   const { loading, error, message, clearError, clearMessage } = useAuth();
   const { isVisible } = useScrollDirection();
 
@@ -35,19 +37,38 @@ const Navbar = () => {
       y: -120,
       opacity: 0,
       filter: "blur(8px)",
-      transition: { type: "spring", stiffness: 150, damping: 25, duration: 0.3 },
+      transition: {
+        type: "spring",
+        stiffness: 150,
+        damping: 25,
+        duration: 0.3,
+      },
     },
     visibleScroll: {
       y: 0,
       opacity: 1,
       filter: "blur(0px)",
-      transition: { type: "spring", stiffness: 150, damping: 25, duration: 0.3 },
+      transition: {
+        type: "spring",
+        stiffness: 150,
+        damping: 25,
+        duration: 0.3,
+      },
     },
   };
 
   useEffect(() => {
     setIsMenuOpen(false);
   }, [pathname]);
+
+  // Restore focus to toggle when closing mobile menu
+  useEffect(() => {
+    if (isMenuOpen) {
+      lastFocusedElementRef.current = document.activeElement;
+    } else if (lastFocusedElementRef.current) {
+      menuButtonRef.current?.focus();
+    }
+  }, [isMenuOpen]);
 
   if (loading) {
     return (
@@ -65,7 +86,12 @@ const Navbar = () => {
 
   return (
     <>
-      <NotificationBanner error={error} message={message} clearError={clearError} clearMessage={clearMessage} />
+      <NotificationBanner
+        error={error}
+        message={message}
+        clearError={clearError}
+        clearMessage={clearMessage}
+      />
 
       <motion.nav
         className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-neutral-900 border-b border-border dark:border-border-dark shadow-md"
@@ -93,16 +119,29 @@ const Navbar = () => {
               whileTap={{ scale: 0.98 }}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="p-2.5 rounded-xl bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-lg focus:outline-none text-foreground dark:text-foreground-dark"
-              aria-label="Toggle menu"
+              aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-menu-panel"
+              ref={menuButtonRef}
             >
-              <motion.div animate={{ rotate: isMenuOpen ? 180 : 0 }} transition={{ duration: 0.3 }}>
-                {isMenuOpen ? <CloseIcon className="w-5 h-5" /> : <MenuIcon className="w-5 h-5" />}
+              <motion.div
+                animate={{ rotate: isMenuOpen ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {isMenuOpen ? (
+                  <CloseIcon className="w-5 h-5" />
+                ) : (
+                  <MenuIcon className="w-5 h-5" />
+                )}
               </motion.div>
             </motion.button>
           </div>
         </div>
-
-        <MobileMenu isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+        <MobileMenu
+          isMenuOpen={isMenuOpen}
+          setIsMenuOpen={setIsMenuOpen}
+          panelId="mobile-menu-panel"
+        />
       </motion.nav>
     </>
   );

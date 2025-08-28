@@ -66,7 +66,7 @@ export default function RequestPasswordResetForm() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-6 bg-[var(--color-primary)] dark:bg-[var(--color-surface)] rounded-xl shadow-[var(--shadow-dental-lg)] border border-border dark:border-border-dark">
+    <div className="w-full max-w-md mx-auto p-6 sm:p-8 bg-[var(--color-primary)] dark:bg-[var(--color-surface)] rounded-xl shadow-[var(--shadow-dental-lg)] border border-border dark:border-border-dark">
       <motion.h2
         className="text-2xl font-bold text-center mb-2 text-[var(--color-text-primary)]"
         initial="hidden"

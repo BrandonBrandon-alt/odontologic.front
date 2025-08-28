@@ -42,29 +42,30 @@ const buttonContainerVariants = {
 function HeroSection() {
   return (
     <motion.section
-      className="relative w-screen left-1/2 -ml-[50vw] bg-gradient-primary dark:bg-gradient-primary-dark to-accent-500 text-white py-36 md:py-56 flex items-center justify-center overflow-hidden"
-      style={{ minHeight: "calc(100vh - 80px)" }}
+      className="relative w-screen left-1/2 -ml-[50vw] bg-gradient-primary dark:bg-gradient-primary-dark text-white py-28 sm:py-36 md:py-48 lg:py-56 flex items-center justify-center overflow-hidden"
+      style={{ minHeight: "clamp(540px, 100vh - 72px, 880px)" }}
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
-      <div className="absolute inset-0 bg-black/20 z-0"></div>
+      <div className="absolute inset-0 bg-black/30 dark:bg-black/40 backdrop-blur-[2px] z-0"></div>
 
-      <div className="relative z-10 container mx-auto text-center px-6">
+      <div className="relative z-10 max-w-7xl mx-auto text-center px-4 sm:px-6">
         <motion.h1
-          className="text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-8 tracking-tight"
-          style={{ textShadow: "0px 4px 10px rgba(0,0,0,0.3)" }}
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-6 sm:mb-8 tracking-tight"
+          style={{ textShadow: "0px 4px 10px rgba(0,0,0,0.35)" }}
           variants={itemVariants}
         >
-          Sonrisas que Inspiran, Cuidados que Transforman
+          Sonrisas que Inspiran,
+          <span className="block mt-1">Cuidados que Transforman</span>
         </motion.h1>
         <motion.p
-          className="text-xl md:text-2xl opacity-90 mb-16 max-w-4xl mx-auto font-light"
-          style={{ textShadow: "0px 2px 6px rgba(255, 255, 255, 0.95)" }}
+          className="text-base sm:text-lg md:text-xl lg:text-2xl opacity-95 mb-10 sm:mb-14 max-w-3xl md:max-w-4xl mx-auto font-light"
+          style={{ textShadow: "0px 2px 6px rgba(0,0,0,0.35)" }}
           variants={itemVariants}
         >
-          En Odontologic, combinamos la última tecnología con un toque humano
-          para ofrecerte una experiencia dental excepcional en el corazón de
+          En Odontologic combinamos tecnología de vanguardia y calidez humana
+          para brindarte una experiencia dental excepcional en el corazón de
           Armenia, Quindío.
         </motion.p>
 
@@ -76,10 +77,12 @@ function HeroSection() {
                 */}
         <motion.div variants={buttonContainerVariants}>
           <DentalButton
-            variant="primary" // Usa la variante principal para un CTA destacado
-            size="xl" // Un tamaño grande para mayor impacto
-            rounded="full" // Totalmente redondeado como el diseño original// Activa el efecto de brillo para llamar la atención
-            onClick={() => alert("Redirigiendo a la agenda de citas...")} // Acción de ejemplo
+            variant="primary"
+            size="xl"
+            rounded="full"
+            aria-label="Agendar una cita gratis"
+            onClick={() => alert("Redirigiendo a la agenda de citas...")}
+            className="shadow-xl shadow-primary-900/20 hover:shadow-primary-900/30"
           >
             ¡Agenda tu cita gratis!
           </DentalButton>
