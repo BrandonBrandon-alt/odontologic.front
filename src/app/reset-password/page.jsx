@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { Suspense } from "react";
 import { motion } from "framer-motion";
 import ResetPasswordForm from "@/components/Form/ResetPasswordForm";
 
@@ -16,7 +16,17 @@ export default function ResetPasswordPage() {
       animate="visible"
       variants={pageVariants}
     >
-      <ResetPasswordForm />
+      <Suspense
+        fallback={
+          <div className="w-full max-w-md p-8 rounded-xl border border-border dark:border-border-dark bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm animate-pulse text-center">
+            <p className="text-sm text-foreground-muted dark:text-foreground-muted-dark">
+              Cargando formulario...
+            </p>
+          </div>
+        }
+      >
+        <ResetPasswordForm />
+      </Suspense>
     </motion.div>
   );
 }

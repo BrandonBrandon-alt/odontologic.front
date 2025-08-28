@@ -363,133 +363,141 @@ function RegisterForm() {
           )}
         </AnimatePresence>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            label="Nombre Completo"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            startIcon={<FaUser className="h-5 w-5 text-foreground-muted" />}
-            error={fieldErrors.name}
-          />
-          <Input
-            label="Número de Identificación"
-            name="idNumber"
-            value={formData.idNumber}
-            onChange={handleChange}
-            required
-            startIcon={<FaIdCard className="h-5 w-5 text-foreground-muted" />}
-            error={fieldErrors.idNumber}
-          />
-          <Input
-            label="Correo Electrónico"
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            startIcon={<FaEnvelope className="h-5 w-5 text-foreground-muted" />}
-            error={fieldErrors.email}
-          />
-          <Input
-            label="Contraseña"
-            name="password"
-            type={showPassword ? "text" : "password"}
-            value={formData.password}
-            onChange={handleChange}
-            required
-            minLength="8"
-            startIcon={<FaLock className="h-5 w-5 text-foreground-muted" />}
-            endIcon={
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="ml-2 p-1"
-                aria-label={
-                  showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
-                }
-                aria-pressed={showPassword}
-              >
-                {showPassword ? (
-                  <FaEyeSlash className="h-5 w-5" />
-                ) : (
-                  <FaEye className="h-5 w-5" />
-                )}
-              </button>
-            }
-            error={fieldErrors.password}
-            helper="Mínimo 8 caracteres, con mayúsculas, minúsculas, números y símbolos."
-          />
-          <Input
-            label="Confirmar Contraseña"
-            name="confirmPassword"
-            type={showConfirmPassword ? "text" : "password"}
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-            startIcon={<FaLock className="h-5 w-5 text-foreground-muted" />}
-            endIcon={
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="ml-2 p-1"
-                aria-label={
-                  showConfirmPassword
-                    ? "Ocultar contraseña"
-                    : "Mostrar contraseña"
-                }
-                aria-pressed={showConfirmPassword}
-              >
-                {showConfirmPassword ? (
-                  <FaEyeSlash className="h-5 w-5" />
-                ) : (
-                  <FaEye className="h-5 w-5" />
-                )}
-              </button>
-            }
-            error={fieldErrors.confirmPassword}
-          />
-          <Input
-            label="Teléfono"
-            name="phone"
-            type="tel"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-            startIcon={<FaPhone className="h-5 w-5 text-foreground-muted" />}
-            error={fieldErrors.phone}
-          />
-          <Input
-            label="Dirección"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            startIcon={
-              <FaMapMarkerAlt className="h-5 w-5 text-foreground-muted" />
-            }
-            error={fieldErrors.address}
-          />
-          <Input
-            label="Fecha de Nacimiento"
-            name="birth_date"
-            type="date"
-            value={formData.birth_date}
-            onChange={handleChange}
-            startIcon={
-              <FaCalendarAlt className="h-5 w-5 text-foreground-muted" />
-            }
-            error={fieldErrors.birth_date}
-          />
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Grid responsive: 1 columna en mobile, 2 en desktop */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="Nombre Completo"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              startIcon={<FaUser className="h-5 w-5 text-foreground-muted" />}
+              error={fieldErrors.name}
+            />
+            <Input
+              label="Número de Identificación"
+              name="idNumber"
+              value={formData.idNumber}
+              onChange={handleChange}
+              required
+              startIcon={<FaIdCard className="h-5 w-5 text-foreground-muted" />}
+              error={fieldErrors.idNumber}
+            />
+            <Input
+              label="Correo Electrónico"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              startIcon={
+                <FaEnvelope className="h-5 w-5 text-foreground-muted" />
+              }
+              error={fieldErrors.email}
+            />
+            <Input
+              label="Teléfono"
+              name="phone"
+              type="tel"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+              startIcon={<FaPhone className="h-5 w-5 text-foreground-muted" />}
+              error={fieldErrors.phone}
+            />
+            <Input
+              label="Contraseña"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              value={formData.password}
+              onChange={handleChange}
+              required
+              minLength="8"
+              startIcon={<FaLock className="h-5 w-5 text-foreground-muted" />}
+              endIcon={
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="ml-2 p-1"
+                  aria-label={
+                    showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
+                  }
+                  aria-pressed={showPassword}
+                >
+                  {showPassword ? (
+                    <FaEyeSlash className="h-5 w-5" />
+                  ) : (
+                    <FaEye className="h-5 w-5" />
+                  )}
+                </button>
+              }
+              error={fieldErrors.password}
+              helper="Mínimo 8 caracteres, con mayúsculas, minúsculas, números y símbolos."
+            />
+            <Input
+              label="Confirmar Contraseña"
+              name="confirmPassword"
+              type={showConfirmPassword ? "text" : "password"}
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+              startIcon={<FaLock className="h-5 w-5 text-foreground-muted" />}
+              endIcon={
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="ml-2 p-1"
+                  aria-label={
+                    showConfirmPassword
+                      ? "Ocultar contraseña"
+                      : "Mostrar contraseña"
+                  }
+                  aria-pressed={showConfirmPassword}
+                >
+                  {showConfirmPassword ? (
+                    <FaEyeSlash className="h-5 w-5" />
+                  ) : (
+                    <FaEye className="h-5 w-5" />
+                  )}
+                </button>
+              }
+              error={fieldErrors.confirmPassword}
+            />
+            <Input
+              label="Dirección"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              startIcon={
+                <FaMapMarkerAlt className="h-5 w-5 text-foreground-muted" />
+              }
+              error={fieldErrors.address}
+              className="md:col-span-2"
+            />
+            <Input
+              label="Fecha de Nacimiento"
+              name="birth_date"
+              type="date"
+              value={formData.birth_date}
+              onChange={handleChange}
+              startIcon={
+                <FaCalendarAlt className="h-5 w-5 text-foreground-muted" />
+              }
+              error={fieldErrors.birth_date}
+            />
+          </div>
 
-          <Button
-            type="submit"
-            loading={loading}
-            disabled={!isScriptLoaded}
-            className="w-full py-3 mt-6"
-          >
-            {loading ? "Registrando..." : "Registrarse"}
-          </Button>
+          <div>
+            <Button
+              type="submit"
+              loading={loading}
+              disabled={!isScriptLoaded}
+              className="w-full py-3"
+            >
+              {loading ? "Registrando..." : "Registrarse"}
+            </Button>
+          </div>
 
           <p className="text-xs text-left text-[var(--color-text-muted)] mt-4">
             This site is protected by reCAPTCHA and the Google&nbsp;

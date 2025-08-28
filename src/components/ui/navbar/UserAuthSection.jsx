@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -111,6 +111,44 @@ const UserAuthSection = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Keyboard navigation for dropdown menu
+  const menuItemsRef = useRef([]);
+  useEffect(() => {
+    if (isDropdownOpen) {
+      // Focus first item after slight delay to ensure presence
+      setTimeout(() => {
+        menuItemsRef.current[0]?.focus();
+      }, 10);
+    }
+  }, [isDropdownOpen]);
+
+  const handleMenuKeyDown = (e) => {
+    if (!isDropdownOpen) return;
+    const items = menuItemsRef.current.filter(Boolean);
+    const currentIndex = items.indexOf(document.activeElement);
+    switch (e.key) {
+      case "Escape":
+        setIsDropdownOpen(false);
+        break;
+      case "ArrowDown":
+        e.preventDefault();
+        items[(currentIndex + 1) % items.length]?.focus();
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        items[(currentIndex - 1 + items.length) % items.length]?.focus();
+        break;
+      case "Home":
+        e.preventDefault();
+        items[0]?.focus();
+        break;
+      case "End":
+        e.preventDefault();
+        items[items.length - 1]?.focus();
+        break;
+    }
+  };
+
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
@@ -183,14 +221,17 @@ const UserAuthSection = () => {
               whileTap="tap"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               onMouseEnter={handleRefreshUser}
-              className="group flex items-center space-x-3 px-4 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+              className="group flex items-center space-x-3 px-4 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-lg hover:shadow-xl transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+              aria-haspopup="menu"
+              aria-expanded={isDropdownOpen}
+              aria-controls="user-menu"
             >
               <div className="relative">
                 <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center border-2 border-white/30 overflow-hidden backdrop-blur-sm">
                   {user?.avatar ? (
                     <img
                       src={user.avatar}
-                      alt="avatar"
+                      alt={user?.name ? `Avatar de ${user.name}` : "Avatar"}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -218,7 +259,11 @@ const UserAuthSection = () => {
             <AnimatePresence>
               {isDropdownOpen && (
                 <motion.div
-                  className="absolute right-0 mt-3 w-72 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 dark:border-gray-700/50 overflow-hidden"
+                  id="user-menu"
+                  role="menu"
+                  aria-label="Menú de usuario"
+                  onKeyDown={handleMenuKeyDown}
+                  className="absolute right-0 mt-3 w-72 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 dark:border-gray-700/50 overflow-hidden focus:outline-none"
                   variants={dropdownVariants}
                   initial="hidden"
                   animate="visible"
@@ -278,6 +323,9 @@ const UserAuthSection = () => {
                         <Link
                           href={item.href}
                           className="group flex items-center space-x-3 px-6 py-3 text-sm font-medium text-foreground dark:text-foreground-dark hover:bg-interactive dark:hover:bg-interactive-dark transition-all duration-200"
+                          role="menuitem"
+                          tabIndex={-1}
+                          ref={(el) => (menuItemsRef.current[index] = el)}
                         >
                           <motion.div
                             whileHover={{ scale: 1.1, rotate: 5 }}
@@ -296,7 +344,10 @@ const UserAuthSection = () => {
                       transition={{ delay: 0.2 }}
                       onClick={handleLogout}
                       disabled={isLoggingOut}
-                      className="group flex items-center space-x-3 w-full text-left px-6 py-3 text-sm font-medium text-error-DEFAULT dark:text-error-foreground-dark hover:bg-error-light dark:hover:bg-error-dark/30 disabled:opacity-50 transition-all duration-200"
+                      className="group flex items-center space-x-3 w-full text-left px-6 py-3 text-sm font-medium text-error-DEFAULT dark:text-error-foreground-dark hover:bg-error-light dark:hover:bg-error-dark/30 disabled:opacity-50 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-error-500/50"
+                      role="menuitem"
+                      tabIndex={-1}
+                      ref={(el) => (menuItemsRef.current[2] = el)}
                     >
                       <motion.div
                         animate={isLoggingOut ? { rotate: 360 } : {}}

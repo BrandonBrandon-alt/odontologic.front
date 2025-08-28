@@ -7,7 +7,6 @@ import Card from "../ui/Card";
 import { FaUsers, FaStar, FaHeart } from "react-icons/fa";
 import { PiToothFill } from "react-icons/pi";
 
-
 const FeaturedServicesSection = () => {
   const services = [
     {
@@ -57,7 +56,7 @@ const FeaturedServicesSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 mb-12">
           {services.map((service, index) => (
             <motion.div
               key={index}
@@ -67,7 +66,11 @@ const FeaturedServicesSection = () => {
               viewport={{ once: true }}
               className="h-full"
             >
-              <Link href={service.link} className="h-full block">
+              <Link
+                href={service.link}
+                aria-label={service.title}
+                className="h-full block focus:outline-none focus-visible:ring-4 focus-visible:ring-primary-400/40 rounded-2xl"
+              >
                 <Card
                   variant="elevated"
                   interactive={true}

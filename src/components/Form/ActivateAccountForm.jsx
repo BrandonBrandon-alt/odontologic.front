@@ -133,7 +133,7 @@ export default function ActivateAccountForm() {
   };
 
   return (
-    <div className="relative bg-[var(--color-primary)] dark:bg-[var(--color-surface)] rounded-xl shadow-[var(--shadow-dental-xl)] w-full max-w-6xl overflow-hidden md:flex md:min-h-[640px]">
+    <div className="relative bg-[var(--color-primary)] dark:bg-[var(--color-surface)] rounded-xl shadow-[var(--shadow-dental-xl)] w-full max-w-6xl overflow-hidden md:flex md:min-h-[600px] lg:min-h-[640px]">
       <motion.div
         className="hidden md:block md:w-1/2 relative overflow-hidden"
         variants={imageVariants}
@@ -160,7 +160,7 @@ export default function ActivateAccountForm() {
         </div>
       </motion.div>
       <motion.div
-        className="w-full md:w-1/2 p-6 sm:p-10 lg:p-16 flex flex-col justify-center border-2 border-border dark:border-border-dark"
+        className="w-full md:w-1/2 flex flex-col justify-center border-2 border-border dark:border-border-dark px-5 py-8 sm:px-8 sm:py-12 xl:px-16 xl:py-16"
         variants={formVariants}
       >
         <motion.h2
@@ -190,7 +190,10 @@ export default function ActivateAccountForm() {
           )}
         </AnimatePresence>
 
-        <Form onSubmit={handleSubmit} className="space-y-6">
+        <Form
+          onSubmit={handleSubmit}
+          className="space-y-6 max-w-md mx-auto w-full"
+        >
           <Form.Field>
             <div
               className="relative group"
@@ -237,7 +240,7 @@ export default function ActivateAccountForm() {
             />
           </Form.Field>
 
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 pt-2">
             <Button
               type="submit"
               fullWidth

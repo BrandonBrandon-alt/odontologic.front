@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { FaHome, FaTooth, FaInfoCircle, FaEnvelope } from "react-icons/fa";
 
@@ -46,51 +46,63 @@ const iconVariants = {
 
 const NavLinks = () => {
   const pathname = usePathname();
+  const reduceMotion = useReducedMotion();
 
   return (
-    <div className="flex items-center space-x-1 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-1 shadow-inner">
-      {navItems.map((item) => {
-        const isActive =
-          item.href === "/"
-            ? pathname === item.href
-            : pathname.startsWith(item.href);
+    <nav aria-label="Navegación principal">
+      <ul className="flex items-center space-x-1 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-1 shadow-inner">
+        {navItems.map((item) => {
+          const isActive =
+            item.href === "/"
+              ? pathname === item.href
+              : pathname.startsWith(item.href);
 
-        return (
-          <motion.div
-            key={item.href}
-            variants={buttonHoverVariants}
-            whileHover="hover"
-            whileTap="tap"
-          >
-            <Link
-              href={item.href}
-              className={`
-                group relative flex items-center space-x-2 px-4 py-2.5 rounded-xl
-                font-medium text-sm transition-all duration-300 overflow-hidden
-                ${
-                  isActive
-                    ? "bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-lg shadow-primary-500/25"
-                    : "text-foreground dark:text-foreground-dark hover:bg-interactive dark:hover:bg-interactive-dark"
-                }
-              `}
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-              <motion.div variants={iconVariants} whileHover="hover">
-                {item.icon}
+          return (
+            <li key={item.href} className="list-none">
+              <motion.div
+                variants={buttonHoverVariants}
+                whileHover="hover"
+                whileTap="tap"
+              >
+                <Link
+                  href={item.href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`
+                    group relative flex items-center space-x-2 px-4 py-2.5 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/60
+                    font-medium text-sm transition-all duration-300 overflow-hidden
+                    ${
+                      isActive
+                        ? "bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-lg shadow-primary-500/25"
+                        : "text-foreground dark:text-foreground-dark hover:bg-interactive dark:hover:bg-interactive-dark"
+                    }
+                  `}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                  <motion.div
+                    variants={iconVariants}
+                    whileHover={reduceMotion ? undefined : "hover"}
+                  >
+                    {item.icon}
+                  </motion.div>
+                  <span className="relative z-10">{item.text}</span>
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeIndicator"
+                      className="absolute bottom-0 left-1/2 w-1 h-1 bg-white rounded-full transform -translate-x-1/2"
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                </Link>
               </motion.div>
-              <span className="relative z-10">{item.text}</span>
-              {isActive && (
-                <motion.div
-                  layoutId="activeIndicator"
-                  className="absolute bottom-0 left-1/2 w-1 h-1 bg-white rounded-full transform -translate-x-1/2"
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-              )}
-            </Link>
-          </motion.div>
-        );
-      })}
-    </div>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
   );
 };
 
