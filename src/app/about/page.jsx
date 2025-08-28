@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import PageHero from "@/components/ui/PageHero"; // Hero reutilizable
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
@@ -178,51 +177,6 @@ const SectionTitle = ({
         {subtitle}
       </motion.p>
     )}
-  </motion.div>
-);
-
-// Hero reutilizando PageHero para consistencia
-const HeroSection = () => (
-  <PageHero
-    headingLines={["Cuidando Sonrisas,", "Transformando Vidas"]}
-    subtitle={
-      `Desde ${clinicData.founded}, hemos combinado la excelencia médica con la última tecnología para ofrecer una experiencia dental inigualable en Colombia.`
-    }
-  >
-    <span className="px-4 py-2 rounded-full bg-white/15 text-white text-sm font-medium backdrop-blur-sm flex items-center gap-2">
-      <CalendarDaysIcon className="w-5 h-5" /> {clinicData.experience} de Experiencia
-    </span>
-    <span className="px-4 py-2 rounded-full bg-white/15 text-white text-sm font-medium backdrop-blur-sm flex items-center gap-2">
-      <UserGroupIcon className="w-5 h-5" /> {clinicData.patients} Pacientes
-    </span>
-    <span className="px-4 py-2 rounded-full bg-white/15 text-white text-sm font-medium backdrop-blur-sm flex items-center gap-2">
-      <AcademicCapIcon className="w-5 h-5" /> {clinicData.specialties}+ Especialidades
-    </span>
-  </PageHero>
-);
-
-// --- Enhanced Stat Card Component ---
-const EnhancedStatCard = ({ icon: Icon, value, label, delay = 0 }) => (
-  <motion.div
-    variants={itemVariants}
-    initial={{ scale: 0.8, opacity: 0 }}
-    animate={{ scale: 1, opacity: 1 }}
-    transition={{ delay, duration: 0.6 }}
-    whileHover={scaleOnHover.hover}
-    className="w-full max-w-sm mx-auto"
-  >
-    <StatCard
-      title={label}
-      value={value}
-      icon={<Icon className="w-10 h-10 text-white" />}
-      className="bg-white/20 backdrop-blur-xl border border-white/30 text-center text-white h-full min-h-[180px] shadow-2xl"
-    >
-      <motion.div
-        variants={pulseVariants}
-        animate="animate"
-        className="absolute -top-6 -right-6 w-24 h-24 bg-white/10 rounded-full blur-xl"
-      />
-    </StatCard>
   </motion.div>
 );
 
@@ -638,12 +592,10 @@ function AboutPage() {
       </div>
 
       {/* Page Sections */}
-      <HeroSection />
       <HistoryMissionSection />
       <ValuesSection />
       <TeamSection />
       <WhyChooseUsSection />
-      <CTASection />
     </div>
   );
 }
