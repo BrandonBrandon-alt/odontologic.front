@@ -575,11 +575,11 @@ const ContactSection = () => (
 // Este es el componente principal que compone toda la página de servicios
 function ServicesPage() {
   return (
-    <div className="min-h-screen dental-bg-background relative">
+    <div className="min-h-screen dental-bg-background relative pt-4 sm:pt-2">
       {" "}
       {/* Contenedor principal de la página con altura mínima de pantalla y fondo temático */}
       {/* Decoraciones de fondo fijas */}
-      <div className="fixed inset-0 -z-10">
+      <div className="absolute inset-0 -z-10 pointer-events-none">
         <motion.div
           animate={{
             rotate: [0, 360],
