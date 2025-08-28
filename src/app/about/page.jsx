@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import PageHero from "@/components/ui/PageHero"; // Hero reutilizable
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
@@ -180,89 +181,24 @@ const SectionTitle = ({
   </motion.div>
 );
 
-// --- Redesigned Hero Section ---
+// Hero reutilizando PageHero para consistencia
 const HeroSection = () => (
-  <motion.section
-    initial="hidden"
-    animate="visible"
-    variants={containerVariants}
-    className="relative bg-gradient-primary dark:bg-gradient-primary-dark text-white py-32 w-screen left-1/2 -ml-[50vw] overflow-hidden"
+  <PageHero
+    headingLines={["Cuidando Sonrisas,", "Transformando Vidas"]}
+    subtitle={
+      `Desde ${clinicData.founded}, hemos combinado la excelencia médica con la última tecnología para ofrecer una experiencia dental inigualable en Colombia.`
+    }
   >
-    {/* Background decorative blurred circles removed for simplicity */}
-
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-      {/* Enhanced Floating elements */}
-      <motion.div
-        variants={floatingVariants}
-        animate="animate"
-        className="absolute top-20 left-20 text-white/30"
-      >
-        <SparklesIcon className="w-16 h-16" />
-      </motion.div>
-      <motion.div
-        variants={floatingVariants}
-        animate="animate"
-        className="absolute top-40 right-40 text-white/30"
-      >
-        <HeartIcon className="w-14 h-14" />
-      </motion.div>
-      <motion.div
-        variants={floatingVariants}
-        animate="animate"
-        className="absolute bottom-40 left-40 text-white/30"
-      >
-        <TrophyIcon className="w-12 h-12" />
-      </motion.div>
-
-      <motion.h1
-        variants={itemVariants}
-        className="text-5xl md:text-6xl lg:text-7xl font-black mb-8 leading-tight"
-      >
-        <span className="block">Cuidando Sonrisas,</span>
-        <span className="block text-white/90">Transformando Vidas</span>
-      </motion.h1>
-
-      <motion.p
-        variants={itemVariants}
-        className="text-2xl md:text-3xl opacity-90 mb-16 max-w-6xl mx-auto leading-relaxed font-medium"
-      >
-        Desde <span className="font-bold text-white">{clinicData.founded}</span>
-        , hemos combinado la
-        <span className="font-semibold text-white"> excelencia médica</span> con
-        la
-        <span className="font-semibold text-white">
-          {" "}
-          última tecnología
-        </span>{" "}
-        para ofrecer una experiencia dental inigualable en Colombia.
-      </motion.p>
-
-      {/* Enhanced Stats Grid */}
-      <motion.div
-        variants={containerVariants}
-        className="grid grid-cols-1 sm:grid-cols-3 gap-10 max-w-6xl mx-auto"
-      >
-        <EnhancedStatCard
-          icon={CalendarDaysIcon}
-          value={clinicData.experience}
-          label="de Experiencia"
-          delay={0.2}
-        />
-        <EnhancedStatCard
-          icon={UserGroupIcon}
-          value={clinicData.patients}
-          label="Pacientes Felices"
-          delay={0.4}
-        />
-        <EnhancedStatCard
-          icon={AcademicCapIcon}
-          value={`${clinicData.specialties}+`}
-          label="Especialidades"
-          delay={0.6}
-        />
-      </motion.div>
-    </div>
-  </motion.section>
+    <span className="px-4 py-2 rounded-full bg-white/15 text-white text-sm font-medium backdrop-blur-sm flex items-center gap-2">
+      <CalendarDaysIcon className="w-5 h-5" /> {clinicData.experience} de Experiencia
+    </span>
+    <span className="px-4 py-2 rounded-full bg-white/15 text-white text-sm font-medium backdrop-blur-sm flex items-center gap-2">
+      <UserGroupIcon className="w-5 h-5" /> {clinicData.patients} Pacientes
+    </span>
+    <span className="px-4 py-2 rounded-full bg-white/15 text-white text-sm font-medium backdrop-blur-sm flex items-center gap-2">
+      <AcademicCapIcon className="w-5 h-5" /> {clinicData.specialties}+ Especialidades
+    </span>
+  </PageHero>
 );
 
 // --- Enhanced Stat Card Component ---

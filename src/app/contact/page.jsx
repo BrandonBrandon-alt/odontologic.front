@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import PageHero from "@/components/ui/PageHero"; // Hero reutilizable
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
@@ -115,62 +116,31 @@ const SectionTitle = ({ title, subtitle, gradient = false, icon }) => (
   </motion.div>
 );
 
-// --- Hero Section ---
+// --- Hero Section reutilizando PageHero ---
 const HeroSection = () => (
-  <motion.section
-    initial="hidden"
-    animate="visible"
-    variants={containerVariants}
-    className="relative bg-gradient-primary dark:bg-gradient-primary-dark text-white py-24 w-screen left-1/2 -ml-[50vw] overflow-hidden"
-  >
-    {/* Background decorations removed (two blurred circles) */}
-
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-      <motion.h1
-        variants={itemVariants}
-        className="text-4xl md:text-5xl lg:text-6xl font-black mb-6"
-      >
-        <span>Contáctanos</span>
-        <br />
-        <span className="text-white">Estamos Aquí para Ayudarte</span>
-      </motion.h1>
-
-      <motion.p
-        variants={itemVariants}
-        className="text-xl md:text-2xl opacity-90 mb-12 max-w-4xl mx-auto leading-relaxed"
-      >
-        ¿Tienes alguna pregunta o necesitas agendar una cita? Nuestro equipo
-        está listo para atenderte y brindarte la mejor atención dental.
-      </motion.p>
-
-      <motion.div
-        variants={itemVariants}
-        className="flex flex-col sm:flex-row gap-6 justify-center items-center"
-      >
-        <Link href="#contact-form" passHref>
-          <DentalButton
-            variant="primary"
-            size="lg"
-            icon={<ChatBubbleLeftRightIcon className="w-6 h-6" />}
-            className="bg-white text-primary font-bold shadow-lg hover:shadow-xl"
-          >
-            Enviar Mensaje
-          </DentalButton>
-        </Link>
-
-        <Link href="https://wa.me/573123456789" target="_blank" passHref>
-          <DentalButton
-            variant="secondary"
-            size="lg"
-            icon={<FaWhatsapp />}
-            className="border-2 border-white text-white font-bold backdrop-blur-sm hover:bg-white/10"
-          >
-            WhatsApp
-          </DentalButton>
-        </Link>
-      </motion.div>
-    </div>
-  </motion.section>
+  <PageHero
+    headingLines={["Contáctanos", "Estamos Aquí para Ayudarte"]}
+    subtitle="¿Tienes alguna pregunta o necesitas agendar una cita? Nuestro equipo está listo para atenderte y brindarte la mejor atención dental."
+    primaryAction={{
+      label: "Enviar Mensaje",
+      ariaLabel: "Ir al formulario de contacto",
+      onClick: () => {
+        const el = document.getElementById("contact-form");
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      },
+      variant: "primary",
+      icon: <ChatBubbleLeftRightIcon className="w-5 h-5" />,
+    }}
+    secondaryActions={[
+      {
+        label: "WhatsApp",
+        href: "https://wa.me/573123456789",
+        ariaLabel: "Abrir chat de WhatsApp",
+        variant: "secondary",
+        icon: <FaWhatsapp className="w-5 h-5" />,
+      },
+    ]}
+  />
 );
 
 // --- Contact Form Section ---
