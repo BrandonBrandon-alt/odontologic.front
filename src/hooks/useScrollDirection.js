@@ -19,6 +19,8 @@ const useScrollDirection = (
     topOffset = 100,
     hideDeltaThreshold = 12,
     showOnRouteChangeDelay = 500,
+    // Nueva distancia mínima acumulada de desplazamiento hacia abajo tras un cambio de ruta
+    minAccumulatedScrollToHide = 140,
   } = {}
 ) => {
   const [scrollDirection, setScrollDirection] = useState("up");
@@ -28,6 +30,7 @@ const useScrollDirection = (
   const routeChangeTimeoutRef = useRef(null);
   const initializedRef = useRef(false);
   const userInteractedRef = useRef(false);
+  const accumulatedDownRef = useRef(0); // cuánto se ha desplazado hacia abajo desde el último reset
 
   const handleScroll = useCallback(() => {
     currentScrollY.current = window.scrollY;
@@ -50,12 +53,21 @@ const useScrollDirection = (
       return;
     }
 
-    // Scroll hacia abajo: sólo ocultar si delta supera umbral
-    if (delta > hideDeltaThreshold && userInteractedRef.current) {
+    // Scroll hacia abajo: sólo ocultar si delta supera umbral puntual Y la distancia acumulada también
+    if (
+      delta > hideDeltaThreshold &&
+      userInteractedRef.current &&
+      accumulatedDownRef.current >= minAccumulatedScrollToHide
+    ) {
       if (isVisible) setIsVisible(false);
       setScrollDirection("down");
       prevScrollY.current = y;
       return;
+    }
+
+    // Acumular desplazamiento hacia abajo (sólo suma cuando delta positivo)
+    if (delta > 0) {
+      accumulatedDownRef.current += delta;
     }
 
     // Scroll hacia arriba: mostrar si delta negativo significativo
@@ -111,6 +123,7 @@ const useScrollDirection = (
     setScrollDirection("up");
     initializedRef.current = false;
     userInteractedRef.current = false; // reiniciar interacción al cambiar de ruta
+    accumulatedDownRef.current = 0; // reset acumulado
     prevScrollY.current = window.scrollY;
     // Pequeña ventana en la que se ignoran ocultamientos
     if (routeChangeTimeoutRef.current)

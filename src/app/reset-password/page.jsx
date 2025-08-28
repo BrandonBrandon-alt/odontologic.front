@@ -11,7 +11,7 @@ const pageVariants = {
 export default function ResetPasswordPage() {
   return (
     <motion.div
-      className="min-h-screen flex items-center justify-center p-4 md:p-8"
+      className="min-h-[calc(100vh-5rem)] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8"
       initial="hidden"
       animate="visible"
       variants={pageVariants}

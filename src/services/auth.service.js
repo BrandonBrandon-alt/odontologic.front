@@ -18,6 +18,17 @@ class AuthService {
         "Authorization"
       ] = `Bearer ${accessToken}`;
 
+      try {
+        // Guardar cookie ligera con rol (no sensible) para que middleware pueda redirigir
+        const role = encodeURIComponent(user.role || "user");
+        const name = encodeURIComponent(user.name || "");
+        // Expira en 1 día
+        document.cookie = `appRole=${role}; path=/; max-age=86400; SameSite=Lax`;
+        document.cookie = `appUserName=${name}; path=/; max-age=86400; SameSite=Lax`;
+      } catch (e) {
+        // Ignorar fallo de cookie (SSR o restricciones)
+      }
+
       return user;
     } catch (error) {
       console.error("Login error:", error);
@@ -39,6 +50,12 @@ class AuthService {
         apiClient.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${accessToken}`;
+        try {
+          const role = encodeURIComponent(user.role || "user");
+          const name = encodeURIComponent(user.name || "");
+          document.cookie = `appRole=${role}; path=/; max-age=86400; SameSite=Lax`;
+          document.cookie = `appUserName=${name}; path=/; max-age=86400; SameSite=Lax`;
+        } catch (e) {}
       }
 
       return user;
@@ -103,6 +120,11 @@ class AuthService {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
+      try {
+        // Expirar cookies de rol y nombre
+        document.cookie = "appRole=; path=/; max-age=0; SameSite=Lax";
+        document.cookie = "appUserName=; path=/; max-age=0; SameSite=Lax";
+      } catch (e) {}
       delete apiClient.defaults.headers.common["Authorization"];
     }
   }

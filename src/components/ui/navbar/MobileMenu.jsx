@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { usePathname } from "next/navigation";
 import {
   FaHome,
   FaTooth,
@@ -111,7 +111,9 @@ const MobileMenu = ({
   panelId = "mobile-menu-panel",
 }) => {
   const pathname = usePathname();
-  const { isLoggedIn, user, logout: logoutContext } = useAuth();
+  const { isAuthenticated, user, logout: logoutContext } = useAuth();
+  const router = useRouter();
+  const isLoggedIn = isAuthenticated;
   const panelRef = useRef(null);
   const overlayRef = useRef(null);
 
@@ -150,42 +152,67 @@ const MobileMenu = ({
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isMenuOpen, setIsMenuOpen]);
 
-  // Prevent body scroll when menu is open
+  // Prevent body scroll when menu is open (con compensación de scrollbar para evitar 'salto')
   useEffect(() => {
+    const body = document.body;
+    const html = document.documentElement;
+
     if (isMenuOpen) {
-      // Guardar la posición actual del scroll
       const scrollY = window.scrollY;
-      document.body.style.position = "fixed";
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = "100%";
-      document.body.classList.add("mobile-menu-open");
-    } else {
-      // Restaurar el scroll
-      const scrollY = document.body.style.top;
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.width = "";
-      document.body.classList.remove("mobile-menu-open");
+      // Ancho del scrollbar (si existe) para evitar reflow horizontal
+      const scrollbarWidth = window.innerWidth - html.clientWidth;
+      body.dataset.scrollLock = "true";
+      body.style.position = "fixed";
+      body.style.top = `-${scrollY}px`;
+      body.style.left = "0";
+      body.style.right = "0";
+      body.style.width = "100%";
+      if (scrollbarWidth > 0) {
+        body.style.paddingRight = `${scrollbarWidth}px`;
+      }
+      body.classList.add("mobile-menu-open");
+    } else if (body.dataset.scrollLock) {
+      const scrollY = body.style.top;
+      body.classList.remove("mobile-menu-open");
+      body.style.position = "";
+      body.style.top = "";
+      body.style.left = "";
+      body.style.right = "";
+      body.style.width = "";
+      body.style.paddingRight = "";
+      delete body.dataset.scrollLock;
       if (scrollY) {
         window.scrollTo(0, parseInt(scrollY || "0") * -1);
       }
     }
 
     return () => {
-      // Cleanup en caso de desmontaje del componente
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.width = "";
-      document.body.classList.remove("mobile-menu-open");
+      if (body.dataset.scrollLock) {
+        const scrollY = body.style.top;
+        body.classList.remove("mobile-menu-open");
+        body.style.position = "";
+        body.style.top = "";
+        body.style.left = "";
+        body.style.right = "";
+        body.style.width = "";
+        body.style.paddingRight = "";
+        delete body.dataset.scrollLock;
+        if (scrollY) {
+          window.scrollTo(0, parseInt(scrollY || "0") * -1);
+        }
+      }
     };
   }, [isMenuOpen]);
 
   const handleLogout = async () => {
     try {
       await logoutContext();
-      setIsMenuOpen(false);
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
+    } finally {
+      setIsMenuOpen(false);
+      const target = `/login?from=${encodeURIComponent(pathname || "/")}`;
+      router.replace(target);
     }
   };
 

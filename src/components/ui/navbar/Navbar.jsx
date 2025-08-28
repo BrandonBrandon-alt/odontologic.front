@@ -25,8 +25,9 @@ const Navbar = () => {
   const { loading, error, message, clearError, clearMessage } = useAuth();
   const { isVisible } = useScrollDirection(pathname, {
     topOffset: 80,
-    hideDeltaThreshold: 16,
-    showOnRouteChangeDelay: 400,
+    hideDeltaThreshold: 18, // un poco más tolerante
+    showOnRouteChangeDelay: 450,
+    minAccumulatedScrollToHide: 180, // exige desplazamiento real antes de poder ocultar
   });
 
   const navVariants = {
@@ -161,8 +162,16 @@ const Navbar = () => {
       <motion.nav
         className="fixed top-0 left-0 right-0 z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-b border-border dark:border-border-dark shadow-sm"
         initial="hidden"
-        animate={isVisible ? "visibleScroll" : "hiddenScroll"}
+        // Mantener visible si el menú móvil está abierto para evitar 'salto' o desplazamiento visual
+        animate={
+          isMenuOpen
+            ? "visibleScroll"
+            : isVisible
+            ? "visibleScroll"
+            : "hiddenScroll"
+        }
         variants={navVariants}
+        data-menu-open={isMenuOpen ? "true" : "false"}
       >
         {/* Background gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-primary-500/3 via-transparent to-accent-500/3 pointer-events-none"></div>

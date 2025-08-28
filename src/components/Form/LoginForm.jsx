@@ -10,7 +10,8 @@ import Form from "../ui/Form";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
 import Alert from "../ui/Alert";
-import { authService } from "../../services/auth.service";
+import { authService } from "../../services/auth.service"; // (mantener si se quiere aún usar recaptcha token, pero usaremos login del contexto)
+import { useAuth } from "@/context/AuthContext";
 
 /**
  * Componente LoginForm
@@ -18,6 +19,7 @@ import { authService } from "../../services/auth.service";
  */
 const LoginForm = () => {
   const router = useRouter();
+  const { login: loginWithContext } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -120,13 +122,33 @@ const LoginForm = () => {
           action: "login",
         });
       }
-      await authService.login({
+      const result = await loginWithContext({
         email: formData.email.trim().toLowerCase(),
         password: formData.password,
         recaptchaToken,
       });
+      if (!result.success) {
+        throw new Error(result.error || "Error de autenticación");
+      }
       setIsSuccess(true);
-      setTimeout(() => router.push("/dashboard"), 800);
+      // Determinar dashboard según rol guardado en localStorage
+      try {
+        const stored = localStorage.getItem("user");
+        let target = "/patient-dashboard";
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          const role = parsed?.role;
+          target =
+            role === "admin"
+              ? "/admin-dashboard"
+              : role === "dentist"
+              ? "/dentist-dashboard"
+              : "/patient-dashboard";
+        }
+        setTimeout(() => router.push(target), 700);
+      } catch (e) {
+        setTimeout(() => router.push("/patient-dashboard"), 700);
+      }
     } catch (err) {
       const status = err.response?.status;
       const messageFromApi = err.response?.data?.message;
