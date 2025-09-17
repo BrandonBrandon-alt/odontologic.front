@@ -11,6 +11,7 @@ import {
 import { motion } from "framer-motion";
 import Card, { StatCard } from "@/components/ui/Card";
 import DentalButton from "@/components/ui/Button";
+import Link from "next/link";
 
 const stats = [
   {
@@ -145,6 +146,27 @@ export default function PatientDashboardPage() {
               </li>
             ))}
           </ul>
+        </Card>
+      </section>
+
+      <section aria-labelledby="patient-profile-heading" className="space-y-4">
+        <h2
+          id="patient-profile-heading"
+          className="text-xl font-bold tracking-tight"
+        >
+          Gestión de Perfil
+        </h2>
+        <Card className="p-6 flex flex-col gap-4" shadow="sm">
+          <p className="text-sm text-text-secondary max-w-prose">
+            Ahora la administración de tu perfil y seguridad se centraliza en
+            una sola página. Accede para actualizar datos personales o cambiar
+            tu contraseña.
+          </p>
+          <div>
+            <Link href="/profile" className="inline-block">
+              <DentalButton variant="primary">Ir a Mi Perfil</DentalButton>
+            </Link>
+          </div>
         </Card>
       </section>
     </motion.div>

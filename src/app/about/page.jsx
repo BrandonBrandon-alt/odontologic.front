@@ -10,13 +10,18 @@ import {
   SparklesIcon,
   HeartIcon,
   ShieldCheckIcon,
-  TrophyIcon,
+  TrophyIcon as OutlineTrophyIcon,
   StarIcon,
   LightBulbIcon,
   CheckCircleIcon,
   MapPinIcon,
   PhoneIcon,
 } from "@heroicons/react/24/outline";
+
+// Forzar el icono Trophy a color amarillo
+const TrophyIcon = ({ className = "", ...props }) => (
+  <OutlineTrophyIcon {...props} className={`${className} text-yellow-400`} />
+);
 import {
   FaCalendarPlus,
   FaStethoscope,
@@ -192,8 +197,8 @@ const HistoryMissionSection = () => (
     >
       <motion.div variants={slideInFromLeft} className="space-y-8">
         <div className="flex items-center space-x-4 mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center shadow-xl">
-            <TrophyIcon className="w-8 h-8 text-white" />
+          <div className="w-16 h-16 bg-[var(--color-primary)] dark:bg-[var(--color-surface)] border-2 border-border dark:border-border-dark  rounded-2xl flex items-center justify-center shadow-xl">
+            <TrophyIcon className="w-8 h-8 text-yellow" />
           </div>
           <h2 className="text-5xl font-black text-primary">Nuestra Historia</h2>
         </div>
@@ -206,10 +211,11 @@ const HistoryMissionSection = () => (
               <span className="font-bold text-primary text-2xl">
                 {clinicData.founded}
               </span>
-              , {clinicData.name} nació con la visión de ser un referente en
-              salud oral, donde cada paciente se sienta seguro, cómodo y
-              valorado.
+              , {clinicData.name} nació con la bg-[var(--color-primary)]
+              dark:bg-[var(--color-surface)] visión de ser un referente en salud
+              oral, donde cada paciente se sienta seguro, cómodo y valorado.
             </p>
+            from-primary to-accent rounded-xl
           </div>
           <div className="relative pl-8">
             <span className="absolute left-0 top-3 w-3 h-3 bg-accent rounded-full shadow-lg"></span>

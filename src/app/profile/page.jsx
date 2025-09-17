@@ -27,7 +27,6 @@ export default function UnifiedProfilePage() {
   };
 
   return (
-    //hola esto
     <ProfilePageLayout
       role={role}
       title="Mi Perfil"

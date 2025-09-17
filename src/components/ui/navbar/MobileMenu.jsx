@@ -223,12 +223,7 @@ const MobileMenu = ({
       user: "/patient-dashboard",
     }[role] || "/patient-dashboard");
 
-  const getProfilePath = (role) =>
-    ({
-      admin: "/admin-profile",
-      dentist: "/dentist-profile",
-      user: "/patient-profile",
-    }[role] || "/patient-profile");
+  const getProfilePath = () => "/profile"; // página unificada
 
   const navigationItems = [
     { href: "/", icon: <FaHome />, text: "Home" },
@@ -318,7 +313,7 @@ const MobileMenu = ({
                       4
                     )}
                     {renderMobileLink(
-                      getProfilePath(user?.role),
+                      getProfilePath(),
                       <FaUserEdit />,
                       "Mi Perfil",
                       pathname,

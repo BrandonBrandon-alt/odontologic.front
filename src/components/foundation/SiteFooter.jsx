@@ -242,7 +242,7 @@ export default function SiteFooter() {
               </h3>
 
               {/* Social Icons */}
-              <ul
+              <ul 
                 className="flex flex-wrap justify-center sm:justify-start gap-3 sm:gap-4"
                 aria-label="Redes sociales"
               >
