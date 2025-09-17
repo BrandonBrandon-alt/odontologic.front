@@ -160,7 +160,7 @@ const Navbar = () => {
 
       {/* Main Navigation */}
       <motion.nav
-        className="fixed top-0 left-0 right-0 z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-b border-border dark:border-border-dark shadow-sm"
+        className="fixed top-0 left-0 right-0 z-40 bg-[var(--color-primary)] dark:bg-[var(--color-surface)] backdrop-blur-md border-b border-border dark:border-border-dark shadow-sm"
         initial="hidden"
         // Mantener visible si el menú móvil está abierto para evitar 'salto' o desplazamiento visual
         animate={

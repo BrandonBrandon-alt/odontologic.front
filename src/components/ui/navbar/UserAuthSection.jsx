@@ -87,10 +87,10 @@ const UserAuthSection = () => {
           </Link>
         </motion.div>
 
-        {/* User Menu */}
+        {/* User Profile Link (unified /profile) */}
         <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap">
           <Link
-            href={`/${user?.role || "patient"}-profile`}
+            href="/profile"
             className="flex items-center space-x-2 px-3 py-2 border border-border dark:border-border-dark hover:bg-interactive dark:hover:bg-interactive-dark rounded-lg transition-colors duration-200 font-medium text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/50"
           >
             {roleIconMap[user?.role] || <FaUser className="text-sm" />}

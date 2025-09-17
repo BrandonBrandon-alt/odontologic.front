@@ -128,6 +128,28 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Actualizar usuario manualmente (ej: tras editar perfil)
+  const updateUser = (nextUser) => {
+    if (!nextUser) return;
+    setUser(nextUser);
+    try {
+      localStorage.setItem("user", JSON.stringify(nextUser));
+      // Actualizar cookies simples si cambió nombre o rol
+      if (nextUser.role) {
+        document.cookie = `appRole=${encodeURIComponent(
+          nextUser.role
+        )}; path=/; max-age=86400; SameSite=Lax`;
+      }
+      if (nextUser.name) {
+        document.cookie = `appUserName=${encodeURIComponent(
+          nextUser.name
+        )}; path=/; max-age=86400; SameSite=Lax`;
+      }
+    } catch (e) {
+      console.warn("No se pudo persistir user actualizado:", e);
+    }
+  };
+
   // Memoizar el valor del contexto para evitar re-renders innecesarios
   const value = useMemo(
     () => ({
@@ -138,6 +160,7 @@ export const AuthProvider = ({ children }) => {
       register,
       logout,
       refreshUserData,
+      updateUser,
     }),
     [user, isAuthenticated, isLoading]
   );
