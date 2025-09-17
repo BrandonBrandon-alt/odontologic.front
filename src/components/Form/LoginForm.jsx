@@ -21,8 +21,8 @@ const LoginForm = () => {
   const router = useRouter();
   const { login: loginWithContext } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [fieldErrors, setFieldErrors] = useState({});
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
@@ -99,8 +99,8 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null);
     setIsSuccess(false);
+    setAlertMessage("");
 
     // Validación completa
     const errors = {};
@@ -110,7 +110,7 @@ const LoginForm = () => {
     });
     if (Object.keys(errors).length) {
       setIsLoading(false);
-      setError("Por favor corrige los errores del formulario.");
+      setAlertMessage("Por favor corrige los errores del formulario.");
       return;
     }
 
@@ -131,6 +131,7 @@ const LoginForm = () => {
         throw new Error(result.error || "Error de autenticación");
       }
       setIsSuccess(true);
+      setAlertMessage("Has iniciado sesión correctamente. Redirigiendo...");
       // Determinar dashboard según rol guardado en localStorage
       try {
         const stored = localStorage.getItem("user");
@@ -159,7 +160,7 @@ const LoginForm = () => {
       if (status === 401) friendly = "Credenciales inválidas.";
       else if (status === 403)
         friendly = "Cuenta inactiva. Revisa tu correo para activarla.";
-      setError(friendly);
+      setAlertMessage(friendly);
     } finally {
       setIsLoading(false);
     }
@@ -211,24 +212,16 @@ const LoginForm = () => {
           Ingresa tus credenciales para continuar.
         </motion.p>
 
-        <AnimatePresence>
-          {isSuccess && (
-            <Alert
-              key="success-alert"
-              type="success"
-              title="¡Bienvenido!"
-              message="Has iniciado sesión correctamente. Redirigiendo..."
-            />
-          )}
-          {error && (
-            <Alert
-              key="error-alert"
-              type="error"
-              title="Error de autenticación"
-              message={error}
-            />
-          )}
-        </AnimatePresence>
+        {alertMessage && (
+          <Alert
+            type={isSuccess ? "success" : "error"}
+            title={isSuccess ? "¡Bienvenido!" : "Error de autenticación"}
+            message={alertMessage}
+            autoClose={isSuccess ? 5000 : null}
+            onClose={() => setAlertMessage("")}
+            className="mb-6"
+          />
+        )}
 
         <Form
           onSubmit={handleSubmit}

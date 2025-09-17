@@ -46,8 +46,8 @@ export default function ActivateAccountForm() {
   }, [searchParams]);
   const [fieldErrors, setFieldErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [message, setMessage] = useState(null);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
 
   // Validación
@@ -76,8 +76,8 @@ export default function ActivateAccountForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null);
-    setMessage(null);
+    setIsSuccess(false);
+    setAlertMessage("");
 
     const errs = {};
     Object.entries(formData).forEach(([k, v]) => {
@@ -86,7 +86,7 @@ export default function ActivateAccountForm() {
     });
     if (Object.keys(errs).length) {
       setIsLoading(false);
-      setError("Por favor corrige los errores del formulario.");
+      setAlertMessage("Por favor corrige los errores del formulario.");
       return;
     }
 
@@ -95,7 +95,8 @@ export default function ActivateAccountForm() {
         email: formData.email.trim(),
         code: formData.code.trim(),
       });
-      setMessage("Cuenta activada correctamente. Redirigiendo al login...");
+      setIsSuccess(true);
+      setAlertMessage("Cuenta activada correctamente. Redirigiendo al login...");
       setTimeout(() => router.push("/login"), 1300);
     } catch (err) {
       const status = err.response?.status;
@@ -103,7 +104,7 @@ export default function ActivateAccountForm() {
       let friendly = apiMsg || err.message || "No se pudo activar la cuenta.";
       if (status === 400) friendly = "Datos inválidos o código incorrecto.";
       if (status === 404) friendly = "Usuario no encontrado.";
-      setError(friendly);
+      setAlertMessage(friendly);
     } finally {
       setIsLoading(false);
     }
@@ -111,11 +112,12 @@ export default function ActivateAccountForm() {
 
   const handleResend = async () => {
     if (resendCooldown || !formData.email || fieldErrors.email) return;
-    setError(null);
-    setMessage(null);
+    setIsSuccess(false);
+    setAlertMessage("");
     try {
       await authService.resendActivationCode(formData.email.trim());
-      setMessage("Nuevo código enviado a tu correo.");
+      setIsSuccess(true);
+      setAlertMessage("Nuevo código enviado a tu correo.");
       setResendCooldown(45); // 45 segundos de cooldown
       const interval = setInterval(() => {
         setResendCooldown((c) => {
@@ -128,7 +130,7 @@ export default function ActivateAccountForm() {
       }, 1000);
     } catch (err) {
       const apiMsg = err.response?.data?.message;
-      setError(apiMsg || err.message || "No se pudo reenviar el código.");
+      setAlertMessage(apiMsg || err.message || "No se pudo reenviar el código.");
     }
   };
 
@@ -176,19 +178,16 @@ export default function ActivateAccountForm() {
           Revisa tu bandeja. Si no llega, solicita un nuevo código.
         </motion.p>
 
-        <AnimatePresence>
-          {message && (
-            <Alert
-              key="success"
-              type="success"
-              title="Éxito"
-              message={message}
-            />
-          )}
-          {error && (
-            <Alert key="error" type="error" title="Error" message={error} />
-          )}
-        </AnimatePresence>
+        {alertMessage && (
+          <Alert
+            type={isSuccess ? "success" : "error"}
+            title={isSuccess ? "Éxito" : "Error"}
+            message={alertMessage}
+            autoClose={isSuccess ? 5000 : null}
+            onClose={() => setAlertMessage("")}
+            className="mb-6"
+          />
+        )}
 
         <Form
           onSubmit={handleSubmit}

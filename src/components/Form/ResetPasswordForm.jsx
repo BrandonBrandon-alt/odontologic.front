@@ -31,8 +31,8 @@ export default function ResetPasswordForm() {
   const [emailLocked, setEmailLocked] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState(null);
-  const [error, setError] = useState(null);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -89,8 +89,8 @@ export default function ResetPasswordForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-    setMessage(null);
+    setIsSuccess(false);
+    setAlertMessage("");
     setLoading(true);
     const errs = {};
     Object.entries(formData).forEach(([k, v]) => {
@@ -99,7 +99,7 @@ export default function ResetPasswordForm() {
     });
     if (Object.keys(errs).length) {
       setLoading(false);
-      setError("Corrige los errores del formulario.");
+      setAlertMessage("Corrige los errores del formulario.");
       return;
     }
     try {
@@ -107,11 +107,12 @@ export default function ResetPasswordForm() {
         resetCode: formData.code.trim(),
         newPassword: formData.newPassword,
       });
-      setMessage("Contraseña restablecida. Redirigiendo al login...");
+      setIsSuccess(true);
+      setAlertMessage("Contraseña restablecida. Redirigiendo al login...");
       setTimeout(() => router.push("/login"), 1500);
     } catch (err) {
       const apiMsg = err.response?.data?.message;
-      setError(
+      setAlertMessage(
         apiMsg || err.message || "No se pudo restablecer la contraseña."
       );
     } finally {
@@ -132,10 +133,16 @@ export default function ResetPasswordForm() {
       <p className="text-sm text-center text-[var(--color-text-secondary)] mb-6">
         Ingresa el código enviado y tu nueva contraseña.
       </p>
-      <AnimatePresence>
-        {message && <Alert type="success" title="Éxito" message={message} />}
-        {error && <Alert type="error" title="Error" message={error} />}
-      </AnimatePresence>
+      {alertMessage && (
+        <Alert
+          type={isSuccess ? "success" : "error"}
+          title={isSuccess ? "Éxito" : "Error"}
+          message={alertMessage}
+          autoClose={isSuccess ? 5000 : null}
+          onClose={() => setAlertMessage("")}
+          className="mb-6"
+        />
+      )}
       <Form onSubmit={handleSubmit} className="space-y-5">
         <Form.Field>
           <div

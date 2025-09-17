@@ -78,8 +78,8 @@ function RegisterForm() {
     birth_date: "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [message, setMessage] = useState(null);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
@@ -178,8 +178,8 @@ function RegisterForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
-    setMessage(null);
+    setIsSuccess(false);
+    setAlertMessage("");
     // Full validation snapshot
     const newErrors = {};
     Object.entries(formData).forEach(([k, v]) => {
@@ -244,7 +244,7 @@ function RegisterForm() {
     if (Object.keys(newErrors).length) {
       setFieldErrors((prev) => ({ ...prev, ...newErrors }));
       setLoading(false);
-      setError("Por favor, corrige los errores en el formulario.");
+      setAlertMessage("Por favor, corrige los errores en el formulario.");
       return;
     }
 
@@ -267,7 +267,8 @@ function RegisterForm() {
 
       const registeredUser = await authService.register(userData);
       const emailForRedirect = formData.email; // snapshot
-      setMessage("¡Registro Exitoso! Te redirigimos para activar tu cuenta.");
+      setIsSuccess(true);
+      setAlertMessage("¡Registro Exitoso! Te redirigimos para activar tu cuenta.");
       // Debug (puedes quitar luego)
       if (process.env.NODE_ENV === "development") {
         console.log(
@@ -290,7 +291,7 @@ function RegisterForm() {
         errorMessage =
           "Ya existe un usuario con este correo o número de identificación.";
       }
-      setError(errorMessage);
+      setAlertMessage(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -344,24 +345,16 @@ function RegisterForm() {
           Regístrate en pocos pasos y accede a tu perfil de paciente.
         </motion.p>
 
-        <AnimatePresence>
-          {message && (
-            <Alert
-              key="success-alert"
-              type="success"
-              title="¡Registro Exitoso!"
-              message={message}
-            />
-          )}
-          {error && (
-            <Alert
-              key="error-alert"
-              type="error"
-              title="Error en el Registro"
-              message={error}
-            />
-          )}
-        </AnimatePresence>
+        {alertMessage && (
+          <Alert
+            type={isSuccess ? "success" : "error"}
+            title={isSuccess ? "¡Registro Exitoso!" : "Error en el Registro"}
+            message={alertMessage}
+            autoClose={isSuccess ? 5000 : null}
+            onClose={() => setAlertMessage("")}
+            className="mb-6"
+          />
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Grid responsive: 1 columna en mobile, 2 en desktop */}

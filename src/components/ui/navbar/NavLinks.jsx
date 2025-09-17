@@ -54,7 +54,7 @@ const NavLinks = () => {
 
   return (
     <nav aria-label="Navegación principal" className="hidden md:block">
-      <ul className="flex items-center space-x-1 rounded-2xl rounded-2xl p-1 shadow-inner border-2 border-primary-700">
+      <ul className="flex items-center space-x-1 rounded-2xl rounded-2xl p-1 shadow-inner border-2 border-border dark:border-border-dark">
         {/* Iterar sobre los items de la navegación */}
         {navItems.map((item) => {
           const isActive =

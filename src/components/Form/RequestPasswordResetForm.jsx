@@ -22,8 +22,8 @@ const variants = {
 export default function RequestPasswordResetForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
-  const [error, setError] = useState(null);
-  const [message, setMessage] = useState(null);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [fieldError, setFieldError] = useState("");
   const [redirecting, setRedirecting] = useState(false);
@@ -42,8 +42,8 @@ export default function RequestPasswordResetForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-    setMessage(null);
+    setIsSuccess(false);
+    setAlertMessage("");
     const fe = validateEmail(email);
     setFieldError(fe);
     if (fe) return;
@@ -53,13 +53,14 @@ export default function RequestPasswordResetForm() {
       const target = `/reset-password?email=${encodeURIComponent(
         email.trim().toLowerCase()
       )}`;
-      setMessage("Código enviado (si el correo existe). Redirigiendo...");
+      setIsSuccess(true);
+      setAlertMessage("Código enviado (si el correo existe). Redirigiendo...");
       setRedirecting(true);
       // Pequeña pausa para que el usuario vea el mensaje
       setTimeout(() => router.push(target), 900);
     } catch (err) {
       const apiMsg = err.response?.data?.message;
-      setError(apiMsg || err.message || "No se pudo procesar la solicitud.");
+      setAlertMessage(apiMsg || err.message || "No se pudo procesar la solicitud.");
     } finally {
       setLoading(false);
     }
@@ -78,12 +79,16 @@ export default function RequestPasswordResetForm() {
       <p className="text-sm text-center text-[var(--color-text-secondary)] mb-6">
         Ingresa tu correo para enviarte un código de restablecimiento.
       </p>
-      <AnimatePresence>
-        {message && (
-          <Alert type="success" title="Solicitud enviada" message={message} />
-        )}
-        {error && <Alert type="error" title="Error" message={error} />}
-      </AnimatePresence>
+      {alertMessage && (
+        <Alert
+          type={isSuccess ? "success" : "error"}
+          title={isSuccess ? "Solicitud enviada" : "Error"}
+          message={alertMessage}
+          autoClose={isSuccess ? 5000 : null}
+          onClose={() => setAlertMessage("")}
+          className="mb-6"
+        />
+      )}
       <Form onSubmit={handleSubmit} className="space-y-5">
         <Form.Field>
           <Input
