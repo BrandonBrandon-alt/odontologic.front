@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { FaHome, FaTooth, FaInfoCircle, FaEnvelope } from "react-icons/fa";
 
+// Definir los items de la navegación
 const navItems = [
   { href: "/", icon: <FaHome className="text-sm sm:text-lg" />, text: "Home" },
   {
@@ -23,6 +24,7 @@ const navItems = [
   },
 ];
 
+// Definir los estilos de los botones cuando se pasa el ratón por encima
 const buttonHoverVariants = {
   hover: {
     scale: 1.05,
@@ -36,6 +38,7 @@ const buttonHoverVariants = {
   },
 };
 
+// Definir los estilos de los íconos cuando se pasa el ratón por encima
 const iconVariants = {
   hover: {
     rotate: [0, -10, 10, 0],
@@ -44,29 +47,31 @@ const iconVariants = {
   },
 };
 
+// Componente de la barra de navegación
 const NavLinks = () => {
-  const pathname = usePathname();
-  const reduceMotion = useReducedMotion();
+  const pathname = usePathname(); // Obtener la ruta actual
+  const reduceMotion = useReducedMotion(); // Comprobar si el sistema tiene reducción de movimiento activada
 
   return (
     <nav aria-label="Navegación principal" className="hidden md:block">
-      <ul className="flex items-center space-x-1 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-1 shadow-inner">
+      <ul className="flex items-center space-x-1 rounded-2xl rounded-2xl p-1 shadow-inner border-2 border-primary-700">
+        {/* Iterar sobre los items de la navegación */}
         {navItems.map((item) => {
           const isActive =
             item.href === "/"
               ? pathname === item.href
-              : pathname.startsWith(item.href);
+              : pathname.startsWith(item.href); // Comprobar si el item actual es el activo
 
           return (
             <li key={item.href} className="list-none">
               <motion.div
-                variants={buttonHoverVariants}
+                variants={buttonHoverVariants} // Aplicar los estilos de botón cuando se pasa el ratón por encima
                 whileHover={reduceMotion ? undefined : "hover"}
                 whileTap={reduceMotion ? undefined : "tap"}
               >
                 <Link
                   href={item.href}
-                  aria-current={isActive ? "page" : undefined}
+                  aria-current={isActive ? "page" : undefined} // Agregar el atributo aria-current si el item es el activo
                   className={`
                     group relative flex items-center space-x-2 px-3 py-2.5 lg:px-4 rounded-xl 
                     focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/60
@@ -81,7 +86,7 @@ const NavLinks = () => {
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
 
                   <motion.div
-                    variants={iconVariants}
+                    variants={iconVariants} // Aplicar los estilos de ícono cuando se pasa el ratón por encima
                     whileHover={reduceMotion ? undefined : "hover"}
                     className="flex-shrink-0"
                   >
