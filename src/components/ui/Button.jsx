@@ -1,5 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { cva } from "class-variance-authority";
 import {
   FaSpinner,
   FaPlus,
@@ -16,22 +17,222 @@ import {
  * Componente Button mejorado con diseño premium y animaciones espectaculares
  * Sistema de colores semánticos con efectos visuales avanzados
  */
+
+const buttonVariants = cva(
+  `
+    relative overflow-hidden
+    font-dental font-semibold transition-all duration-300 ease-out
+    focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
+    focus-visible:ring-offset-background dark:focus-visible:ring-offset-background-dark
+    inline-flex items-center justify-center gap-dental-sm
+    disabled:cursor-not-allowed
+    transform-gpu will-change-transform
+  `,
+  {
+    variants: {
+      variant: {
+        primary: `
+          bg-gradient-primary dark:bg-gradient-primary-dark
+          hover:from-accent-500 hover:via-accent-500 hover:to-accent-500
+          active:from-primary-600 active:via-primary-700 active:to-primary-800
+          text-white font-bold
+          border border-primary-600/20
+          shadow-lg shadow-primary-500/25
+          hover:shadow-xl hover:shadow-primary-500/40
+          focus-visible:ring-primary-500
+          disabled:from-primary-300 disabled:via-primary-300 disabled:to-primary-300
+          disabled:shadow-none disabled:opacity-60
+          dark:from-primary-600 dark:via-primary-700 dark:to-primary-800
+          dark:hover:from-primary-500 dark:hover:via-primary-600 dark:hover:to-primary-700
+        `,
+        secondary: `
+          bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300
+          hover:from-primary-50 hover:via-accent-50 hover:to-primary-100
+          active:from-gray-300 active:via-gray-400 active:to-gray-500
+          dental-text-primary border-2 border-gray-300/60
+          hover:border-primary-500 hover:shadow-lg hover:shadow-primary-500/15
+          focus-visible:ring-primary-500
+          disabled:from-gray-200 disabled:via-gray-200 disabled:to-gray-200
+          disabled:dental-text-muted disabled:opacity-50 disabled:shadow-none
+          dark:from-gray-800 dark:via-gray-700 dark:to-gray-600
+          dark:hover:from-primary-900/40 dark:hover:via-accent-900/30 dark:hover:to-primary-800/40
+          dark:border-gray-600/60 dark:hover:border-primary-400/50
+          transition-all duration-300
+        `,
+        success: `
+          bg-gradient-to-br from-emerald-500 via-emerald-600 to-green-700
+          hover:from-emerald-400 hover:via-emerald-500 hover:to-green-600
+          active:from-emerald-600 active:via-emerald-700 active:to-green-800
+          text-white font-bold
+          border border-emerald-600/20
+          shadow-lg shadow-emerald-500/25
+          hover:shadow-xl hover:shadow-emerald-500/40
+          focus-visible:ring-emerald-500
+          disabled:from-emerald-300 disabled:via-emerald-300 disabled:to-emerald-300
+          disabled:shadow-none disabled:opacity-60
+        `,
+        danger: `
+          bg-gradient-to-br from-red-500 via-red-600 to-rose-700
+          hover:from-red-400 hover:via-red-500 hover:to-rose-600
+          active:from-red-600 active:via-red-700 active:to-rose-800
+          text-white font-bold
+          border border-red-600/20
+          shadow-lg shadow-red-500/25
+          hover:shadow-xl hover:shadow-red-500/40
+          focus-visible:ring-red-500
+          disabled:from-red-300 disabled:via-red-300 disabled:to-red-300
+          disabled:shadow-none disabled:opacity-60
+        `,
+        warning: `
+          bg-gradient-to-br from-amber-500 via-orange-500 to-yellow-600
+          hover:from-amber-400 hover:via-orange-400 hover:to-yellow-500
+          active:from-amber-600 active:via-orange-600 active:to-yellow-700
+          text-white font-bold
+          border border-amber-600/20
+          shadow-lg shadow-amber-500/25
+          hover:shadow-xl hover:shadow-amber-500/40
+          focus-visible:ring-amber-500
+          disabled:from-amber-300 disabled:via-amber-300 disabled:to-amber-300
+          disabled:shadow-none disabled:opacity-60
+        `,
+        info: `
+          bg-gradient-to-br from-blue-500 via-cyan-500 to-sky-600
+          hover:from-blue-400 hover:via-cyan-400 hover:to-sky-500
+          active:from-blue-600 active:via-cyan-600 active:to-sky-700
+          text-white font-bold
+          border border-blue-600/20
+          shadow-lg shadow-blue-500/25
+          hover:shadow-xl hover:shadow-blue-500/40
+          focus-visible:ring-blue-500
+          disabled:from-blue-300 disabled:via-blue-300 disabled:to-blue-300
+          disabled:shadow-none disabled:opacity-60
+        `,
+        outline: `
+          bg-gradient-to-br from-transparent via-primary-50/30 to-primary-100/50
+          hover:from-primary-50 hover:via-primary-100 hover:to-primary-200
+          active:from-primary-100 active:via-primary-200 active:to-primary-300
+          dental-text-primary border-2 border-primary-500/60
+          hover:border-primary-500 shadow-md shadow-primary-500/10
+          hover:shadow-lg hover:shadow-primary-500/20
+          focus-visible:ring-primary-500
+          disabled:border-primary-200 disabled:dental-text-muted disabled:opacity-50
+          dark:from-transparent dark:via-primary-900/20 dark:to-primary-800/30
+          dark:hover:from-primary-900/30 dark:hover:via-primary-800/40 dark:hover:to-primary-700/50
+          dark:border-primary-400/60 dark:hover:border-primary-400
+        `,
+        ghost: `
+          bg-transparent hover:bg-gradient-to-br hover:from-gray-100/80 hover:via-gray-200/60 hover:to-gray-300/40
+          active:from-gray-200/80 active:via-gray-300/60 active:to-gray-400/40
+          dental-text-primary border border-transparent
+          hover:border-gray-300/30 hover:shadow-md hover:shadow-gray-400/20
+          focus-visible:ring-gray-500
+          disabled:opacity-50
+          dark:hover:from-gray-800/80 dark:hover:via-gray-700/60 dark:hover:to-gray-600/40
+          dark:hover:border-gray-600/30
+        `,
+        link: `
+          bg-transparent dental-text-primary border-none p-0 shadow-none
+          hover:dental-text-secondary hover:underline
+          disabled:dental-text-muted disabled:no-underline
+          dark:hover:text-primary-400
+          transition-colors duration-200
+        `,
+        premium: `
+          bg-gradient-to-br from-purple-600 via-pink-600 to-indigo-700
+          hover:from-purple-500 hover:via-pink-500 hover:to-indigo-600
+          active:from-purple-700 active:via-pink-700 active:to-indigo-800
+          text-white font-bold
+          border border-purple-600/20
+          shadow-lg shadow-purple-500/25
+          hover:shadow-2xl hover:shadow-purple-500/50
+          focus-visible:ring-purple-500
+          disabled:from-purple-300 disabled:via-purple-300 disabled:to-purple-300
+          disabled:shadow-none disabled:opacity-60
+          animate-gradient-x bg-[length:200%_200%]
+        `,
+      },
+      size: {
+        xs: "px-3 py-1.5 text-xs min-h-[28px]",
+        sm: "px-4 py-2 text-sm min-h-[36px]",
+        md: "px-6 py-3 text-base min-h-[44px]",
+        lg: "px-8 py-4 text-lg min-h-[52px]",
+        xl: "px-10 py-5 text-xl min-h-[60px]",
+      },
+      rounded: {
+        none: "rounded-none",
+        xs: "rounded",
+        sm: "rounded-md",
+        md: "rounded-lg",
+        lg: "rounded-xl",
+        xl: "rounded-2xl",
+        "2xl": "rounded-3xl",
+        "3xl": "rounded-[2rem]",
+        full: "rounded-full",
+      },
+      fullWidth: {
+        true: "w-full",
+      },
+    },
+    compoundVariants: [
+      {
+        variant: ["primary", "success", "danger", "warning", "info", "premium"],
+        glowEffect: true,
+        className: "animate-pulse",
+      },
+      {
+        variant: "primary",
+        glowEffect: true,
+        className: "shadow-2xl shadow-primary-500/50",
+      },
+      {
+        variant: "success",
+        glowEffect: true,
+        className: "shadow-2xl shadow-emerald-500/50",
+      },
+      {
+        variant: "danger",
+        glowEffect: true,
+        className: "shadow-2xl shadow-red-500/50",
+      },
+      {
+        variant: "warning",
+        glowEffect: true,
+        className: "shadow-2xl shadow-amber-500/50",
+      },
+      {
+        variant: "info",
+        glowEffect: true,
+        className: "shadow-2xl shadow-blue-500/50",
+      },
+      {
+        variant: "premium",
+        glowEffect: true,
+        className: "shadow-2xl shadow-purple-500/60",
+      },
+    ],
+    defaultVariants: {
+      variant: "primary",
+      size: "md",
+      rounded: "md",
+    },
+  }
+);
 const DentalButton = ({
   children,
   onClick,
-  variant = "primary",
-  size = "md",
-  className = "",
+  variant,
+  size,
+  className,
   isLoading = false,
   disabled = false,
   icon,
   iconPosition = "left",
   loadingText = "Cargando...",
-  fullWidth = false,
-  rounded = "md",
+  fullWidth,
+  rounded,
   shadow = true,
   type = "button",
-  glowEffect = false,
+  glowEffect,
   rippleEffect = true,
   ...props
 }) => {
@@ -69,207 +270,19 @@ const DentalButton = ({
     }
   };
 
-  // Clases base mejoradas
-  const baseClasses = `
-    relative overflow-hidden
-    font-dental font-semibold transition-all duration-300 ease-out
-    focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
-    focus-visible:ring-offset-background dark:focus-visible:ring-offset-background-dark
-    inline-flex items-center justify-center gap-dental-sm
-    disabled:cursor-not-allowed
-    transform-gpu will-change-transform
-    ${fullWidth ? "w-full" : ""}
-    ${isPressed ? "scale-95" : "scale-100"}
-  `;
-
-  // Variantes mejoradas con gradientes y efectos
-  const variants = {
-    primary: `
-      bg-gradient-primary dark:bg-gradient-primary-dark
-      hover:from-accent-500 hover:via-accent-500 hover:to-accent-500
-      active:from-primary-600 active:via-primary-700 active:to-primary-800
-      text-white font-bold
-      border border-primary-600/20
-      shadow-lg shadow-primary-500/25
-      hover:shadow-xl hover:shadow-primary-500/40
-      focus-visible:ring-primary-500
-      disabled:from-primary-300 disabled:via-primary-300 disabled:to-primary-300
-      disabled:shadow-none disabled:opacity-60
-      dark:from-primary-600 dark:via-primary-700 dark:to-primary-800
-      dark:hover:from-primary-500 dark:hover:via-primary-600 dark:hover:to-primary-700
-      ${glowEffect ? "animate-pulse shadow-2xl shadow-primary-500/50" : ""}
-    `,
-
-    secondary: `
-      hover:from-primary-900 hover:via-primary-900 hover:to-primary-900
-      active:from-gray-200 active:via-gray-300 active:to-gray-400
-      dental-text-primary border border-gray-300/50
-      shadow-md shadow-gray-400/20
-      hover:shadow-lg hover:shadow-gray-400/30
-      focus-visible:ring-gray-500
-      disabled:opacity-50
-      dark:from-gray-800 dark:via-gray-800 dark:to-gray-900
-      dark:hover:from-gray-700 dark:hover:via-gray-800 dark:hover:to-gray-900
-      dark:border-gray-600/50 dark:shadow-gray-900/30
-    `,
-
-    success: `
-      bg-gradient-to-br from-emerald-500 via-emerald-600 to-green-700
-      hover:from-emerald-400 hover:via-emerald-500 hover:to-green-600
-      active:from-emerald-600 active:via-emerald-700 active:to-green-800
-      text-white font-bold
-      border border-emerald-600/20
-      shadow-lg shadow-emerald-500/25
-      hover:shadow-xl hover:shadow-emerald-500/40
-      focus-visible:ring-emerald-500
-      disabled:from-emerald-300 disabled:via-emerald-300 disabled:to-emerald-300
-      disabled:shadow-none disabled:opacity-60
-      ${glowEffect ? "animate-pulse shadow-2xl shadow-emerald-500/50" : ""}
-    `,
-
-    danger: `
-      bg-gradient-to-br from-red-500 via-red-600 to-rose-700
-      hover:from-red-400 hover:via-red-500 hover:to-rose-600
-      active:from-red-600 active:via-red-700 active:to-rose-800
-      text-white font-bold
-      border border-red-600/20
-      shadow-lg shadow-red-500/25
-      hover:shadow-xl hover:shadow-red-500/40
-      focus-visible:ring-red-500
-      disabled:from-red-300 disabled:via-red-300 disabled:to-red-300
-      disabled:shadow-none disabled:opacity-60
-      ${glowEffect ? "animate-pulse shadow-2xl shadow-red-500/50" : ""}
-    `,
-
-    warning: `
-      bg-gradient-to-br from-amber-500 via-orange-500 to-yellow-600
-      hover:from-amber-400 hover:via-orange-400 hover:to-yellow-500
-      active:from-amber-600 active:via-orange-600 active:to-yellow-700
-      text-white font-bold
-      border border-amber-600/20
-      shadow-lg shadow-amber-500/25
-      hover:shadow-xl hover:shadow-amber-500/40
-      focus-visible:ring-amber-500
-      disabled:from-amber-300 disabled:via-amber-300 disabled:to-amber-300
-      disabled:shadow-none disabled:opacity-60
-      ${glowEffect ? "animate-pulse shadow-2xl shadow-amber-500/50" : ""}
-    `,
-
-    info: `
-      bg-gradient-to-br from-blue-500 via-cyan-500 to-sky-600
-      hover:from-blue-400 hover:via-cyan-400 hover:to-sky-500
-      active:from-blue-600 active:via-cyan-600 active:to-sky-700
-      text-white font-bold
-      border border-blue-600/20
-      shadow-lg shadow-blue-500/25
-      hover:shadow-xl hover:shadow-blue-500/40
-      focus-visible:ring-blue-500
-      disabled:from-blue-300 disabled:via-blue-300 disabled:to-blue-300
-      disabled:shadow-none disabled:opacity-60
-      ${glowEffect ? "animate-pulse shadow-2xl shadow-blue-500/50" : ""}
-    `,
-
-    outline: `
-      bg-gradient-to-br from-transparent via-primary-50/30 to-primary-100/50
-      hover:from-primary-50 hover:via-primary-100 hover:to-primary-200
-      active:from-primary-100 active:via-primary-200 active:to-primary-300
-      dental-text-primary border-2 border-primary-500/60
-      hover:border-primary-500 shadow-md shadow-primary-500/10
-      hover:shadow-lg hover:shadow-primary-500/20
-      focus-visible:ring-primary-500
-      disabled:border-primary-200 disabled:dental-text-muted disabled:opacity-50
-      dark:from-transparent dark:via-primary-900/20 dark:to-primary-800/30
-      dark:hover:from-primary-900/30 dark:hover:via-primary-800/40 dark:hover:to-primary-700/50
-      dark:border-primary-400/60 dark:hover:border-primary-400
-    `,
-
-    ghost: `
-      bg-transparent hover:bg-gradient-to-br hover:from-gray-100/80 hover:via-gray-200/60 hover:to-gray-300/40
-      active:from-gray-200/80 active:via-gray-300/60 active:to-gray-400/40
-      dental-text-primary border border-transparent
-      hover:border-gray-300/30 hover:shadow-md hover:shadow-gray-400/20
-      focus-visible:ring-gray-500
-      disabled:opacity-50
-      dark:hover:from-gray-800/80 dark:hover:via-gray-700/60 dark:hover:to-gray-600/40
-      dark:hover:border-gray-600/30
-    `,
-
-    link: `
-      bg-transparent dental-text-primary border-none p-0 shadow-none
-      hover:dental-text-secondary hover:underline
-      disabled:dental-text-muted disabled:no-underline
-      dark:hover:text-primary-400
-      transition-colors duration-200
-    `,
-
-    premium: `
-      bg-gradient-to-br from-purple-600 via-pink-600 to-indigo-700
-      hover:from-purple-500 hover:via-pink-500 hover:to-indigo-600
-      active:from-purple-700 active:via-pink-700 active:to-indigo-800
-      text-white font-bold
-      border border-purple-600/20
-      shadow-lg shadow-purple-500/25
-      hover:shadow-2xl hover:shadow-purple-500/50
-      focus-visible:ring-purple-500
-      disabled:from-purple-300 disabled:via-purple-300 disabled:to-purple-300
-      disabled:shadow-none disabled:opacity-60
-      animate-gradient-x bg-[length:200%_200%]
-      ${glowEffect ? "animate-pulse shadow-2xl shadow-purple-500/60" : ""}
-    `,
+  const iconSizes = {
+    xs: 12,
+    sm: 14,
+    md: 16,
+    lg: 18,
+    xl: 20,
   };
 
-  // Tamaños mejorados
-  const sizes = {
-    xs: {
-      padding: "px-3 py-1.5",
-      text: "text-xs",
-      iconSize: 12,
-      minHeight: "min-h-[28px]",
-    },
-    sm: {
-      padding: "px-4 py-2",
-      text: "text-sm",
-      iconSize: 14,
-      minHeight: "min-h-[36px]",
-    },
-    md: {
-      padding: "px-6 py-3",
-      text: "text-base",
-      iconSize: 16,
-      minHeight: "min-h-[44px]",
-    },
-    lg: {
-      padding: "px-8 py-4",
-      text: "text-lg",
-      iconSize: 18,
-      minHeight: "min-h-[52px]",
-    },
-    xl: {
-      padding: "px-10 py-5",
-      text: "text-xl",
-      iconSize: 20,
-      minHeight: "min-h-[60px]",
-    },
-  };
-
-  // Border radius mejorados
-  const roundedStyles = {
-    none: "rounded-none",
-    xs: "rounded",
-    sm: "rounded-md",
-    md: "rounded-lg",
-    lg: "rounded-xl",
-    xl: "rounded-2xl",
-    "2xl": "rounded-3xl",
-    "3xl": "rounded-[2rem]",
-    full: "rounded-full",
-  };
-
-  const sizeStyle = sizes[size];
+  const iconSize = iconSizes[size] || iconSizes.md;
   const isDisabled = disabled || isLoading;
 
   // Animaciones mejoradas de Framer Motion
-  const buttonVariants = {
+  const motionVariants = {
     initial: {
       scale: 1,
       y: 0,
@@ -294,7 +307,7 @@ const DentalButton = ({
     },
   };
 
-  const iconVariants = {
+  const iconMotionVariants = {
     initial: { rotate: 0, scale: 1 },
     hover: {
       rotate: variant === "primary" ? 5 : 0,
@@ -329,10 +342,7 @@ const DentalButton = ({
           animate="animate"
           className="flex items-center justify-center"
         >
-          <FaSpinner
-            size={sizeStyle.iconSize}
-            className="dental-text-current"
-          />
+          <FaSpinner size={iconSize} className="dental-text-current" />
         </motion.div>
       );
     }
@@ -340,11 +350,11 @@ const DentalButton = ({
     if (icon && position === iconPosition && !isLoading) {
       return (
         <motion.div
-          variants={iconVariants}
+          variants={iconMotionVariants}
           className="flex items-center justify-center"
         >
           {React.cloneElement(icon, {
-            size: sizeStyle.iconSize,
+            size: iconSize,
             className: `dental-text-current ${icon.props?.className || ""}`,
           })}
         </motion.div>
@@ -358,7 +368,7 @@ const DentalButton = ({
 
   return (
     <motion.button
-      variants={buttonVariants}
+      variants={motionVariants}
       initial="initial"
       whileHover={!isDisabled ? "hover" : "initial"}
       whileTap={!isDisabled ? "tap" : "initial"}
@@ -366,18 +376,14 @@ const DentalButton = ({
       onMouseUp={() => setIsPressed(false)}
       onMouseLeave={() => setIsPressed(false)}
       type={type}
-      className={`
-        ${baseClasses}
-        ${variants[variant]}
-        ${sizeStyle.padding}
-        ${sizeStyle.text}
-        ${sizeStyle.minHeight}
-        ${roundedStyles[rounded]}
-        ${isLoading ? "cursor-wait" : ""}
-        ${className}
-      `
-        .replace(/\s+/g, " ")
-        .trim()}
+      className={buttonVariants({
+        variant,
+        size,
+        rounded,
+        fullWidth,
+        glowEffect,
+        className,
+      })}
       onClick={handleClick}
       disabled={isDisabled}
       {...props}
@@ -509,24 +515,4 @@ export const PremiumButton = (props) => (
   </DentalButton>
 );
 
-// CSS personalizado para animaciones avanzadas (agregar al global.css)
-const styles = `
-@keyframes gradient-x {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.animate-gradient-x {
-  animation: gradient-x 3s ease infinite;
-}
-
-/* Mejora para el focus ring */
-.focus-visible\\:ring-2:focus-visible {
-  ring-offset-width: 2px;
-  ring-width: 2px;
-}
-`;
-
-export { styles as buttonStyles };
 export default DentalButton;

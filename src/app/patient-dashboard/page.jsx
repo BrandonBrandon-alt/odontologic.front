@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import {
@@ -7,40 +7,59 @@ import {
   FaHeartbeat,
   FaCalendarPlus,
   FaClipboardList,
+  FaClock,
+  FaCheckCircle,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 import Card, { StatCard } from "@/components/ui/Card";
 import DentalButton from "@/components/ui/Button";
+import AppointmentList from "@/components/appointments/AppointmentList";
+import useAppointments from "@/hooks/useAppointments";
 import Link from "next/link";
-
-const stats = [
-  {
-    title: "Citas activas",
-    value: 2,
-    icon: <FaCalendarPlus className="text-primary-500" />,
-  },
-  {
-    title: "Tratamientos",
-    value: 1,
-    icon: <FaClipboardList className="text-accent-500" />,
-  },
-  {
-    title: "Salud bucal",
-    value: "Buena",
-    icon: <FaHeartbeat className="text-success-500" />,
-  },
-];
-
-const activities = [
-  { id: 1, label: "Cita confirmada con Dr. Ruiz", time: "Hace 2 días" },
-  { id: 2, label: "Recordatorio de higiene enviado", time: "Hace 4 días" },
-  { id: 3, label: "Resultados de revisión disponibles", time: "Hace 1 semana" },
-];
 
 export default function PatientDashboardPage() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const { allowed } = useRequireAuth({ role: "user" });
+  const { appointments, loading: appointmentsLoading } = useAppointments(user);
+  const [activeTab, setActiveTab] = useState('overview');
+  
   const displayName = user?.name || "Paciente";
+
+  // Calcular estadísticas basadas en citas reales
+  const activeAppointments = appointments.filter(apt => 
+    apt.status === 'pending' || apt.status === 'confirmed'
+  ).length;
+  
+  const completedAppointments = appointments.filter(apt => 
+    apt.status === 'completed'
+  ).length;
+
+  const stats = [
+    {
+      title: "Citas activas",
+      value: activeAppointments,
+      icon: <FaCalendarPlus className="text-primary-500" />,
+    },
+    {
+      title: "Citas completadas",
+      value: completedAppointments,
+      icon: <FaCheckCircle className="text-green-500" />,
+    },
+    {
+      title: "Próxima cita",
+      value: appointments.find(apt => apt.status === 'confirmed') ? "Programada" : "Ninguna",
+      icon: <FaClock className="text-blue-500" />,
+    },
+  ];
+
+  // Actividades recientes basadas en citas
+  const activities = appointments
+    .slice(0, 3)
+    .map(apt => ({
+      id: apt.id,
+      label: `${apt.status === 'confirmed' ? 'Cita confirmada' : 'Cita pendiente'} - ${apt.serviceType?.name}`,
+      time: new Date(apt.createdAt).toLocaleDateString(),
+    }));
 
   if (!allowed) {
     return (
@@ -78,11 +97,17 @@ export default function PatientDashboardPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <DentalButton variant="primary" icon={<FaCalendarPlus />}>
-            Agendar Cita
-          </DentalButton>
-          <DentalButton variant="outline" icon={<FaClipboardList />}>
-            Historial
+          <Link href="/book-appointment">
+            <DentalButton variant="primary" icon={<FaCalendarPlus />}>
+              Agendar Cita
+            </DentalButton>
+          </Link>
+          <DentalButton 
+            variant="outline" 
+            icon={<FaClipboardList />}
+            onClick={() => setActiveTab('appointments')}
+          >
+            Ver Citas
           </DentalButton>
         </div>
       </header>
@@ -149,26 +174,64 @@ export default function PatientDashboardPage() {
         </Card>
       </section>
 
-      <section aria-labelledby="patient-profile-heading" className="space-y-4">
-        <h2
-          id="patient-profile-heading"
-          className="text-xl font-bold tracking-tight"
-        >
-          Gestión de Perfil
-        </h2>
-        <Card className="p-6 flex flex-col gap-4" shadow="sm">
-          <p className="text-sm text-text-secondary max-w-prose">
-            Ahora la administración de tu perfil y seguridad se centraliza en
-            una sola página. Accede para actualizar datos personales o cambiar
-            tu contraseña.
-          </p>
-          <div>
-            <Link href="/profile" className="inline-block">
-              <DentalButton variant="primary">Ir a Mi Perfil</DentalButton>
-            </Link>
-          </div>
-        </Card>
-      </section>
+      {/* Navigation Tabs */}
+      <div className="border-b border-gray-200 dark:border-gray-700">
+        <nav className="-mb-px flex space-x-8">
+          <button
+            onClick={() => setActiveTab('overview')}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              activeTab === 'overview'
+                ? 'border-primary-500 text-primary-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Resumen
+          </button>
+          <button
+            onClick={() => setActiveTab('appointments')}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              activeTab === 'appointments'
+                ? 'border-primary-500 text-primary-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Mis Citas
+          </button>
+        </nav>
+      </div>
+
+      {/* Tab Content */}
+      <div className="mt-6">
+        {activeTab === 'overview' && (
+          <section aria-labelledby="patient-profile-heading" className="space-y-4">
+            <h2
+              id="patient-profile-heading"
+              className="text-xl font-bold tracking-tight"
+            >
+              Gestión de Perfil
+            </h2>
+            <Card className="p-6 flex flex-col gap-4" shadow="sm">
+              <p className="text-sm text-text-secondary max-w-prose">
+                Ahora la administración de tu perfil y seguridad se centraliza en
+                una sola página. Accede para actualizar datos personales o cambiar
+                tu contraseña.
+              </p>
+              <div>
+                <Link href="/profile" className="inline-block">
+                  <DentalButton variant="primary">Ir a Mi Perfil</DentalButton>
+                </Link>
+              </div>
+            </Card>
+          </section>
+        )}
+
+        {activeTab === 'appointments' && (
+          <section aria-labelledby="appointments-heading">
+            <AppointmentList user={user} />
+          </section>
+        )}
+      </div>
+
     </motion.div>
   );
 }

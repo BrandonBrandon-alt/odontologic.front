@@ -1,22 +1,21 @@
-"use client"; // Directiva para indicar que este componente es un componente de cliente en Next.js
+"use client";
 
-import React from "react"; // Importa la librería React
-import { motion } from "framer-motion"; // Importa el componente 'motion' de Framer Motion para animaciones
-import Link from "next/link"; // Importa el componente 'Link' de Next.js para la navegación entre páginas
-import {
-  FaClock, // Icono de reloj
-  FaShieldAlt, // Icono de escudo
-  FaHeart, // Icono de corazón
-  FaTooth, // Icono de diente (usado como icono principal de odontología)
-  FaMagic, // Icono de magia
-  FaUserMd, // Icono de médico (no usado en este código, pero importado)
-  FaCalendarPlus, // Icono de calendario con un signo de más (para agendar cita)
-  FaMapMarkerAlt, // Icono de marcador de mapa (para ubicación)
-  FaPhone, // Icono de teléfono
-  FaClock as FaClockAlt, // Se importa FaClock de nuevo pero con un alias FaClockAlt para evitar conflicto de nombres si se necesitara usar el original FaClock también.
-} from "react-icons/fa"; // Importa varios iconos de la librería Font Awesome a través de react-icons
-import Card, { ActionCard, StatCard } from "../../components/ui/Card"; // Importa componentes de tarjeta (Card, ActionCard, StatCard) desde una ruta relativa
-import DentalButton from "../../components/ui/Button"; // Importa un componente de botón personalizado (DentalButton) desde una ruta relativa
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { 
+  FaMapMarkerAlt, 
+  FaPhone, 
+  FaEnvelope,
+  FaClock
+} from 'react-icons/fa';
+import DentalButton from '@/components/ui/Button';
+import Card from '@/components/ui/Card';
+
+
+import Link from 'next/link';
+
+// API Configuration
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
 // --- Animation Variants (Variantes de Animación) ---
 // Define variantes de animación para el contenedor principal
@@ -72,140 +71,7 @@ const floatingVariants = {
 };
 
 // --- Data (Datos) ---
-// Objeto que contiene los datos para las diferentes categorías de servicios dentales
-const servicesData = {
-  general: {
-    title: "Odontología General y Preventiva", // Título de la categoría
-    color: "primary", // Color asociado a la categoría (probablemente usado para estilos)
-    icon: "🦷", // Icono emoji para la categoría
-    services: [
-      // Array de servicios individuales dentro de esta categoría
-      {
-        name: "Limpieza Dental Profesional",
-        description:
-          "Eliminación de placa y sarro para mantener una boca saludable",
-        duration: "45 min",
-        price: "Desde $50.000",
-      },
-      {
-        name: "Chequeo y Diagnóstico",
-        description:
-          "Evaluación completa de la salud bucal con tecnología avanzada",
-        duration: "30 min",
-        price: "Desde $30.000",
-      },
-      {
-        name: "Tratamiento de Caries",
-        description:
-          "Restauración de dientes afectados con materiales de alta calidad",
-        duration: "60 min",
-        price: "Desde $80.000",
-      },
-      {
-        name: "Extracciones Simples",
-        description: "Extracción segura de dientes dañados o problemáticos",
-        duration: "45 min",
-        price: "Desde $100.000",
-      },
-    ],
-  },
-  estetica: {
-    title: "Estética Dental y Blanqueamiento",
-    color: "secondary",
-    icon: "✨",
-    services: [
-      {
-        name: "Blanqueamiento Dental",
-        description:
-          "Sonrisa más brillante y blanca con tecnología profesional",
-        duration: "90 min",
-        price: "Desde $150.000",
-      },
-      {
-        name: "Carillas de Porcelana",
-        description:
-          "Transformación completa de la sonrisa con carillas personalizadas",
-        duration: "2 sesiones",
-        price: "Desde $800.000",
-      },
-      {
-        name: "Diseño de Sonrisa",
-        description: "Planificación integral para la sonrisa de tus sueños",
-        duration: "Consulta",
-        price: "Desde $200.000",
-      },
-      {
-        name: "Bonding Dental",
-        description: "Corrección de imperfecciones menores de forma rápida",
-        duration: "60 min",
-        price: "Desde $120.000",
-      },
-    ],
-  },
-  ortodoncia: {
-    title: "Ortodoncia y Rehabilitación",
-    color: "accent",
-    icon: "🪥",
-    services: [
-      {
-        name: "Brackets Metálicos",
-        description:
-          "Ortodoncia tradicional para alinear perfectamente tus dientes",
-        duration: "18-24 meses",
-        price: "Desde $2.500.000",
-      },
-      {
-        name: "Brackets Estéticos",
-        description: "Ortodoncia discreta con brackets transparentes",
-        duration: "18-24 meses",
-        price: "Desde $3.200.000",
-      },
-      {
-        name: "Invisalign",
-        description: "Alineadores transparentes removibles para adultos",
-        duration: "12-18 meses",
-        price: "Desde $4.500.000",
-      },
-      {
-        name: "Retenedores",
-        description: "Mantenimiento de resultados después del tratamiento",
-        duration: "Permanente",
-        price: "Desde $150.000",
-      },
-    ],
-  },
-  especializada: {
-    title: "Especialidades Avanzadas",
-    color: "primary",
-    icon: "🔬",
-    services: [
-      {
-        name: "Endodoncia",
-        description: "Tratamiento de conductos para salvar dientes dañados",
-        duration: "90 min",
-        price: "Desde $300.000",
-      },
-      {
-        name: "Periodoncia",
-        description: "Tratamiento de encías y enfermedades periodontales",
-        duration: "60 min",
-        price: "Desde $200.000",
-      },
-      {
-        name: "Cirugía Oral",
-        description: "Extracciones complejas y cirugías bucales",
-        duration: "Varía",
-        price: "Desde $400.000",
-      },
-      {
-        name: "Implantes Dentales",
-        description: "Reemplazo permanente de dientes perdidos",
-        duration: "3-6 meses",
-        price: "Desde $2.800.000",
-      },
-    ],
-  },
-};
+// Los datos de servicios ahora se cargan dinámicamente desde la API
 
 // Array de información de contacto
 const contactInfo = [
@@ -222,10 +88,10 @@ const contactInfo = [
     iconColor: "text-blue-500",
   },
   {
-    icon: FaClockAlt, // Icono de reloj (alias para FaClock)
+    icon: FaClock, // Icono de reloj
     title: "Horarios", // Título
     content: ["Lun - Vie: 8:00 AM - 6:00 PM", "Sáb: 8:00 AM - 2:00 PM"], // Horarios de atención
-    iconColor: "text--500",
+    iconColor: "text-green-500",
   },
 ];
 
@@ -290,45 +156,38 @@ const SectionTitle = ({ title, subtitle, gradient = false, icon }) => (
   </motion.div>
 );
 
-// Componente para una tarjeta de servicio individual
+// Componente para una tarjeta de servicio
 const ServiceCard = ({ service, index }) => (
   <motion.div
-    variants={itemVariants} // Aplica variantes de animación de item
-    initial={{ scale: 0.8, opacity: 0 }} // Estado inicial de animación
-    animate={{ scale: 1, opacity: 1 }} // Estado final
-    transition={{ delay: index * 0.1, duration: 0.6 }} // Retraso de animación basado en el índice
-    whileHover={scaleOnHover.hover} // Animación al pasar el ratón
-    className="w-full max-w-md mx-auto" // Estilos de ancho y centrado
+    variants={itemVariants}
+    className="w-full max-w-md"
   >
-    <ActionCard
-      className="bg-[var(--color-primary)] dark:bg-[var(--color-surface)] h-full w-full min-h-[200px] border-2 border-border dark:border-border-dark relative overflow-hidden" // Estilos de la tarjeta, incluyendo colores de fondo y bordes para temas claro/oscuro
-      title={service.name} // Título de la tarjeta (nombre del servicio)
-      description={service.description} // Descripción del servicio
-      actions={
-        // Contenido de la sección de acciones de la tarjeta
-        <div className="flex justify-between items-center w-full mt-6">
-          <span className="text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full font-medium">
-            {service.duration} {/* Duración del servicio */}
-          </span>
-          <div className="flex flex-col items-end">
-            <span className="text-sm font-bold text-primary mb-2">
-              {service.price} {/* Precio del servicio */}
-            </span>
-            <DentalButton variant="primary" size="sm">
-              Agendar {/* Botón para agendar */}
-            </DentalButton>
-          </div>
-        </div>
-      }
+    <Card
+      className="bg-white dark:bg-gray-800 h-full w-full min-h-[200px] border-2 border-gray-200 dark:border-gray-700 relative overflow-hidden"
     >
-      {/* Decoración de efecto hover */}
+      <div className="p-6">
+        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+          {service.name}
+        </h3>
+        <p className="text-gray-600 dark:text-gray-300 mb-4">
+          {service.description}
+        </p>
+        <div className="flex justify-between items-center">
+          <span className="text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full font-medium">
+            {service.duration}
+          </span>
+          <DentalButton variant="primary" size="sm">
+            <Link href="/book-appointment">Agendar</Link>
+          </DentalButton>
+        </div>
+      </div>
       <motion.div
-        className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-primary to-accent" // Línea de gradiente en la parte inferior
-        initial={{ width: "0%" }} // Estado inicial: ancho 0
-        whileHover={{ width: "100%" }} // Al pasar el ratón: ancho 100%
-        transition={{ duration: 0.3 }} // Duración de la transición
+        className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-primary to-accent"
+        initial={{ width: "0%" }}
+        whileHover={{ width: "100%" }}
+        transition={{ duration: 0.3 }}
       />
-    </ActionCard>
+    </Card>
   </motion.div>
 );
 
@@ -398,76 +257,6 @@ const ContactCard = ({ info, index }) => (
   </motion.div>
 );
 
-// Componente para la sección de Llamada a la Acción (CTA)
-const CTASection = () => (
-  <Section className="relative text-white">
-    <div className="full-bleed-bg bg-gradient-primary dark:bg-gradient-primary-dark absolute inset-0 -z-10" />{" "}
-    {/* Estilos de la sección CTA */}
-    {/* Decoraciones de fondo */}
-    <motion.div
-      // Eliminada rotación para mejorar rendimiento y simplicidad visual
-      // animate={{ rotate: [0, 360] }}
-      transition={{ duration: 30, repeat: Infinity, ease: "linear" }} // Transición
-      className="absolute -top-20 -right-20 w-40 h-40 border border-white/10 rounded-full" // Estilos de la decoración
-    />
-    <motion.div
-      // animate={{ rotate: [360, 0] }}
-      transition={{ duration: 25, repeat: Infinity, ease: "linear" }} // Transición
-      className="absolute -bottom-20 -left-20 w-32 h-32 border border-white/10 rounded-full" // Estilos de la decoración
-    />
-    <motion.div
-      initial="hidden" // Estado inicial: oculto
-      whileInView="visible" // Anima a visible cuando está en la vista
-      viewport={{ once: true, amount: 0.5 }} // Configuración del viewport
-      variants={containerVariants} // Aplica variantes de animación de contenedor
-      className="text-center relative z-10" // Estilos del contenido
-    >
-      <motion.div
-        variants={itemVariants} // Aplica variantes de animación de item
-        className="inline-flex p-4 mb-8 bg-white/10 rounded-2xl backdrop-blur-sm" // Estilos del contenedor del icono
-      >
-        <FaMagic className="w-12 h-12 text-white" /> {/* Icono de magia */}
-      </motion.div>
-      <motion.h2
-        variants={itemVariants} // Aplica variantes de animación de item
-        className="text-3xl md:text-4xl font-bold mb-6" // Estilos del título
-      >
-        ¿Listo para Transformar tu Sonrisa? {/* Título */}
-      </motion.h2>
-      <motion.p
-        variants={itemVariants} // Aplica variantes de animación de item
-        className="text-xl mb-8 opacity-90 max-w-3xl mx-auto" // Estilos del subtítulo
-      >
-        Agenda tu cita hoy y recibe una consulta de evaluación gratuita{" "}
-        {/* Descripción */}
-      </motion.p>
-      <motion.div
-        variants={itemVariants} // Aplica variantes de animación de item
-        className="flex flex-col sm:flex-row gap-4 justify-center" // Contenedor de botones
-      >
-        <DentalButton
-          variant="primary" // Variante del botón
-          size="lg" // Tamaño del botón
-          icon={<FaCalendarPlus />} // Icono del botón
-          className="bg-white text-primary font-bold shadow-dental-xl hover:shadow-dental-2xl border " // Estilos adicionales
-        >
-          Agendar Cita {/* Texto del botón */}
-        </DentalButton>
-        <Link href="/contact">
-          {" "}
-          {/* Enlace a la página de contacto */}
-          <DentalButton
-            variant="secondary" // Variante del botón
-            size="lg" // Tamaño del botón
-            className="border-2 border-white text-white hover:bg-white hover:text-primary-500 backdrop-blur-sm" // Estilos adicionales
-          >
-            Contactar {/* Texto del botón */}
-          </DentalButton>
-        </Link>
-      </motion.div>
-    </motion.div>
-  </Section>
-);
 
 // Componente para la sección de Contacto
 const ContactSection = () => (
@@ -496,24 +285,231 @@ const ContactSection = () => (
 // --- Main Services Page Component (Componente Principal de la Página de Servicios) ---
 // Este es el componente principal que compone toda la página de servicios
 function ServicesPage() {
+  const [servicesData, setServicesData] = useState({});
+  const [specialties, setSpecialties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [mounted, setMounted] = useState(false);
+
+  // Función para cargar especialidades y servicios desde la API
+  const loadServicesData = async () => {
+    try {
+      setLoading(true);
+      
+      // Cargar especialidades
+      const specialtiesResponse = await fetch(`${API_BASE_URL}/specialties`);
+      if (!specialtiesResponse.ok) throw new Error('Error al cargar especialidades');
+      const specialtiesData = await specialtiesResponse.json();
+      
+      console.log('Especialidades response:', specialtiesData);
+      
+      // Cargar solo servicios destacados (limitamos a los más populares)
+      const servicesResponse = await fetch(`${API_BASE_URL}/service-types`);
+      if (!servicesResponse.ok) throw new Error('Error al cargar servicios');
+      const allServices = await servicesResponse.json();
+      
+      // Filtrar solo servicios destacados por especialidad (máximo 3 por especialidad)
+      const featuredServices = [];
+      const servicesPerSpecialty = {};
+      
+      // Agrupar por especialidad
+      allServices.forEach(service => {
+        if (!servicesPerSpecialty[service.specialty_id]) {
+          servicesPerSpecialty[service.specialty_id] = [];
+        }
+        servicesPerSpecialty[service.specialty_id].push(service);
+      });
+      
+      // Tomar solo los primeros 3 servicios por especialidad
+      Object.values(servicesPerSpecialty).forEach(services => {
+        featuredServices.push(...services.slice(0, 3));
+      });
+      
+      const servicesDataResponse = featuredServices;
+      
+      console.log('Servicios response:', servicesDataResponse);
+      console.log('Primer servicio completo:', servicesDataResponse[0]);
+      console.log('Campos del primer servicio:', Object.keys(servicesDataResponse[0]));
+      
+      // Validar que tenemos los datos necesarios
+      if (!specialtiesData || !Array.isArray(specialtiesData)) {
+        throw new Error('Formato de especialidades inválido');
+      }
+      
+      if (!servicesDataResponse || !Array.isArray(servicesDataResponse)) {
+        throw new Error('Formato de servicios inválido');
+      }
+      
+      // Organizar servicios por especialidad
+      const organizedData = {};
+      
+      specialtiesData.forEach((specialty, index) => {
+        // Filtrar servicios por especialidad
+        const specialtyServices = servicesDataResponse.filter(
+          service => service.specialty_id === specialty.id
+        );
+        
+        console.log(`Especialidad: ${specialty.name} (ID: ${specialty.id})`);
+        console.log(`Servicios encontrados: ${specialtyServices.length}`);
+        
+        // Solo crear la categoría si tiene servicios
+        if (specialtyServices.length > 0) {
+          // Mapear a formato esperado por el componente
+          const mappedServices = specialtyServices.map(service => ({
+            name: service.name,
+            description: service.description,
+            duration: `${service.duration} min`
+          }));
+          
+          // Crear clave única para la especialidad
+          const categoryKey = specialty.name.toLowerCase().replace(/\s+/g, '_').replace(/ñ/g, 'n');
+          
+          organizedData[categoryKey] = {
+            title: specialty.name,
+            color: getColorForIndex(index),
+            icon: getIconForSpecialty(specialty.name),
+            services: mappedServices,
+            totalServices: specialtyServices.length // Para mostrar cuántos servicios hay en total
+          };
+        }
+      });
+      
+      console.log('Datos organizados:', organizedData);
+      console.log('Número de categorías:', Object.keys(organizedData).length);
+      
+      setSpecialties(specialtiesData);
+      setServicesData(organizedData);
+      
+    } catch (err) {
+      console.error('Error cargando datos:', err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Función auxiliar para asignar colores
+  const getColorForIndex = (index) => {
+    const colors = ['primary', 'secondary', 'accent', 'primary'];
+    return colors[index % colors.length];
+  };
+
+  // Función auxiliar para asignar iconos
+  const getIconForSpecialty = (specialtyName) => {
+    const iconMap = {
+      'Odontología General': '🦷',
+      'Ortodoncia': '🪥',
+      'Endodoncia': '🔬',
+      'Periodoncia': '🦷',
+      'Cirugía Oral': '⚕️',
+      'Odontopediatría': '👶',
+      'Prostodoncia': '🦷',
+      'Estética Dental': '✨',
+      'Implantología': '🔬',
+      'Radiología Oral': '📷'
+    };
+    return iconMap[specialtyName] || '🦷';
+  };
+
+  // Manejar el montaje del componente para evitar problemas de hidratación
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Cargar datos al montar el componente
+  useEffect(() => {
+    if (mounted) {
+      loadServicesData();
+    }
+  }, [mounted]);
+
+  // No renderizar hasta que esté montado (evita problemas de hidratación)
+  if (!mounted) {
+    return (
+      <div className="min-h-screen dental-bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-600">Inicializando...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Mostrar loading
+  if (loading) {
+    return (
+      <div className="min-h-screen dental-bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-600">Cargando servicios...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Mostrar error
+  if (error) {
+    return (
+      <div className="min-h-screen dental-bg-background flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">Error: {error}</p>
+          <DentalButton onClick={loadServicesData}>
+            Reintentar
+          </DentalButton>
+        </div>
+      </div>
+    );
+  }
+
+  console.log('Renderizando con servicesData:', servicesData);
+  console.log('Número de categorías a renderizar:', Object.keys(servicesData).length);
+
   return (
     <div className="min-h-screen dental-bg-background relative pt-6 sm:pt-4">
-      {" "}
-      {/* Contenedor principal de la página con altura mínima de pantalla y fondo temático */}
-      {/* Decoraciones de fondo fijas */}
-      {/* Fondo decorativo fijo removido (dos círculos blur animados) para reducir distracción y repaints */}
-      {/* Sección Hero */}
       {/* Categorías de Servicios */}
       <Section>
-        {Object.entries(servicesData).map(([category, categoryData], index) => (
-          <ServiceCategory
-            key={category} // Clave única para cada categoría
-            category={category} // Nombre de la categoría
-            categoryData={categoryData} // Datos de la categoría
-            index={index} // Índice de la categoría para posibles retrasos de animación
-          />
-        ))}
+        {Object.keys(servicesData).length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-gray-600 text-lg">No hay servicios disponibles</p>
+          </div>
+        ) : (
+          Object.entries(servicesData).map(([category, categoryData], index) => {
+            console.log(`Renderizando categoría: ${category}`, categoryData);
+            return (
+              <ServiceCategory
+                key={category}
+                category={category}
+                categoryData={categoryData}
+                index={index}
+              />
+            );
+          })
+        )}
       </Section>
+      
+      {/* Sección "Ver Todos los Servicios" */}
+      <Section>
+        <div className="text-center py-16">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+            ¿Buscas un servicio específico?
+          </h3>
+          <p className="text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+            Estos son solo algunos de nuestros servicios más populares. 
+            Ofrecemos una amplia gama de tratamientos dentales especializados.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/services/all">
+              <DentalButton variant="primary" size="lg">
+                Ver Todos los Servicios
+              </DentalButton>
+            </Link>
+            <DentalButton variant="secondary" size="lg">
+              <Link href="/book-appointment">Agendar Consulta</Link>
+            </DentalButton>
+          </div>
+        </div>
+      </Section>
+      
       {/* Sección de Contacto */}
       <ContactSection />
     </div>

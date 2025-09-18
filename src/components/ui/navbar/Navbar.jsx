@@ -12,8 +12,8 @@ import useScrollDirection from "../../../hooks/useScrollDirection";
 // Importa los subcomponentes
 import Logo from "./Logo";
 import NavLinks from "./NavLinks";
-import UserAuthSection from "./UserAuthSection";
-const MobileMenu = dynamic(() => import("./MobileMenu"), { ssr: false });
+import UserAuthSection from "./UserAuthSection"; // Los botones de inicio de sesión y registro están aquí
+const MobileMenu = dynamic(() => import("./MobileMenu"), { ssr: false }); // También contiene los botones de auth para móvil
 import NotificationBanner from "./NotificationBanner";
 import ThemeToggleButton from "../ThemeToggleButton";
 
@@ -187,6 +187,7 @@ const Navbar = () => {
             {/* Separator */}
             <div className="w-px h-6 sm:h-8 bg-gradient-to-b from-transparent via-border dark:via-border-dark to-transparent opacity-50"></div>
 
+            {/* AQUÍ ESTÁN LOS BOTONES DE INICIO DE SESIÓN Y REGISTRO PARA DESKTOP */}
             <UserAuthSection />
           </div>
 
@@ -242,6 +243,7 @@ const Navbar = () => {
         </div>
       </motion.nav>
 
+      {/* AQUÍ ESTÁN LOS BOTONES DE INICIO DE SESIÓN Y REGISTRO PARA MÓVIL */}
       {/* Mobile Menu fuera del <nav> para evitar stacking context por transforms */}
       <MobileMenu
         isMenuOpen={isMenuOpen}

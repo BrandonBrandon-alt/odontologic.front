@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { FaHome, FaTooth, FaInfoCircle, FaEnvelope } from "react-icons/fa";
+import { FaHome, FaTooth, FaInfoCircle, FaEnvelope, FaCalendar } from "react-icons/fa";
 
 // Definir los items de la navegación
 const navItems = [
@@ -21,6 +21,11 @@ const navItems = [
     href: "/contact",
     icon: <FaEnvelope className="text-sm sm:text-lg" />,
     text: "Contacto",
+  },
+  {
+    href: "/book-appointment",
+    icon: <FaCalendar className="text-sm sm:text-lg" />,
+    text: "Agenda Cita",
   },
 ];
 

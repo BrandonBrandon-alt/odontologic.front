@@ -3,6 +3,10 @@ import React from "react";
 import { motion } from "framer-motion";
 import DentalButton from "../ui/Button";
 
+/**
+ * Animation variant for the main container
+ * Controls the overall fade-in and stagger timing for child elements
+ */
 const container = {
   hidden: { opacity: 0 },
   visible: {
@@ -16,6 +20,10 @@ const container = {
   },
 };
 
+/**
+ * Animation variant for fade-in-up effect with scale
+ * Used for title and main content elements
+ */
 const fadeInUp = {
   hidden: {
     opacity: 0,
@@ -35,6 +43,10 @@ const fadeInUp = {
   },
 };
 
+/**
+ * Animation variant for fade-in with scale effect
+ * Used for buttons and interactive elements with a delay
+ */
 const fadeInScale = {
   hidden: {
     opacity: 0,
@@ -86,17 +98,27 @@ export default function ProfessionalHero({
   fullHeight = true,
   decorativeElements,
 }) {
+  /**
+   * Determines alignment classes based on the align prop
+   */
   const alignClasses =
     align === "left"
       ? "text-left items-start justify-start"
       : "text-center items-center justify-center";
 
+  /**
+   * Determines height classes based on fullHeight and minHeight props
+   */
   const heightClass = fullHeight
     ? "min-h-screen"
     : minHeight
     ? `min-h-[${minHeight}]`
     : "min-h-[80vh]";
 
+  /**
+   * Returns appropriate background classes based on variant and customBg
+   * @returns {string} Background CSS classes
+   */
   const getBackgroundClasses = () => {
     if (customBg) return customBg;
 
@@ -152,6 +174,7 @@ export default function ProfessionalHero({
         </div>
 
         {/* Floating geometric shapes */}
+        {/* First floating circle with subtle animation */}
         <motion.div
           animate={{
             y: [-20, 20, -20],
@@ -165,6 +188,7 @@ export default function ProfessionalHero({
           className="absolute top-20 left-[10%] w-32 h-32 rounded-full bg-white/5 dark:bg-white/3 blur-sm"
         />
 
+        {/* Second floating square with opposite animation */}
         <motion.div
           animate={{
             y: [20, -20, 20],
@@ -233,6 +257,7 @@ export default function ProfessionalHero({
                   ${align === "center" ? "justify-center" : "justify-start"}
                 `}
               >
+                {/* Primary CTA Button */}
                 {primary && (
                   <HeroAction
                     {...primary}
@@ -240,6 +265,7 @@ export default function ProfessionalHero({
                     className="transform hover:scale-105 transition-all duration-200 shadow-2xl shadow-black/25 hover:shadow-black/40"
                   />
                 )}
+                {/* Secondary Action Buttons */}
                 {secondary.map((action, index) => (
                   <HeroAction
                     key={index}
@@ -298,6 +324,15 @@ export default function ProfessionalHero({
 
 /**
  * Hero Action Button Component
+ * 
+ * @param {Object} props
+ * @param {string} props.label - Button text
+ * @param {string} props.href - Link URL (optional)
+ * @param {Function} props.onClick - Click handler (optional)
+ * @param {React.ReactNode} props.icon - Button icon (optional)
+ * @param {string} props.ariaLabel - Accessibility label (optional)
+ * @param {boolean} props.primary - Whether this is the primary button
+ * @param {string} props.className - Additional CSS classes
  */
 function HeroAction({
   label,
@@ -308,13 +343,19 @@ function HeroAction({
   primary,
   className = "",
 }) {
+  /**
+   * Base CSS classes for the button based on primary/secondary variant
+   */
   const baseClasses = primary
     ? "bg-white text-primary-400 hover:bg-white/95 font-semibold px-8 py-4 rounded-full text-lg shadow-xl"
     : `bg-transparent text-white border-2 border-white/40 hover:bg-white/10 font-medium px-6 py-3 rounded-lg ${className}`;
 
+  /**
+   * Button element with DentalButton component
+   */
   const button = (
     <DentalButton
-      variant={primary ? "secondary" : "outline"}
+      variant={primary ? "primary" : "outline"}
       size={primary ? "xl" : "lg"}
       onClick={onClick}
       aria-label={ariaLabel || label}
@@ -325,6 +366,7 @@ function HeroAction({
     </DentalButton>
   );
 
+  // If href is provided, wrap button in anchor tag
   if (href) {
     return (
       <a
@@ -338,5 +380,6 @@ function HeroAction({
     );
   }
 
+  // Return standalone button
   return button;
 }
